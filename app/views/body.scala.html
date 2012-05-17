@@ -1,0 +1,12 @@
+@(items: Seq[Item])
+
+<ul>
+    @items.map {item =>
+    <li>
+        <a href="@routes.Items.details(item.id)">
+            @item.imageKeys.map {imageKeys => <img src="@Images.generateUrl(imageKeys.split('|').head)" />}
+            @item.name - @item.description
+        </a>
+    </li>
+    }
+</ul>

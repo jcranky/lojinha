@@ -1,0 +1,55 @@
+@(itemForm: Form[(String, String, List[String])])
+
+@import helper._
+@import helper.twitterBootstrap._
+
+@* re-usable picture field *@
+@pictureField(field: Field, className: String = "picture") = {
+  @input(field, '_label -> "Pictures", '_class -> className) { (id, name, value, _) =>
+    <input class="input-file btn" type="file" name="@name" value="@value">
+    <a class="removePicture btn danger">Remove</a>
+  }
+}
+
+<h2>Adicionar um novo item</h2>
+
+@form(action = routes.Admin.newItem, 'enctype -> "multipart/form-data") {
+  @inputText(itemForm("name"))
+  @inputText(itemForm("description"))
+  
+  <div class="pictures">
+      @repeat(itemForm("pictures"), min = 0) {picField =>
+        @pictureField(picField)
+      }
+      @pictureField(itemForm("pictures[x]"), className = "picture_template")
+      
+      <div class="clearfix">
+          <div class="input">
+              <a class="addPicture btn success">Add Picture</a>
+          </div>
+      </div>
+  </div>
+  
+  @* TODO: display a confirmation message, instead of redirecting without any message *@
+  <input class="btn primary" type="submit" value="Enviar">
+}
+
+<script type="text/javascript" charset="utf-8">
+    $('.addPicture').live('click', function(e) {
+        var pictures = $(this).parents('.pictures');
+        var template = $('.picture_template', pictures);
+        template.before('<div class="clearfix picture">' + template.html() + '</div>');
+        renumberPics();
+    });
+    
+    $('.removePicture').live('click', function(e) {
+        $(this).parents('.picture').remove();
+        renumberPics();
+    });
+    
+    var renumberPics = function() {
+        $('.picture input').each(function(i) {
+            $(this).attr('name', $(this).attr('name').replace(/pictures\[.+\]/g, 'pictures[' + i + ']'));
+        });
+    }
+</script>
