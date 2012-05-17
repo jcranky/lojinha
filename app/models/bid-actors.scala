@@ -4,10 +4,10 @@ import akka.actor._
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 
-object AkkaDelegate {
+object BidHelper {
   val masterBidActor = Akka.system.actorOf(Props[MasterBidActor], "master-bid-actor")
   
-  def sendToAkka(email: String, value: BigDecimal, itemId: Int) = {
+  def processBid(email: String, value: BigDecimal, itemId: Int) = {
     masterBidActor ! ProcessBid(email, value, itemId)
   }
 }

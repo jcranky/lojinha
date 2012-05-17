@@ -4,7 +4,7 @@ import play.api._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.mvc._
-import models.{AkkaDelegate, Bid, Item}
+import models.{BidHelper, Bid, Item}
 
 object Items extends Controller {
   
@@ -24,7 +24,7 @@ object Items extends Controller {
         bidForm.bindFromRequest.fold(
           formWithErrors => BadRequest(itemDetailsPage(item, formWithErrors)),
           bidTuple => {
-            AkkaDelegate.sendToAkka(bidTuple._1, bidTuple._2, itemId)
+            BidHelper.processBid(bidTuple._1, bidTuple._2, itemId)
             Redirect(routes.Items.details(itemId))
           }
         )
