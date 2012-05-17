@@ -1,0 +1,64 @@
+<project name="lojinha" default="default">
+    <description>Builds, tests, and runs the project sbt-netbeans-plugin.</description>
+    <import file="nbproject/build-impl.xml"></import>
+
+    <target name="clean" description="Clean build products.">
+        <exec dir="/home/jcranky/projects/lojinha" executable="sbt">
+            <arg value=";project lojinha;clean"></arg>
+        </exec>
+    </target>
+
+    <target name="jar" description="Build JAR.">
+        <exec dir="/home/jcranky/projects/lojinha" executable="sbt">
+            <arg value=";project lojinha;;package;package-src"></arg>
+        </exec>
+    </target>
+
+    <target name="compile" description="Compile project.">
+        <exec dir="/home/jcranky/projects/lojinha" executable="sbt">
+            <arg value=";project lojinha;compile"></arg>
+        </exec>
+    </target>
+
+    <target name="test" description="Run unit tests.">
+        <exec dir="/home/jcranky/projects/lojinha" executable="sbt">
+            <arg value=";project lojinha;test"></arg>
+        </exec>
+    </target>
+    
+    <target name="run-single">
+        <exec dir="/home/jcranky/projects/lojinha" executable="sbt">
+            <arg value=";project lojinha;run-main ${run.class}"></arg>
+        </exec>        
+    </target>
+    
+    <target name="run" description="Run a main class.">
+        <echo>You must set the main class for the main 'run' task. Change Compile to Test to set it for 'test:run': 
+        mainClass in (Compile, run) := Some({main.class})
+        </echo>
+        <exec dir="/home/jcranky/projects/lojinha" executable="sbt">
+            <arg value=";project lojinha;run"></arg>
+        </exec>        
+    </target>       
+    
+    <target name="debug-single">
+        <echo>
+            Add -Xrunjdwp:transport=dt_socket,address={jpda.address} as an argument
+            to the SBT (specifying desired `jpda.address`), attach debugger and run the file.
+        </echo>
+    </target>    
+    
+    <target name="debug" description="Debug project in IDE.">
+        <echo>
+            Add -Xrunjdwp:transport=dt_socket,address={jpda.address} as an argument
+            to the SBT (specifying desired `jpda.address`), attach debugger and run the project.
+        </echo>        
+    </target>  
+    
+    <target name="-javadoc-build">
+        <exec dir="/home/jcranky/projects/lojinha" executable="sbt">
+            <arg value=";project lojinha;package-doc"></arg>
+        </exec>        
+    </target>        
+
+</project>
