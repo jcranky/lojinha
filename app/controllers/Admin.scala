@@ -6,6 +6,7 @@ import play.api.data.Forms._
 import play.api.mvc._
 
 object Admin extends Controller {
+  val itemDAO = DAOFactory.itemDAO
   
   val addItemForm = Form(
     tuple(
@@ -34,7 +35,7 @@ object Admin extends Controller {
           Images.processImage(filePart.ref.file)
         }
         
-        Item.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")))
+        itemDAO.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")))
         Redirect(routes.Application.index)
       }
     )

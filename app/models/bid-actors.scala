@@ -34,18 +34,21 @@ class BidProcessActor(itemId: Int) extends Actor {
   
   def receive = {
     case ProcessBid(email, value, itemId) =>
-      bidProcessor.addBid(Bid(0, email, value, bidProcessor.item))
+      bidProcessor.addBid(Bid(email, value, bidProcessor.item))
   }
 }
 
 class BidProcessor(itemId: Int) {
-  val item = Item.findById(itemId).getOrElse(
+  val itemDAO = DAOFactory.itemDAO
+  val bidDAO = DAOFactory.bidDAO
+  
+  val item = itemDAO.findById(itemId).getOrElse(
     throw new IllegalArgumentException("cannot have a BidProcessActor for an inexistent Item"))
-  var itemBids = new ItemBids(Bid.all(itemId), item)
+  var itemBids = new ItemBids(bidDAO.all(itemId), item)
   
   def addBid(bid: Bid) = {
     itemBids = itemBids.withBid(bid)
-    Bid.create(bid)
+    bidDAO.create(bid)
   }
 }
 
