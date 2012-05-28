@@ -6,6 +6,7 @@ package models
 import akka.actor._
 import akka.routing.SmallestMailboxRouter
 import java.io.File
+import models.images.ImageThumber
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import scala.util.Random
@@ -30,7 +31,7 @@ object Images {
     println("received %s to process".format(image.getName))
     
     val imageKey = new Random(image.getName.hashCode).nextString(20)
-    thumberRouter ! GenThumb(image)
+    thumberRouter ! GenThumb(image, imageKey)
     
     imageKey
   }
@@ -44,21 +45,13 @@ object Images {
 // image thumb stuff
 class ImageThumberActor extends Actor {
   def receive = {
-    case GenThumb(image) =>
-      new ImageThumber(image).generateThumbs
+    case GenThumb(image, imageKey) =>
+      new ImageThumber(image, imageKey).generateThumbs
       Akka.system.actorFor("akka://application/user/s3-sender-router") ! SendToS3(image)  // actually, repeat this for each generated thumb
   }
 }
 
-class ImageThumber(image: File) {
-  def generateThumbs() = {
-    println("thumb generation logic called - " + image.getName)
-//    val newFile = new File("/tmp/" + System.currentTimeMillis + file.filename)
-//    file.ref.moveTo(newFile)
-  }
-}
-
-case class GenThumb(image: File)
+case class GenThumb(image: File, imageKey: String)
 
 
 // s3 sending stuff
