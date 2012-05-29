@@ -12,8 +12,6 @@ import play.api.libs.concurrent.Akka
 import scala.util.Random
 
 //TODO: validate the image and return an error if its contentType isn't from an image
-//TODO: redimension the images to a proper size, or make uploading really big images illegal?
-
 object Images {
   
   val thumberRouter =
@@ -21,15 +19,11 @@ object Images {
   val s3SenderRouter =
     Akka.system.actorOf(Props[S3SenderActor].withRouter(SmallestMailboxRouter(2)), "s3-sender-router")
   
-  println("PATH = " + s3SenderRouter.path)
-  
   /**
    * Generates a key for the image and returns it immediatelly, while sending the
    * image to be processed asynchronously with akka.
    */
   def processImage(image: File): String = {
-    println("received %s to process".format(image.getName))
-    
     val imageKey = new Random(image.getName.hashCode).nextString(20)
     thumberRouter ! GenThumb(image, imageKey)
     
@@ -46,8 +40,9 @@ object Images {
 class ImageThumberActor extends Actor {
   def receive = {
     case GenThumb(image, imageKey) =>
+      //TODO: change this to iterate over the list of files returned and send them to s3
       new ImageThumber(image, imageKey).generateThumbs
-      Akka.system.actorFor("akka://application/user/s3-sender-router") ! SendToS3(image)  // actually, repeat this for each generated thumb
+      Akka.system.actorFor("akka://application/user/s3-sender-router") ! SendToS3(image) 
   }
 }
 
