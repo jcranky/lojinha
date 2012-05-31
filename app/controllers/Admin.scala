@@ -1,5 +1,6 @@
 package controllers
 
+import java.io.File
 import models._
 import play.api.data._
 import play.api.data.Forms._
@@ -32,7 +33,10 @@ object Admin extends Controller {
       formWithErrors => BadRequest(itemAddFormPage(formWithErrors)),
       itemTuple => {
         val pictureKeys = request.body.files map {filePart =>
-          Images.processImage(filePart.ref.file)
+          val newFile = File.createTempFile("temp-uploaded-", filePart.filename)
+          filePart.ref.moveTo(newFile, true)
+          
+          Images.processImage(newFile)
         }
         
         itemDAO.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")))
