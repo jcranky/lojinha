@@ -1,8 +1,5 @@
 package models
 
-//can serve as inpiration when sending images to s3:
-//https://github.com/jamesward/S3-Blobs-module-for-Play/blob/master/s3blobs/src/play/modules/s3blobs/S3Blob.java
-
 import akka.actor._
 import akka.routing.SmallestMailboxRouter
 import java.io.File
