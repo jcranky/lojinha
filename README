@@ -1,4 +1,6 @@
-This is your new Play 2.0 application
-=====================================
 
-This file will be packaged with your application, when using `play dist`.
+Lojinha is a small application for a personal auction site. It is developed using the
+Play! Framework 2.0 and should be deployable anywhere a play application can run.
+
+Before deploying, remember to configure your database (can be relational or mongo)
+and your amazon aws credentials in the application.conf file.
