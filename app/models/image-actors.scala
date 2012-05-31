@@ -5,6 +5,7 @@ import akka.routing.SmallestMailboxRouter
 import java.io.File
 import models.aws.S3Sender
 import models.images.ImageThumber
+import models.images.ThumbSize
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import scala.util.Random
@@ -29,9 +30,9 @@ class Images(system: ActorSystem) {
     imageKey
   }
   
-  def generateUrl(imageKey: String): String = {
-    //TODO: base s3 url + bucket-name + key ?
-    "dummy-url - " + imageKey
+  def generateUrl(imageKey: String, thumbSize: ThumbSize): String = {
+    val bucket = current.configuration.getString("aws.s3.bucket").get
+    "https://s3.amazonaws.com/%s/%s-%s.png".format(bucket, imageKey, thumbSize.suffix)
   }
 }
 

@@ -2,6 +2,7 @@
 
 @import helper._
 @import helper.twitterBootstrap._
+@import models.images.LargeThumb
 
 <table>
     <tr>
@@ -19,7 +20,7 @@
 </table>
 
 @item.imageKeys.getOrElse("").split('|').map {imageKey =>
-    <img src="@Images.generateUrl(imageKey)" />
+    <img src="@Images.generateUrl(imageKey, LargeThumb)" />
 }
 
 <hr />

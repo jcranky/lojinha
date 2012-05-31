@@ -1,10 +1,11 @@
 @(items: Seq[Item])
+@import models.images.MediumThumb
 
 <ul>
     @items.map {item =>
     <li>
         <a href="@routes.Items.details(item.id)">
-            @item.imageKeys.map {imageKeys => <img src="@Images.generateUrl(imageKeys.split('|').head)" />}
+            @item.imageKeys.map {imageKeys => <img src="@Images.generateUrl(imageKeys.split('|').head, MediumThumb)" />}
             @item.name - @item.description
         </a>
     </li>
