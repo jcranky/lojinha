@@ -6,29 +6,31 @@ import java.io.File
 import javax.imageio.ImageIO
 
 class ImageThumber(image: File, imageKey: String) {
-  def generateThumbs(): List[File] = ImageThumber.sizes map generateThumb
+  def generateThumbs(): List[(File, String)] = ImageThumber.sizes map generateThumb
   
-  def generateThumb(thumbSize: ThumbSize): File = {
+  def generateThumb(thumbSize: ThumbSize): (File, String) = {
     val imageBuf = ImageIO.read(image)
     val height = imageBuf.getHeight
     val width = imageBuf.getWidth
     
+    val imageName = imageKey + "-" + thumbSize.suffix + ".png"
+    
     if (width <= thumbSize.width && height <= thumbSize.height)
-      image
+      (image, imageName)
     else {
       val (newWidth, newHeight) = ImageThumber.newSizesFor(thumbSize, width, height)
-      writeImage(newWidth, newHeight, imageBuf, thumbSize)
+      (writeImage(newWidth, newHeight, imageBuf, thumbSize, imageName), imageName)
     }
   }
   
-  def writeImage(width: Int, height: Int, imageBuf: BufferedImage, thumbSize: ThumbSize) = {
+  private def writeImage(width: Int, height: Int, imageBuf: BufferedImage, thumbSize: ThumbSize, imageName: String) = {
     val scaledImage = new BufferedImage(width, height,  BufferedImage.TYPE_INT_RGB)
     val g = scaledImage.createGraphics
     g.setComposite(AlphaComposite.Src)
     g.drawImage(imageBuf, 0, 0, width, height, null);
     g.dispose
       
-    val destFile = new File(image.getParentFile, imageKey + "-" + thumbSize.suffix + ".png")
+    val destFile = new File(image.getParentFile, imageName)
     ImageIO.write(scaledImage, "png", destFile)
     destFile
   }

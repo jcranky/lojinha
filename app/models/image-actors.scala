@@ -30,7 +30,7 @@ object Images {
   }
   
   def generateUrl(imageKey: String): String = {
-    // base s3 url + bucket-name + key ?
+    //TODO: base s3 url + bucket-name + key ?
     "dummy-url - " + imageKey
   }
 }
@@ -38,9 +38,14 @@ object Images {
 class ImageThumberActor extends Actor {
   def receive = {
     case GenThumb(image, imageKey) =>
-      //TODO: change this to iterate over the list of files returned and send them to s3
-      new ImageThumber(image, imageKey).generateThumbs
-      Akka.system.actorFor("akka://application/user/s3-sender-router") ! SendToS3(image, imageKey) 
+      val images = new ImageThumber(image, imageKey).generateThumbs
+      val s3SenderRouter = Akka.system.actorFor("akka://application/user/s3-sender-router")
+      
+      s3SenderRouter ! SendToS3(image, imageKey + ".png")
+      images foreach { imageTuple =>
+        val (imageFile, imageName) = imageTuple
+        s3SenderRouter ! SendToS3(imageFile, imageName) 
+      }
   }
 }
 
@@ -52,4 +57,4 @@ class S3SenderActor extends Actor {
 }
 
 case class GenThumb(image: File, imageKey: String)
-case class SendToS3(image: File, imageKey: String)
+case class SendToS3(image: File, imageName: String)
