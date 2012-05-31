@@ -7,3 +7,5 @@ tmp
 dist
 /nbproject/private/
 /nbproject/netbeans.cache
+/nbproject/
+/build.xml
