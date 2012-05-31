@@ -9,3 +9,4 @@ dist
 /nbproject/netbeans.cache
 /nbproject/
 /build.xml
+/conf/aws.conf
