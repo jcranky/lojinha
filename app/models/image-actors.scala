@@ -43,16 +43,16 @@ class ImageThumberActor extends Actor {
     case GenThumb(image, imageKey) =>
       //TODO: change this to iterate over the list of files returned and send them to s3
       new ImageThumber(image, imageKey).generateThumbs
-      Akka.system.actorFor("akka://application/user/s3-sender-router") ! SendToS3(image) 
+      Akka.system.actorFor("akka://application/user/s3-sender-router") ! SendToS3(image, imageKey) 
   }
 }
 
 class S3SenderActor extends Actor {
   def receive = {
-    case SendToS3(image) =>
-      new S3Sender(image).send
+    case SendToS3(image, imageKey) =>
+      new S3Sender(image, imageKey).send
   }
 }
 
 case class GenThumb(image: File, imageKey: String)
-case class SendToS3(image: File)
+case class SendToS3(image: File, imageKey: String)
