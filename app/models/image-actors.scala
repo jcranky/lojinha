@@ -6,6 +6,7 @@ package models
 import akka.actor._
 import akka.routing.SmallestMailboxRouter
 import java.io.File
+import models.aws.S3Sender
 import models.images.ImageThumber
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
@@ -37,7 +38,6 @@ object Images {
   }
 }
 
-// image thumb stuff
 class ImageThumberActor extends Actor {
   def receive = {
     case GenThumb(image, imageKey) =>
@@ -47,11 +47,6 @@ class ImageThumberActor extends Actor {
   }
 }
 
-case class GenThumb(image: File, imageKey: String)
-
-
-// s3 sending stuff
-
 class S3SenderActor extends Actor {
   def receive = {
     case SendToS3(image) =>
@@ -59,10 +54,5 @@ class S3SenderActor extends Actor {
   }
 }
 
-class S3Sender(image: File) {
-  def send() = {
-    println("sending to s3..... or so you think =p " + image.getName)
-  }
-}
-
+case class GenThumb(image: File, imageKey: String)
 case class SendToS3(image: File)
