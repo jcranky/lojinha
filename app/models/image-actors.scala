@@ -24,7 +24,8 @@ object Images {
    * image to be processed asynchronously with akka.
    */
   def processImage(image: File): String = {
-    val imageKey = new Random(image.getName.hashCode).nextString(20)
+    val validChars = "abcdefghijklmnopqwxyv_"
+    val imageKey = (1 to 20).foldLeft("")((t, a) => t + validChars(Random.nextInt(validChars.length)))
     thumberRouter ! GenThumb(image, imageKey)
     
     imageKey
