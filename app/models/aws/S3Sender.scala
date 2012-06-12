@@ -13,6 +13,8 @@ class S3Sender(image: File, imageName: String) {
     
     Logger.info("sending to s3: " + imageName)
     S3Sender.s3.putObject(putRequest)
+    
+    if (!image.delete) Logger.info("could not delete original file %s after sending it to s3".format(imageName))
   }
 }
 
