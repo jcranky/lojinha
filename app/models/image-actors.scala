@@ -36,9 +36,11 @@ class Images(system: ActorSystem) {
   }
 }
 
-class ImageThumberActor extends Actor {
+class ImageThumberActor extends Actor with ActorLogging {
   def receive = {
     case GenThumb(image, imageKey) =>
+      log.info("about to generate thumbs for key {}", imageKey)
+      
       val images = new ImageThumber(image, imageKey).generateThumbs
       val s3SenderRouter = context.system.actorFor("akka://application/user/s3-sender-router")
       
@@ -50,9 +52,10 @@ class ImageThumberActor extends Actor {
   }
 }
 
-class S3SenderActor extends Actor {
+class S3SenderActor extends Actor with ActorLogging {
   def receive = {
     case SendToS3(image, imageKey) =>
+      log.info("about to send {} to s3", imageKey)
       new S3Sender(image, imageKey).send
   }
 }
