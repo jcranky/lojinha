@@ -1,12 +1,14 @@
 package controllers
 
 import java.io.File
-import models._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.mvc._
 
-object Admin extends Controller {
+import models._
+import views._
+
+object Admin extends Controller with Secured {
   val itemDAO = DAOFactory.itemDAO
   
   val addItemForm = Form(
@@ -17,12 +19,14 @@ object Admin extends Controller {
     )
   )
   
-  def index = Action {
-    Ok(views.html.index(body = views.html.admin.body(), menu = views.html.admin.menu()))
+  def index = isAuthenticated { username => _ =>
+    User.findByEmail(username).map { user =>
+      Ok(html.index(body = html.admin.body(), menu = html.admin.menu()))
+    }.getOrElse(Forbidden)
   }
   
   def itemAddFormPage(form: Form[(String, String, List[String])] = addItemForm) =
-    views.html.index(body = views.html.admin.newItemForm(form), menu = views.html.admin.menu())
+    html.index(body = html.admin.newItemForm(form), menu = html.admin.menu())
   
   def newItemForm = Action {
     Ok(itemAddFormPage())

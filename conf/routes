@@ -5,10 +5,17 @@
 # Home page
 GET     /                               controllers.Application.index
 
+# Authentication
+GET     /login                          controllers.Application.login
+POST    /login                          controllers.Application.authenticate
+GET     /logout                         controllers.Application.logout
+
+# Admin / Product management
 GET     /admin                          controllers.Admin.index
 GET     /admin/items/form               controllers.Admin.newItemForm
 POST    /admin/items                    controllers.Admin.newItem
 
+# public stuff
 GET     /items/:id                      controllers.Items.details(id: Int)
 GET     /items/:id/highestBid           controllers.Items.highestBid(id: Int)
 GET     /items                          controllers.Items.list(category = "all")
