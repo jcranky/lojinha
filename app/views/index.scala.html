@@ -1,4 +1,4 @@
-@(title: String = "Lojinha! To vendendo!", body: Html, menu: Html = views.html.menu())
+@(title: String = "Lojinha! To vendendo!", body: Html, menu: Html = views.html.menu(), user: Option[User] = None)
 <!DOCTYPE html>
 
 <html>
@@ -22,6 +22,7 @@
                             <li class="active"><a href="@routes.Application.index">Home</a></li>
                             <li><a href="#">About</a></li>
                         </ul>
+                        @user.map{u => <span class="user nav pull-right">@u.name</span>}
                     </div>
                 </div>
             </div>

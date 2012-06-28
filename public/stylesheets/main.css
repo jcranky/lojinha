@@ -88,6 +88,11 @@ a:hover {
     display: none;
 }
 
+.user {
+    padding: 10px 0px;
+    margin: 1px 4px;
+}
+
 #logo {
     color: #fff;
     font-size: 16px;
