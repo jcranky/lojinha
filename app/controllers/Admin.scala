@@ -6,6 +6,7 @@ import play.api.data.Forms._
 import play.api.mvc._
 
 import models._
+import models.dao._
 import views._
 
 object Admin extends Controller with Secured {

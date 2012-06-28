@@ -4,6 +4,8 @@ import akka.actor._
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 
+import models.dao._
+
 object BidHelper {
   val masterBidActor = Akka.system.actorOf(Props[MasterBidActor], "master-bid-actor")
   

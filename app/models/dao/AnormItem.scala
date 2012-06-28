@@ -1,4 +1,4 @@
-package models
+package models.dao
 
 import anorm._
 import anorm.SqlParser._

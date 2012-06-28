@@ -1,4 +1,4 @@
-package models
+package models.dao
 
 import com.mongodb.casbah.Imports._
 import com.mongodb.casbah.commons.MongoDBObject

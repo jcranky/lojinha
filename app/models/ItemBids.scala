@@ -1,5 +1,7 @@
 package models
 
+import models.dao._
+
 case class ItemBids(higherBid: Option[Bid], bidsList: List[Bid] = Nil)(implicit val item: Item) {
   def this(bidsList: List[Bid], item: Item) =
     this(if(bidsList.size > 0) Some(bidsList.max) else None, bidsList)(item)

@@ -3,6 +3,8 @@ package models
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 
+import models.dao._
+
 class ItemBidsSpec extends Specification with Mockito {
   implicit val item = mock[Item]
   val bid = Bid(1, "someone@jcranky.com", 10, item)
