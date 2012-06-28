@@ -155,7 +155,7 @@ nav a {
     display: inline-block;
     margin: 0 4px;
 }
-body  > header {
+body > header {
     box-sizing: border-box;
     padding: 10px;
     z-index: 9;

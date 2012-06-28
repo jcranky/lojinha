@@ -1,7 +1,75 @@
+html,
+body,
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+font,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+caption {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: inherit;
+}
 
 body {
     padding-top: 60px;
     padding-bottom: 40px;
+    font: 13px "Lucida Grande", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialised;
+    -webkit-user-select: none;
+}
+
+a {
+    color: #4794c4;
+    text-decoration: none;
+}
+a:hover {
+    color: #2a5e88;
 }
 
 .sidebar-nav {
@@ -18,4 +86,14 @@ body {
 
 .picture_template {
     display: none;
+}
+
+#logo {
+    color: #fff;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    text-shadow: 1px 1px 0 #000;
+    padding: 10px 0px;
+    margin: 1px 4px;
 }
