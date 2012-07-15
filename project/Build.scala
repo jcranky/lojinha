@@ -15,6 +15,9 @@ object ApplicationBuild extends Build {
 
   val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
     routesImport += "se.radley.plugin.salat.Binders._",
-    templatesImport += "org.bson.types.ObjectId"
+    templatesImport ++= Seq(
+      "org.bson.types.ObjectId",
+      "models.dao._"
+    )
   )
 }
