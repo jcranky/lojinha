@@ -1,6 +1,6 @@
 package models.dao
 
-case class User(email: String, name: String, password: String)
+case class User(id: Int, email: String, name: String, password: String)
 
 trait UserDAO {
   def authenticate(email: String, password: String): Option[User]
