@@ -1,6 +1,14 @@
 # Items schema
 # --- !Ups
 
+CREATE SEQUENCE user_id_seq;
+CREATE TABLE user (
+    id INTEGER NOT NULL DEFAULT nextval('user_id_seq'),
+    email VARCHAR(255) NOT NULL,
+    passwd VARCHAR(255) NOT NULL
+);
+INSERT INTO user(email, passwd) VALUES('admin@lojinha.com', '1234');
+
 CREATE SEQUENCE item_id_seq;
 CREATE TABLE item (
     id INTEGER NOT NULL DEFAULT nextval('item_id_seq'),
@@ -18,6 +26,9 @@ CREATE TABLE bid (
 );
 
 # --- !Downs
+
+DROP TABLE user;
+DROP SEQUENCE user_id_seq;
 
 DROP TABLE item;
 DROP SEQUENCE item_id_seq;
