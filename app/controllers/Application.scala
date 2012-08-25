@@ -10,12 +10,14 @@ import models.dao._
 import views._
 
 object Application extends Controller {
+  val userDAO = DAOFactory.userDAO
+  
   val loginForm = Form(
     tuple(
       "email" -> text,
       "password" -> text
     ) verifying ("Invalid email or password", result => result match {
-        case (email, password) => User.authenticate(email, password).isDefined
+        case (email, password) => userDAO.authenticate(email, password).isDefined
       })
   )
 

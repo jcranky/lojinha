@@ -10,6 +10,7 @@ import models.dao._
 import views._
 
 object Admin extends Controller with Secured {
+  val userDAO = DAOFactory.userDAO
   val itemDAO = DAOFactory.itemDAO
   
   val addItemForm = Form(
@@ -21,7 +22,7 @@ object Admin extends Controller with Secured {
   )
   
   def index = isAuthenticated { username => _ =>
-    User.findByEmail(username).map { user =>
+    userDAO.findByEmail(username).map { user =>
       Ok(html.index(body = html.admin.body(), menu = html.admin.menu(), user = Some(user)))
     }.getOrElse(Forbidden)
   }

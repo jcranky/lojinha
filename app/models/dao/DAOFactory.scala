@@ -14,4 +14,10 @@ object DAOFactory {
     case Some("sql") => AnormBidDAO
     case None => AnormBidDAO
   }
+  
+  def userDAO: UserDAO = dbConfig match {
+    case Some("mongo") => throw new UnsupportedOperationException("not implemented yet") //MongoUserDAO
+    case Some("sql") => AnormUserDAO
+    case None => AnormUserDAO
+  }
 }

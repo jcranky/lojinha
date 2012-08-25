@@ -55,3 +55,9 @@ object AnormBidDAO extends BidDAO {
       'bidderEmail -> bid.bidderEmail, 'value -> bid.value.bigDecimal, 'itemId -> bid.item.id).executeUpdate()
   }
 }
+
+object AnormUserDAO extends UserDAO {
+  def authenticate(email: String, password: String): Option[User] = None
+  
+  def findByEmail(email: String): Option[User] = None
+}
