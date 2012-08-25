@@ -5,9 +5,10 @@ CREATE SEQUENCE user_id_seq;
 CREATE TABLE user (
     id INTEGER NOT NULL DEFAULT nextval('user_id_seq'),
     email VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     passwd VARCHAR(255) NOT NULL
 );
-INSERT INTO user(email, passwd) VALUES('admin@lojinha.com', '1234');
+INSERT INTO user(email, name, passwd) VALUES('admin@lojinha.com', 'jcranky', '1234');
 
 CREATE SEQUENCE item_id_seq;
 CREATE TABLE item (
