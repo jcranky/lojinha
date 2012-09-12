@@ -3,10 +3,12 @@
 
 <ul>
     @items.map {item =>
-    <li>
+    <li class="item-li">
         <a href="@routes.Items.details(item.id)">
-            @item.imageKeys.map {imageKeys => <img src="@Images.generateUrl(imageKeys.split('|').head, MediumThumb)" />}
-            @item.name - @item.description
+            <div class="pic-m-thumb">
+                @item.imageKeys.map {imageKeys => <img src="@Images.generateUrl(imageKeys.split('|').head, MediumThumb)" />}
+            </div>
+            <p>@item.name - @item.description</p>
         </a>
     </li>
     }
