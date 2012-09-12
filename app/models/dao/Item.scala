@@ -18,6 +18,8 @@ trait CategoryDAO {
   def findByName(name: String): Option[Category]
 
   def getByName(name: String): Category
+
+  def all(): List[Category]
 }
 
 trait ItemDAO {

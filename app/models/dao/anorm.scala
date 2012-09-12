@@ -11,7 +11,7 @@ object AnormCategoryDAO extends CategoryDAO {
       case id~name => Category(id, name)
     }
   }
-  
+
   def create(name: String) = DB.withConnection { implicit c =>
     SQL("INSERT INTO category(name) VALUES({name})").on('name -> name).executeUpdate()
   }
@@ -29,6 +29,10 @@ object AnormCategoryDAO extends CategoryDAO {
       create(name)
       getByName(name)
     }
+  }
+
+  def all(): List[Category] = DB.withConnection { implicit c =>
+    SQL("SELECT * FROM category").as(category *)
   }
 }
 
