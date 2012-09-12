@@ -29,7 +29,7 @@ trait ItemDAO {
 
   def all(): List[Item]
 
-  def all(cat: String): List[Item]
+  def all(cat: Category): List[Item]
 
   def delete(id: Long)
 }

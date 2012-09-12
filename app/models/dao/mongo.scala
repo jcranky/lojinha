@@ -27,7 +27,7 @@ object MongoItemDAO extends ItemDAO {
 
   def all(): List[Item] = dao.find(MongoDBObject.empty).toList
 
-  def all(cat: String): List[Item] = dao.find(MongoDBObject("category" -> cat)).toList
+  def all(cat: Category): List[Item] = dao.find(MongoDBObject("category" -> cat)).toList
 
   def create(name: String, description: String, imageKeys: Option[String], cat: Category) =
     dao.insert(Item(Sequence.nextIntFor("items"), name, description, imageKeys, cat))

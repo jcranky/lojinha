@@ -11,6 +11,7 @@ import views._
 
 object Application extends Controller {
   val userDAO = DAOFactory.userDAO
+  val itemDAO = DAOFactory.itemDAO
 
   val loginForm = Form(
     tuple(
@@ -39,7 +40,6 @@ object Application extends Controller {
   }
 
   def index = Action {
-    val itemDAO = DAOFactory.itemDAO
-    Ok(html.index(body = views.html.body(itemDAO.all())))
+    Ok(html.index(body = html.body(itemDAO.all())))
   }
 }
