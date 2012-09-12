@@ -45,6 +45,11 @@ object AnormItemDAO extends ItemDAO {
     }
   }
 
+  def create(name: String, description: String, imageKeys: Option[String], cat: Category) = DB.withConnection { implicit c =>
+    SQL("INSERT INTO item(name, description, imageKeys) VALUES({name}, {description}, {imageKeys}, {catId})").on(
+      'name -> name, 'description -> description, 'imageKeys -> imageKeys, 'catId -> cat.id).executeUpdate()
+  }
+
   def findById(id: Int): Option[Item] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM item WHERE id = {id}").on('id -> id).as(item singleOpt)
   }
@@ -57,12 +62,7 @@ object AnormItemDAO extends ItemDAO {
     SQL("SELECT * FROM item WHERE category = {cat}").on('cat -> cat).as(item *)
   }
 
-  def create(name: String, description: String, imageKeys: Option[String], cat: Category) = DB.withConnection { implicit c =>
-    SQL("INSERT INTO item(name, description, imageKeys) VALUES({name}, {description}, {imageKeys}, {catId})").on(
-      'name -> name, 'description -> description, 'imageKeys -> imageKeys, 'catId -> cat.id).executeUpdate()
-  }
-
-  def delete(id: Long) = {}
+  def delete(id: Long) = throw new UnsupportedOperationException("not implemented yet")
 }
 
 object AnormBidDAO extends BidDAO {
@@ -73,6 +73,11 @@ object AnormBidDAO extends BidDAO {
     }
   }
 
+  def create(bid: Bid) = DB.withConnection { implicit c =>
+    SQL("INSERT INTO bid(bidder_email, value, item_id) VALUES({bidderEmail}, {value}, {itemId})").on(
+      'bidderEmail -> bid.bidderEmail, 'value -> bid.value.bigDecimal, 'itemId -> bid.item.id).executeUpdate()
+  }
+  
   def all(itemId: Int): List[Bid] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM bid WHERE item_id = {itemId}").on('itemId -> itemId).as(bid *)
   }
@@ -80,11 +85,6 @@ object AnormBidDAO extends BidDAO {
   def highest(itemId: Int): Option[Bid] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM bid WHERE item_id = {itemId} AND value = (SELECT max(value) FROM bid where item_id = {itemId})").on(
       'itemId -> itemId).as(bid singleOpt)
-  }
-
-  def create(bid: Bid) = DB.withConnection { implicit c =>
-    SQL("INSERT INTO bid(bidder_email, value, item_id) VALUES({bidderEmail}, {value}, {itemId})").on(
-      'bidderEmail -> bid.bidderEmail, 'value -> bid.value.bigDecimal, 'itemId -> bid.item.id).executeUpdate()
   }
 }
 

@@ -23,21 +23,21 @@ trait CategoryDAO {
 }
 
 trait ItemDAO {
+  def create(name: String, description: String, imageKeys: Option[String], cat: Category)
+
   def findById(id: Int): Option[Item]
 
   def all(): List[Item]
 
   def all(cat: String): List[Item]
 
-  def create(name: String, description: String, imageKeys: Option[String], cat: Category)
-
   def delete(id: Long)
 }
 
 trait BidDAO {
+  def create(bid: Bid)
+
   def all(itemId: Int): List[Bid]
 
   def highest(itemId: Int): Option[Bid]
-
-  def create(bid: Bid)
 }
