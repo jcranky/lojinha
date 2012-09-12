@@ -11,7 +11,7 @@ import views._
 
 object Application extends Controller {
   val userDAO = DAOFactory.userDAO
-  
+
   val loginForm = Form(
     tuple(
       "email" -> text,

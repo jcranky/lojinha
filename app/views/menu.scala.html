@@ -1,9 +1,10 @@
+@(categories: List[Category])
 
 <div class="well sidebar-nav">
     <ul class="nav nav-list">
         <li class="nav-header">Categorias</li>
-        @List("Jogos", "CDs", "DVDs", "Livros").map{ item =>
-            <li><a href="@routes.Items.list(item)">@item</a></li>
+        @categories.map{ cat =>
+            <li><a href="@routes.Items.list(cat.name)">@cat.name</a></li>
         }
     </ul>
 </div>
