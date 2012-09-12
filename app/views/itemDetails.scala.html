@@ -28,8 +28,8 @@
 
     <hr />
 
-    Novo Lance:
     @form(routes.Items.newBid(item.id)) {
+      <legend>Novo Lance:</legend>
       @inputText(bidForm("email"))
       @inputText(bidForm("value"))
       <input type="submit" value="Enviar">

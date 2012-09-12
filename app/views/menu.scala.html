@@ -3,6 +3,7 @@
 <div class="well sidebar-nav">
     <ul class="nav nav-list">
         <li class="nav-header">Categorias</li>
+        <li><a href="@routes.Application.index">Tudo</a></li>
         @categories.map{ cat =>
             <li><a href="@routes.Items.list(cat.name)">@cat.name</a></li>
         }
