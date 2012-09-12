@@ -18,6 +18,7 @@ object Admin extends Controller with Secured {
     tuple(
       "name" -> nonEmptyText,
       "description" -> nonEmptyText,
+      "category" -> nonEmptyText,
       "pictures" -> list(text)
     )
   )
@@ -28,7 +29,7 @@ object Admin extends Controller with Secured {
     }.getOrElse(Forbidden)
   }
 
-  def itemAddFormPage(form: Form[(String, String, List[String])] = addItemForm) =
+  def itemAddFormPage(form: Form[(String, String, String, List[String])] = addItemForm) =
     html.index(body = html.admin.newItemForm(form), menu = html.admin.menu())
 
   def newItemForm = Action {
