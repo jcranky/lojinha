@@ -10,12 +10,19 @@ CREATE TABLE user (
 );
 INSERT INTO user(email, name, passwd) VALUES('admin@lojinha.com', 'jcranky', '1234');
 
+CREATE SEQUENCE category_id_seq;
+CREATE TABLE category (
+    id INTEGER NOT NULL DEFAULT nextval('category_id_seq'),
+    name varchar(255)
+);
+
 CREATE SEQUENCE item_id_seq;
 CREATE TABLE item (
     id INTEGER NOT NULL DEFAULT nextval('item_id_seq'),
     name varchar(255),
     description varchar(2048),
-    imageKeys varchar(1024)
+    imageKeys varchar(1024),
+    category_id INTEGER NOT NULL
 );
 
 CREATE SEQUENCE bid_id_seq;

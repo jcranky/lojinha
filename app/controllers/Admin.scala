@@ -12,7 +12,7 @@ import views._
 object Admin extends Controller with Secured {
   val userDAO = DAOFactory.userDAO
   val itemDAO = DAOFactory.itemDAO
-  
+
   val addItemForm = Form(
     tuple(
       "name" -> nonEmptyText,
@@ -20,20 +20,20 @@ object Admin extends Controller with Secured {
       "pictures" -> list(text)
     )
   )
-  
+
   def index = isAuthenticated { username => _ =>
     userDAO.findByEmail(username).map { user =>
       Ok(html.index(body = html.admin.body(), menu = html.admin.menu(), user = Some(user)))
     }.getOrElse(Forbidden)
   }
-  
+
   def itemAddFormPage(form: Form[(String, String, List[String])] = addItemForm) =
     html.index(body = html.admin.newItemForm(form), menu = html.admin.menu())
-  
+
   def newItemForm = Action {
     Ok(itemAddFormPage())
   }
-  
+
   def newItem = Action(parse.multipartFormData) { implicit request =>
     addItemForm.bindFromRequest.fold(
       formWithErrors => BadRequest(itemAddFormPage(formWithErrors)),
@@ -41,11 +41,11 @@ object Admin extends Controller with Secured {
         val pictureKeys = request.body.files map {filePart =>
           val newFile = File.createTempFile("temp-uploaded-", filePart.filename)
           filePart.ref.moveTo(newFile, true)
-          
+
           Images.processImage(newFile)
         }
-        
-        itemDAO.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")))
+
+        itemDAO.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")), Category(1, "Livros"))
         Redirect(routes.Application.index)
       }
     )
