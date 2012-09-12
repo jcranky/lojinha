@@ -46,7 +46,7 @@ object AnormItemDAO extends ItemDAO {
   }
 
   def create(name: String, description: String, imageKeys: Option[String], cat: Category) = DB.withConnection { implicit c =>
-    SQL("INSERT INTO item(name, description, imageKeys) VALUES({name}, {description}, {imageKeys}, {catId})").on(
+    SQL("INSERT INTO item(name, description, imageKeys, category_id) VALUES({name}, {description}, {imageKeys}, {catId})").on(
       'name -> name, 'description -> description, 'imageKeys -> imageKeys, 'catId -> cat.id).executeUpdate()
   }
 
@@ -77,7 +77,7 @@ object AnormBidDAO extends BidDAO {
     SQL("INSERT INTO bid(bidder_email, value, item_id) VALUES({bidderEmail}, {value}, {itemId})").on(
       'bidderEmail -> bid.bidderEmail, 'value -> bid.value.bigDecimal, 'itemId -> bid.item.id).executeUpdate()
   }
-  
+
   def all(itemId: Int): List[Bid] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM bid WHERE item_id = {itemId}").on('itemId -> itemId).as(bid *)
   }
