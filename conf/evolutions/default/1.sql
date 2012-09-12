@@ -38,6 +38,9 @@ CREATE TABLE bid (
 DROP TABLE user;
 DROP SEQUENCE user_id_seq;
 
+DROP TABLE category;
+DROP SEQUENCE category_id_seq;
+
 DROP TABLE item;
 DROP SEQUENCE item_id_seq;
 
