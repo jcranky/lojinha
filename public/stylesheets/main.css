@@ -64,6 +64,10 @@ body {
     -webkit-user-select: none;
 }
 
+ul {
+    list-style: none
+}
+
 a {
     color: #4794c4;
     text-decoration: none;
