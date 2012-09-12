@@ -42,4 +42,8 @@ object Application extends Controller {
   def index = Action {
     Ok(html.index(body = html.body(itemDAO.all())))
   }
+
+  def about = Action {
+    Ok(html.index(body = html.about()))
+  }
 }

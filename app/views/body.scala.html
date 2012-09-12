@@ -1,15 +1,17 @@
 @(items: Seq[Item])
 @import models.images.MediumThumb
 
-<ul>
-    @items.map {item =>
-    <li class="item-li">
-        <a href="@routes.Items.details(item.id)">
-            <div class="pic-m-thumb">
-                @item.imageKeys.map {imageKeys => <img src="@Images.generateUrl(imageKeys.split('|').head, MediumThumb)" />}
-            </div>
-            <p>@item.name - @item.description</p>
-        </a>
-    </li>
-    }
-</ul>
+<div class="well">
+    <ul class="unstyled">
+        @items.map {item =>
+        <li class="item-li">
+            <a href="@routes.Items.details(item.id)">
+                <div class="pic-m-thumb">
+                    @item.imageKeys.map {imageKeys => <img src="@Images.generateUrl(imageKeys.split('|').head, MediumThumb)" />}
+                </div>
+                <p>@item.name - @item.description</p>
+            </a>
+        </li>
+        }
+    </ul>
+</div>
