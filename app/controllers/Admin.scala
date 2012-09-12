@@ -47,7 +47,7 @@ object Admin extends Controller with Secured {
           Images.processImage(newFile)
         }
 
-        itemDAO.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")), categoryDAO.getByName("Livros"))
+        itemDAO.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")), categoryDAO.getByName(itemTuple._3))
         Redirect(routes.Application.index)
       }
     )
