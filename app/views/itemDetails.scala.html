@@ -4,33 +4,37 @@
 @import helper.twitterBootstrap._
 @import models.images.LargeThumb
 
-<table>
-    <tr>
-        <td>Nome</td>
-        <td>@item.name</td>
-    </tr>
-    <tr>
-        <td>Descriçao</td>
-        <td>@item.description</td>
-    </tr>
-    <tr>
-        <td>Maior lance</td>
-        <td class="highestBid">@highestBid.map(_.value).getOrElse("-")</td>
-    </tr>
-</table>
+<div class="well">
+    <table style="width: 100%">
+        <tr>
+            <td>Nome</td>
+            <td>@item.name</td>
+        </tr>
+        <tr>
+            <td>Descri&ccedil;&atilde;o</td>
+            <td>@item.description</td>
+        </tr>
+        <tr>
+            <td>Maior lance</td>
+            <td class="highestBid">@highestBid.map(_.value).getOrElse("-")</td>
+        </tr>
+    </table>
 
-@item.imageKeys.getOrElse("").split('|').map {imageKey =>
-    <img src="@Images.generateUrl(imageKey, LargeThumb)" />
-}
+    <div>
+        @item.imageKeys.getOrElse("").split('|').map {imageKey =>
+            <img src="@Images.generateUrl(imageKey, LargeThumb)" class="img-polaroid">
+        }
+    </div>
 
-<hr />
+    <hr />
 
-Novo Lance:
-@form(routes.Items.newBid(item.id)) {
-  @inputText(bidForm("email"))
-  @inputText(bidForm("value"))
-  <input type="submit" value="Enviar">
-}
+    Novo Lance:
+    @form(routes.Items.newBid(item.id)) {
+      @inputText(bidForm("email"))
+      @inputText(bidForm("value"))
+      <input type="submit" value="Enviar">
+    }
+</div>
 
 <script type="text/javascript">
   // periodically verify for higher bids, in a closure to make this function 'local'
