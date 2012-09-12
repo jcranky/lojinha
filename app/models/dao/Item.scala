@@ -12,9 +12,12 @@ object Bid {
 }
 
 trait CategoryDAO {
-  def findById(id: Int): Option[Category]
+  def create(name: String)
 
-//  def getCategory -> implement it to find it if existing, or create a new one otherwise
+  def findById(id: Int): Option[Category]
+  def findByName(name: String): Option[Category]
+
+  def getByName(name: String): Category
 }
 
 trait ItemDAO {

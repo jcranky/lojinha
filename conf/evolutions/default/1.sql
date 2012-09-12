@@ -13,7 +13,7 @@ INSERT INTO user(email, name, passwd) VALUES('admin@lojinha.com', 'jcranky', '12
 CREATE SEQUENCE category_id_seq;
 CREATE TABLE category (
     id INTEGER NOT NULL DEFAULT nextval('category_id_seq'),
-    name varchar(255)
+    name varchar(255) UNIQUE
 );
 
 CREATE SEQUENCE item_id_seq;

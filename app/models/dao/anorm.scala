@@ -11,9 +11,24 @@ object AnormCategoryDAO extends CategoryDAO {
       case id~name => Category(id, name)
     }
   }
+  
+  def create(name: String) = DB.withConnection { implicit c =>
+    SQL("INSERT INTO category(name) VALUES({name})").on('name -> name).executeUpdate()
+  }
 
   def findById(id: Int): Option[Category] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM category WHERE id = {id}").on('id -> id).as(category singleOpt)
+  }
+
+  def findByName(name: String): Option[Category] = DB.withConnection { implicit c =>
+    SQL("SELECT * FROM category WHERE name = {name}").on('name -> name).as(category singleOpt)
+  }
+
+  def getByName(name: String): Category = DB.withConnection { implicit c =>
+    SQL("SELECT * FROM category WHERE name = {name}").on('name -> name).as(category singleOpt).getOrElse {
+      create(name)
+      getByName(name)
+    }
   }
 }
 

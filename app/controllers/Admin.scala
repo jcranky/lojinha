@@ -10,6 +10,7 @@ import models.dao._
 import views._
 
 object Admin extends Controller with Secured {
+  val categoryDAO = DAOFactory.categoryDAO
   val userDAO = DAOFactory.userDAO
   val itemDAO = DAOFactory.itemDAO
 
@@ -45,7 +46,7 @@ object Admin extends Controller with Secured {
           Images.processImage(newFile)
         }
 
-        itemDAO.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")), Category(1, "Livros"))
+        itemDAO.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")), categoryDAO.getByName("Livros"))
         Redirect(routes.Application.index)
       }
     )
