@@ -10,3 +10,4 @@ dist
 /nbproject/
 /build.xml
 /conf/secret.conf
+/RUNNING_PID
