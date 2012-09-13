@@ -23,11 +23,14 @@ object Admin extends Controller with Secured {
     )
   )
 
-  def index = isAuthenticated { username => _ =>
+  def adminHome(username: String, changePassForm: Form[(String, String, String)] = changePassForm)(implicit request: Request[AnyContent]) =
     userDAO.findByEmail(username).map { user =>
-      Ok(html.index(body = html.admin.body(), menu = html.admin.menu(), user = Some(user)))
-    }.getOrElse(Forbidden)
-  }
+      Ok(html.index(body = html.admin.body(changePassForm), menu = html.admin.menu(), user = Some(user)))
+    }.getOrElse(
+      Forbidden
+    )
+
+  def index = isAuthenticated { username => implicit request => adminHome(username) }
 
   def itemAddFormPage(form: Form[(String, String, String, List[String])] = addItemForm) =
     html.index(body = html.admin.newItemForm(form), menu = html.admin.menu())
@@ -49,6 +52,33 @@ object Admin extends Controller with Secured {
 
         itemDAO.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")), categoryDAO.getByName(itemTuple._3))
         Redirect(routes.Application.index)
+      }
+    )
+  }
+
+  val changePassForm = Form(
+    tuple(
+      "currPass" -> nonEmptyText,
+      "newPass" -> nonEmptyText,
+      "newPassRepeat" -> nonEmptyText
+    ) verifying ("new password and the repeated new password are different", fields => fields match {
+        case (currPass, newPass, newPassRepeat) => newPass == newPassRepeat
+      }
+    )
+  )
+
+  def changePass = isAuthenticated { username => implicit request =>
+    changePassForm.bindFromRequest.fold(
+      formWithErrors => {
+        adminHome(username, formWithErrors.fill("", "", ""))
+      },
+      itemTuple => {
+        userDAO.authenticate(username, itemTuple._1).map {user =>
+          userDAO.changePassword(user.email, itemTuple._2)
+          Redirect(routes.Admin.index).flashing("chgPassMsg" -> "password changed successfully")
+        }.getOrElse {
+          Redirect(routes.Admin.index).flashing("chgPassMsg" -> "current password is wrong")
+        }
       }
     )
   }

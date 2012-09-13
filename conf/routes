@@ -12,7 +12,8 @@ POST    /login                          controllers.Application.authenticate
 GET     /logout                         controllers.Application.logout
 
 # Admin / Product management
-GET     /admin                          controllers.Admin.index
+GET     /admin                          controllers.Admin.index()
+POST    /admin/changePass               controllers.Admin.changePass
 GET     /admin/items/form               controllers.Admin.newItemForm
 POST    /admin/items                    controllers.Admin.newItem
 
