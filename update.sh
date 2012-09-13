@@ -3,4 +3,4 @@
 git pull
 play clean compile stage
 sudo env PATH=$PATH play stop
-sudo ./target/start -Dhttp.port=80 -DapplyEvolutions.default=true &
+sudo -b ./target/start -Dhttp.port=80 -DapplyEvolutions.default=true
