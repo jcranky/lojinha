@@ -23,7 +23,7 @@ object Application extends Controller {
   )
 
   def login = Action { implicit request =>
-    Ok(html.login(loginForm))
+    Ok(html.index(body = html.login(loginForm)))
   }
 
   def authenticate = Action { implicit request =>
