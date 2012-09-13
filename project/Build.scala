@@ -9,7 +9,7 @@ object ApplicationBuild extends Build {
 
   val appDependencies = Seq(
     "com.amazonaws" % "aws-java-sdk" % "1.3.14",
-    "se.radley" %% "play-plugins-salat" % "1.0.6",
+    "se.radley" %% "play-plugins-salat" % "1.0.9",
     "org.mockito" % "mockito-core" % "1.9.0" % "test"
   ) map (_.withSources)
 
