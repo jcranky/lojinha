@@ -97,15 +97,15 @@ object AnormUserDAO extends UserDAO {
   }
 
   def authenticate(email: String, passwd: String): Option[User] = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM user WHERE email = {email} AND passwd = {passwd}").on('email -> email, 'passwd -> passwd).as(user singleOpt)
+    SQL("SELECT * FROM _user WHERE email = {email} AND passwd = {passwd}").on('email -> email, 'passwd -> passwd).as(user singleOpt)
   }
 
   def findByEmail(email: String): Option[User] = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM user WHERE email = {email}").on('email -> email).as(user singleOpt)
+    SQL("SELECT * FROM _user WHERE email = {email}").on('email -> email).as(user singleOpt)
   }
 
   def changePassword(email: String, newPasswd: String) = DB.withConnection { implicit c =>
-    SQL("UPDATE user set passwd = {password} WHERE email = {email}").on(
+    SQL("UPDATE _user set passwd = {password} WHERE email = {email}").on(
       'password -> newPasswd, 'email -> email).executeUpdate()
   }
 }

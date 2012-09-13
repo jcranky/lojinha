@@ -2,13 +2,13 @@
 # --- !Ups
 
 CREATE SEQUENCE user_id_seq;
-CREATE TABLE user (
+CREATE TABLE _user (
     id INTEGER NOT NULL DEFAULT nextval('user_id_seq'),
     email VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     passwd VARCHAR(255) NOT NULL
 );
-INSERT INTO user(email, name, passwd) VALUES('admin@lojinha.com', 'jcranky', '1234');
+INSERT INTO _user(email, name, passwd) VALUES('admin@lojinha.com', 'jcranky', '1234');
 
 CREATE SEQUENCE category_id_seq;
 CREATE TABLE category (
