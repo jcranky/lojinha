@@ -1,14 +1,15 @@
 package models.dao
 
+import org.joda.time.DateTime
+
 case class Category(id: Int, name: String)
-
 case class Item(id: Int, name: String, description: String, imageKeys: Option[String], cat: Category)
-
-case class Bid(id: Int, bidderEmail: String, value: BigDecimal, item: Item) extends Ordered[Bid] {
+case class Bid(id: Int, bidderEmail: String, value: BigDecimal, dateTime: DateTime, item: Item) extends Ordered[Bid] {
   def compare(otherBid: Bid) = (value - otherBid.value).toInt
 }
+
 object Bid {
-  def apply(bidderEmail: String, value: BigDecimal, item: Item): Bid = Bid(0, bidderEmail, value, item)
+  def apply(bidderEmail: String, value: BigDecimal, item: Item): Bid = Bid(0, bidderEmail, value, new DateTime, item)
 }
 
 trait CategoryDAO {

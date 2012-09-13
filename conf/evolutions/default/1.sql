@@ -30,6 +30,7 @@ CREATE TABLE bid (
     id INTEGER NOT NULL DEFAULT nextval('bid_id_seq'),
     bidder_email varchar(255) NOT NULL,
     value NUMBER(8,2),
+    dateTime TIMESTAMP NOT NULL,
     item_id INTEGER NOT NULL
 );
 

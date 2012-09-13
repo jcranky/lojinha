@@ -3,6 +3,7 @@ package models.dao
 import anorm._
 import anorm.SqlParser._
 import play.api.db.DB
+import org.joda.time.DateTime
 import play.api.Play.current
 
 object AnormCategoryDAO extends CategoryDAO {
@@ -68,14 +69,14 @@ object AnormItemDAO extends ItemDAO {
 object AnormBidDAO extends BidDAO {
   val itemDAO = DAOFactory.itemDAO
   val bid = {
-    int("id")~str("bidder_email")~get[java.math.BigDecimal]("value")~int("item_id") map {
-      case id~emailBidder~value~itemId => Bid(id, emailBidder, value, itemDAO.findById(itemId).get)
+    int("id") ~ str("bidder_email") ~ get[java.math.BigDecimal]("value") ~ date("dateTime") ~ int("item_id") map {
+      case id~emailBidder~value~dateTime~itemId => Bid(id, emailBidder, value, new DateTime(dateTime), itemDAO.findById(itemId).get)
     }
   }
 
   def create(bid: Bid) = DB.withConnection { implicit c =>
-    SQL("INSERT INTO bid(bidder_email, value, item_id) VALUES({bidderEmail}, {value}, {itemId})").on(
-      'bidderEmail -> bid.bidderEmail, 'value -> bid.value.bigDecimal, 'itemId -> bid.item.id).executeUpdate()
+    SQL("INSERT INTO bid(bidder_email, value, dateTime, item_id) VALUES({bidderEmail}, {value}, {dateTime}, {itemId})").on(
+      'bidderEmail -> bid.bidderEmail, 'value -> bid.value.bigDecimal, 'dateTime -> bid.dateTime.toDate, 'itemId -> bid.item.id).executeUpdate()
   }
 
   def all(itemId: Int): List[Bid] = DB.withConnection { implicit c =>
