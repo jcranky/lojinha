@@ -15,9 +15,9 @@
     <h2>Adicionar um novo item</h2>
 
     @form(action = routes.Admin.newItem, 'enctype -> "multipart/form-data") {
-      @inputText(itemForm("name"))
-      @inputText(itemForm("description"))
-      @inputText(itemForm("category"))
+      @inputText(itemForm("name"), '_label -> "Name: ")
+      @inputText(itemForm("description"), '_label -> "Description: ")
+      @inputText(itemForm("category"), '_label -> "Category: ")
 
       <div class="pictures">
           @repeat(itemForm("pictures"), min = 0) {picField =>
