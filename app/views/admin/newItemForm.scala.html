@@ -11,29 +11,31 @@
   }
 }
 
-<h2>Adicionar um novo item</h2>
+<div class="well">
+    <h2>Adicionar um novo item</h2>
 
-@form(action = routes.Admin.newItem, 'enctype -> "multipart/form-data") {
-  @inputText(itemForm("name"))
-  @inputText(itemForm("description"))
-  @inputText(itemForm("category"))
+    @form(action = routes.Admin.newItem, 'enctype -> "multipart/form-data") {
+      @inputText(itemForm("name"))
+      @inputText(itemForm("description"))
+      @inputText(itemForm("category"))
 
-  <div class="pictures">
-      @repeat(itemForm("pictures"), min = 0) {picField =>
-        @pictureField(picField)
-      }
-      @pictureField(itemForm("pictures[x]"), className = "picture_template")
+      <div class="pictures">
+          @repeat(itemForm("pictures"), min = 0) {picField =>
+            @pictureField(picField)
+          }
+          @pictureField(itemForm("pictures[x]"), className = "picture_template")
 
-      <div class="clearfix">
-          <div class="input">
-              <a class="addPicture btn success">Add Picture</a>
+          <div class="clearfix">
+              <div class="input">
+                  <a class="addPicture btn success">Add Picture</a>
+              </div>
           </div>
       </div>
-  </div>
 
-  @* TODO: display a confirmation message, instead of redirecting without any message *@
-  <input class="btn primary" type="submit" value="Enviar">
-}
+      @* TODO: display a confirmation message, instead of redirecting without any message *@
+      <input class="btn primary" type="submit" value="Enviar">
+    }
+</div>
 
 <script type="text/javascript" charset="utf-8">
     $('.addPicture').live('click', function(e) {
