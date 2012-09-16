@@ -2,7 +2,7 @@
 
 @import helper._
 @import helper.twitterBootstrap._
-@import models.images.LargeThumb
+@import models.images.{LargeThumb, OriginalSize}
 
 <div class="well">
     <table style="width: 100%">
@@ -22,7 +22,9 @@
 
     <div>
         @item.imageKeys.getOrElse("").split('|').map {imageKey =>
-            <img src="@Images.generateUrl(imageKey, LargeThumb)" class="img-polaroid">
+          <a href="@Images.generateUrl(imageKey, OriginalSize)">
+              <img src="@Images.generateUrl(imageKey, LargeThumb)" class="img-polaroid">
+          </a>
         }
     </div>
 
