@@ -9,7 +9,7 @@
                 <div class="pic-m-thumb">
                     @item.imageKeys.map {imageKeys => <img src="@Images.generateUrl(imageKeys.split('|').head, MediumThumb)" class="img-polaroid">}
                 </div>
-                <p>@item.name - @item.description</p>
+                <p>@item.name<br>@item.description</p>
             </a>
         </li>
         }
