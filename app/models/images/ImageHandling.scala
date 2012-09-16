@@ -4,6 +4,7 @@ import java.awt.AlphaComposite
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
+import models.Images
 
 class ImageThumber(image: File, imageKey: String) {
   def generateThumbs(): List[(File, String)] = ImageThumber.sizes map generateThumb
@@ -13,7 +14,7 @@ class ImageThumber(image: File, imageKey: String) {
     val height = imageBuf.getHeight
     val width = imageBuf.getWidth
 
-    val imageName = imageKey + "-" + thumbSize.suffix + ".png"
+    val imageName = Images.imageName(imageKey, thumbSize)
 
     if (width <= thumbSize.width && height <= thumbSize.height)
       (image, imageName)

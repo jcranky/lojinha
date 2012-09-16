@@ -30,10 +30,13 @@ class Images(system: ActorSystem) {
     imageKey
   }
 
-  def generateUrl(imageKey: String, thumbSize: ThumbSize): String = {
-    val bucket = current.configuration.getString("aws.s3.bucket").get
-    "https://s3.amazonaws.com/%s/%s%s.png".format(bucket, imageKey, thumbSize.suffix)
-  }
+  def generateUrl(imageKey: String, thumbSize: ThumbSize): String =
+    "https://s3.amazonaws.com/%s/%s".format(
+      current.configuration.getString("aws.s3.bucket").get,
+      imageName(imageKey, thumbSize)
+    )
+
+  def imageName(imageKey: String, thumbSize: ThumbSize): String = imageKey + thumbSize.suffix + ".png"
 }
 
 class ImageThumberActor extends Actor with ActorLogging {
