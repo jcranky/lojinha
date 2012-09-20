@@ -16,7 +16,7 @@ class Images(system: ActorSystem) {
   val thumberRouter =
     system.actorOf(Props[ImageThumberActor].withRouter(SmallestMailboxRouter(5)), "thumber-router")
   val s3SenderRouter =
-    system.actorOf(Props[S3SenderActor].withRouter(SmallestMailboxRouter(2)), "s3-sender-router")
+    system.actorOf(Props[S3SenderActor].withRouter(SmallestMailboxRouter(4)), "s3-sender-router")
 
   /**
    * Generates a key for the image and returns it immediatelly, while sending the
