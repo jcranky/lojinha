@@ -11,7 +11,6 @@ import views._
 
 object Admin extends Controller with Secured {
   val categoryDAO = DAOFactory.categoryDAO
-  val userDAO = DAOFactory.userDAO
   val itemDAO = DAOFactory.itemDAO
 
   val addItemForm = Form(
@@ -23,9 +22,9 @@ object Admin extends Controller with Secured {
     )
   )
 
-  def adminHome(username: String, changePassForm: Form[(String, String, String)] = changePassForm)(implicit request: Request[AnyContent]) =
-    userDAO.findByEmail(username).map { user =>
-      Ok(html.index(body = html.admin.body(changePassForm), menu = html.admin.menu(), user = Some(user)))
+  def adminHome(user: Option[User], changePassForm: Form[(String, String, String)] = changePassForm)(implicit request: Request[AnyContent]) =
+    user.map { u =>
+      Ok(html.index(body = html.admin.body(changePassForm), menu = html.admin.menu(), user = Some(u)))
     }.getOrElse(
       Forbidden
     )
