@@ -18,12 +18,12 @@
             <td>Maior lance</td>
             <td class="highestBid">@highestBid.map(_.value).getOrElse("-")</td>
         </tr>
-        
+
         @request.session.get("email").map { username =>
           <tr>
               <td>
                 @form(routes.Admin.itemSold(item.id)) {
-                  <input type="submit" value="Marcar como vendido!">
+                  <input type="submit" id="soldButton" value="Marcar como vendido!">
                 }
               </td>
           </tr>
