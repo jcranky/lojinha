@@ -55,8 +55,8 @@ object Admin extends Controller with Secured {
     )
   }
 
-  def itemSold(id: Int) = isAuthenticated { username =>
-    TODO
+  def itemSold(id: Int) = isAuthenticated { username => implicit request =>
+    itemDAO.sell(id).map(item => Ok(Items.itemDetailsPage(item))).getOrElse(NotFound)
   }
 
   // user management

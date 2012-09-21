@@ -20,13 +20,15 @@
         </tr>
 
         @request.session.get("email").map { username =>
-          <tr>
-              <td>
-                @form(routes.Admin.itemSold(item.id)) {
-                  <input type="submit" id="soldButton" value="Marcar como vendido!">
-                }
-              </td>
-          </tr>
+          @if(!item.sold) {
+            <tr>
+                <td>
+                  @form(routes.Admin.itemSold(item.id)) {
+                    <input type="submit" id="soldButton" value="Marcar como vendido!">
+                  }
+                </td>
+            </tr>
+          }
         }
     </table>
 
@@ -40,11 +42,13 @@
 
     <hr />
 
-    @form(routes.Items.newBid(item.id)) {
-      <legend>Novo Lance:</legend>
-      @inputText(bidForm("email"))
-      @inputText(bidForm("value"))
-      <input type="submit" value="Enviar">
+    @if(!item.sold) {
+        @form(routes.Items.newBid(item.id), args = 'id -> "newBidForm") {
+          <legend>Novo Lance:</legend>
+          @inputText(bidForm("email"))
+          @inputText(bidForm("value"))
+          <input type="submit" value="Enviar">
+        }
     }
 </div>
 

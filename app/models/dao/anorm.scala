@@ -41,14 +41,19 @@ object AnormItemDAO extends ItemDAO {
   val categoryDAO = DAOFactory.categoryDAO
 
   val item = {
-    int("id") ~ str("name") ~ str("description") ~ get[Option[String]]("imageKeys") ~ int("category_id") map {
-      case id~name~description~picturePath~catId => Item(id, name, description, picturePath, categoryDAO.findById(catId).get)
+    int("id") ~ str("name") ~ str("description") ~ get[Option[String]]("imageKeys") ~ int("category_id") ~ bool("sold") map {
+      case id~name~description~picturePath~catId~sold => Item(id, name, description, picturePath, categoryDAO.findById(catId).get, sold)
     }
   }
 
   def create(name: String, description: String, imageKeys: Option[String], cat: Category) = DB.withConnection { implicit c =>
     SQL("INSERT INTO item(name, description, imageKeys, category_id) VALUES({name}, {description}, {imageKeys}, {catId})").on(
       'name -> name, 'description -> description, 'imageKeys -> imageKeys, 'catId -> cat.id).executeUpdate()
+  }
+
+  def sell(id: Int): Option[Item] = DB.withConnection { implicit c =>
+    SQL("UPDATE item SET sold = true WHERE id = {id}").on('id -> id).executeUpdate()
+    findById(id)
   }
 
   def findById(id: Int): Option[Item] = DB.withConnection { implicit c =>

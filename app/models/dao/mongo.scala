@@ -23,14 +23,16 @@ object Sequence {
 object MongoItemDAO extends ItemDAO {
   val dao = new SalatDAO[Item, Int](collection = mongoCollection("items")) {}
 
+  def create(name: String, description: String, imageKeys: Option[String], cat: Category) =
+    dao.insert(Item(Sequence.nextIntFor("items"), name, description, imageKeys, cat))
+
+  def sell(id: Int): Option[Item] = throw new UnsupportedOperationException("not implemented!!")
+
   def findById(id: Int): Option[Item] = dao.findOne(MongoDBObject("_id" -> id))
 
   def all(): List[Item] = dao.find(MongoDBObject.empty).toList
 
   def all(cat: Category): List[Item] = dao.find(MongoDBObject("category" -> cat)).toList
-
-  def create(name: String, description: String, imageKeys: Option[String], cat: Category) =
-    dao.insert(Item(Sequence.nextIntFor("items"), name, description, imageKeys, cat))
 
   def delete(id: Long) = {}
 }
