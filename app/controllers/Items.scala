@@ -6,10 +6,10 @@ import play.api.data.Forms._
 import play.api.mvc._
 
 import models.BidHelper
-import models.dao.{Item, DAOFactory}
+import models.dao.{DAOFactory, Item, User}
 import views._
 
-object Items extends Controller {
+object Items extends Controller with Secured {
   val categoryDAO = DAOFactory.categoryDAO
   val itemDAO = DAOFactory.itemDAO
   val bidDAO = DAOFactory.bidDAO
@@ -21,8 +21,11 @@ object Items extends Controller {
     )
   )
 
-  def itemDetailsPage(item: Item, form: Form[(String, Int)] = bidForm) =
-    html.index(body = html.itemDetails(item, bidDAO.highest(item.id), form))
+  def itemDetailsPage(item: Item, form: Form[(String, Int)] = bidForm)(implicit request: Request[AnyContent]) = {
+    val user: Option[User] = request.session.get("email").map(emailToUser(_).get)
+
+    html.index(body = html.itemDetails(item, bidDAO.highest(item.id), form), user = user)
+  }
 
   def newBid(itemId: Int) = Action { implicit request =>
     itemDAO.findById(itemId) match {
@@ -39,7 +42,7 @@ object Items extends Controller {
     }
   }
 
-  def details(itemId: Int) = Action {
+  def details(itemId: Int) = Action { implicit request =>
     itemDAO.findById(itemId) match {
       case Some(item) => Ok(itemDetailsPage(item))
       case None => NotFound("that product doesn't exist!")  //TODO: create a nice 404 page
