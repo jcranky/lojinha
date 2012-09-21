@@ -3,15 +3,16 @@
 
 <div class="well">
     <ul class="unstyled">
-        @items.map {item =>
-        <li class="item-li">
+        @items.map { item =>
+          <li class='item-li @{if(item.sold) "sold-item-li"}'>
             <a href="@routes.Items.details(item.id)">
                 <div class="pic-m-thumb">
                     @item.imageKeys.map {imageKeys => <img src="@Images.generateUrl(imageKeys.split('|').head, MediumThumb)" class="img-polaroid">}
                 </div>
                 <p>@item.name<br>@item.description</p>
+                @if(item.sold) {<p class="text-error"><strong>Vendido!</strong></p>}
             </a>
-        </li>
+          </li>
         }
     </ul>
 </div>

@@ -42,13 +42,15 @@
 
     <hr />
 
-    @if(!item.sold) {
-        @form(routes.Items.newBid(item.id), args = 'id -> "newBidForm") {
-          <legend>Novo Lance:</legend>
-          @inputText(bidForm("email"))
-          @inputText(bidForm("value"))
-          <input type="submit" value="Enviar">
-        }
+    @if(item.sold) {
+      <p class="text-warning">Vendido!</p>
+    } else {
+      @form(routes.Items.newBid(item.id), args = 'id -> "newBidForm") {
+        <legend>Novo Lance:</legend>
+        @inputText(bidForm("email"))
+        @inputText(bidForm("value"))
+        <input type="submit" value="Enviar">
+      }
     }
 </div>
 
