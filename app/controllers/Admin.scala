@@ -29,7 +29,7 @@ object Admin extends Controller with Secured {
       Forbidden
     )
 
-  def index = isAuthenticated { username => implicit request => adminHome(username) }
+  def index = IsAuthenticated { username => implicit request => adminHome(username) }
 
   def itemAddFormPage(form: Form[(String, String, String, List[String])] = addItemForm) =
     html.index(body = html.admin.newItemForm(form), menu = html.admin.menu())
@@ -55,7 +55,7 @@ object Admin extends Controller with Secured {
     )
   }
 
-  def itemSold(id: Int) = isAuthenticated { username => implicit request =>
+  def itemSold(id: Int) = IsAuthenticated { username => implicit request =>
     itemDAO.sell(id).map(item => Ok(Items.itemDetailsPage(item))).getOrElse(NotFound)
   }
 
@@ -72,7 +72,7 @@ object Admin extends Controller with Secured {
     )
   )
 
-  def changePass = isAuthenticated { username => implicit request =>
+  def changePass = IsAuthenticated { username => implicit request =>
     changePassForm.bindFromRequest.fold(
       formWithErrors => {
         adminHome(username, formWithErrors.fill("", "", ""))

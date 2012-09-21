@@ -10,7 +10,7 @@ trait Secured {
 
   private def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Application.login)
 
-  def isAuthenticated(f: => String => Request[AnyContent] => Result) = Security.Authenticated(username, onUnauthorized) { user =>
+  def IsAuthenticated(f: => String => Request[AnyContent] => Result) = Security.Authenticated(username, onUnauthorized) { user =>
     Action(request => f(user)(request))
   }
 
