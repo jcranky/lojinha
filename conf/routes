@@ -16,6 +16,7 @@ GET     /admin                          controllers.Admin.index()
 POST    /admin/changePass               controllers.Admin.changePass
 GET     /admin/items/form               controllers.Admin.newItemForm
 POST    /admin/items                    controllers.Admin.newItem
+POST    /admin/items/:id/sold           controllers.Admin.itemSold(id: Int)
 
 # public stuff
 GET     /items/:id                      controllers.Items.details(id: Int)

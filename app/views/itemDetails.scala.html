@@ -1,4 +1,4 @@
-@(item: Item, highestBid: Option[Bid], bidForm: Form[(String, Int)])
+@(item: Item, highestBid: Option[Bid], bidForm: Form[(String, Int)])(implicit request: Request[AnyContent])
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -18,6 +18,16 @@
             <td>Maior lance</td>
             <td class="highestBid">@highestBid.map(_.value).getOrElse("-")</td>
         </tr>
+        
+        @request.session.get("email").map { username =>
+          <tr>
+              <td>
+                @form(routes.Admin.itemSold(item.id)) {
+                  <input type="submit" value="Marcar como vendido!">
+                }
+              </td>
+          </tr>
+        }
     </table>
 
     <div>

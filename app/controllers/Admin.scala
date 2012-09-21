@@ -55,6 +55,12 @@ object Admin extends Controller with Secured {
     )
   }
 
+  def itemSold(id: Int) = isAuthenticated { username =>
+    TODO
+  }
+
+  // user management
+
   val changePassForm = Form(
     tuple(
       "currPass" -> nonEmptyText,
