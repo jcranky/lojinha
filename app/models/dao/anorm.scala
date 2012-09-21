@@ -61,11 +61,11 @@ object AnormItemDAO extends ItemDAO {
   }
 
   def all(): List[Item] = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM item").as(item *)
+    SQL("SELECT * FROM item ORDER BY sold").as(item *)
   }
 
   def all(cat: Category): List[Item] = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM item WHERE category_id = {catId}").on('catId -> cat.id).as(item *)
+    SQL("SELECT * FROM item WHERE category_id = {catId} ORDER BY sold").on('catId -> cat.id).as(item *)
   }
 
   def delete(id: Long) = throw new UnsupportedOperationException("not implemented yet")
