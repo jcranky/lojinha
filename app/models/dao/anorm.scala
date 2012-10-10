@@ -57,18 +57,20 @@ object AnormItemDAO extends ItemDAO {
   }
 
   def findById(id: Int): Option[Item] = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM item WHERE id = {id}").on('id -> id).as(item singleOpt)
+    SQL("SELECT * FROM item WHERE id = {id} AND deleted = false").on('id -> id).as(item singleOpt)
   }
 
   def all(): List[Item] = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM item ORDER BY sold").as(item *)
+    SQL("SELECT * FROM item WHERE deleted = false ORDER BY sold").as(item *)
   }
 
   def all(cat: Category): List[Item] = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM item WHERE category_id = {catId} ORDER BY sold").on('catId -> cat.id).as(item *)
+    SQL("SELECT * FROM item WHERE category_id = {catId} AND deleted = false ORDER BY sold").on('catId -> cat.id).as(item *)
   }
 
-  def delete(id: Long) = throw new UnsupportedOperationException("not implemented yet")
+  def delete(id: Long): Unit = DB.withConnection { implicit c =>
+    SQL("UPDATE item SET deleted = true WHERE id = {id}").on('id -> id).executeUpdate()
+  }
 }
 
 object AnormBidDAO extends BidDAO {

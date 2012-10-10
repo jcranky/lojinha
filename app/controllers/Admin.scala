@@ -59,6 +59,11 @@ object Admin extends Controller with Secured {
     itemDAO.sell(id).map(item => Ok(Items.itemDetailsPage(item))).getOrElse(NotFound)
   }
 
+  def deleteItem(id: Int) = IsAuthenticated { username => implicit request =>
+    itemDAO.delete(id)
+    adminHome(username)
+  }
+
   // user management
 
   val changePassForm = Form(
