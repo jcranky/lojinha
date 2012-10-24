@@ -3,10 +3,12 @@ package controllers
 import play.api._
 import play.api.data._
 import play.api.data.Forms._
+import play.api.i18n.Lang
 import play.api.mvc._
 
 import models._
 import models.dao._
+import play.api.templates.Html
 import views._
 
 object Application extends Controller {
@@ -43,7 +45,17 @@ object Application extends Controller {
     Ok(html.index(body = html.body(itemDAO.all())))
   }
 
-  def about = Action {
-    Ok(html.index(body = html.about()))
+  def about = Action { implicit request =>
+    def findPage(l: Lang) = l match {
+      case Lang(language, _) if language == "pt" => Some(html.index(body = html.about()))
+      case Lang(language, _) if language == "en" => Some(html.index(body = html.about_en()))
+      case _ => None
+    }
+    def findLang(langs: List[Lang]): Html = langs match {
+      case Nil => html.index(body = html.about())
+      case head :: tail => findPage(head).getOrElse(findLang(tail))
+    }
+
+    Ok(findLang(request.acceptLanguages.toList))
   }
 }
