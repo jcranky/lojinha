@@ -26,9 +26,9 @@ object AnormCategoryDAO extends CategoryDAO {
   }
 
   def getByName(name: String): Category = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM category WHERE name = {name}").on('name -> name).as(category singleOpt).getOrElse {
+    findByName(name).getOrElse {
       create(name)
-      getByName(name)
+      findByName(name).get
     }
   }
 

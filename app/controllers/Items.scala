@@ -58,6 +58,8 @@ object Items extends Controller with Secured {
   }
 
   def list(category: String) = Action { implicit request =>
-    Ok(html.index(body = html.body(itemDAO.all(categoryDAO.getByName(category))), menu = Application.mainMenu))
+    categoryDAO.findByName(category).map { c =>
+      Ok(html.index(body = html.body(itemDAO.all(c)), menu = Application.mainMenu))
+    } getOrElse Redirect("/")
   }
 }
