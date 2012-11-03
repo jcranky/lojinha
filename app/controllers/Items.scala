@@ -24,7 +24,8 @@ object Items extends Controller with Secured {
   def itemDetailsPage(item: Item, form: Form[(String, Int)] = bidForm)(implicit request: Request[AnyContent]) = {
     val user: Option[User] = request.session.get("email").map(emailToUser(_).get)
 
-    html.index(body = html.itemDetails(item, bidDAO.highest(item.id), form), user = user)
+    html.index(body = html.itemDetails(item, bidDAO.highest(item.id), form),
+               menu = Application.mainMenu, user = user)
   }
 
   def newBid(itemId: Int) = Action { implicit request =>
@@ -56,7 +57,7 @@ object Items extends Controller with Secured {
     }
   }
 
-  def list(category: String) = Action {
-    Ok(html.index(body = html.body(itemDAO.all(categoryDAO.getByName(category)))))
+  def list(category: String) = Action { implicit request =>
+    Ok(html.index(body = html.body(itemDAO.all(categoryDAO.getByName(category))), menu = Application.mainMenu))
   }
 }

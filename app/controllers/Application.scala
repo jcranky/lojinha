@@ -12,6 +12,9 @@ import play.api.templates.Html
 import views._
 
 object Application extends Controller {
+  def mainMenu(implicit request: Request[AnyContent]) = html.menu(categoryDAO.all())
+
+  val categoryDAO = DAOFactory.categoryDAO
   val userDAO = DAOFactory.userDAO
   val itemDAO = DAOFactory.itemDAO
 
@@ -25,12 +28,12 @@ object Application extends Controller {
   )
 
   def login = Action { implicit request =>
-    Ok(html.index(body = html.login(loginForm)))
+    Ok(html.index(body = html.login(loginForm), menu = mainMenu))
   }
 
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(html.index(body = html.login(formWithErrors))),
+      formWithErrors => BadRequest(html.index(body = html.login(formWithErrors), menu = mainMenu)),
       user => Redirect(routes.Admin.index).withSession("email" -> user._1)
     )
   }
@@ -41,18 +44,18 @@ object Application extends Controller {
     )
   }
 
-  def index = Action {
-    Ok(html.index(body = html.body(itemDAO.all())))
+  def index = Action { implicit request =>
+    Ok(html.index(body = html.body(itemDAO.all()), menu = mainMenu))
   }
 
   def about = Action { implicit request =>
     def findPage(l: Lang) = l match {
-      case Lang(language, _) if language == "pt" => Some(html.index(body = html.about()))
-      case Lang(language, _) if language == "en" => Some(html.index(body = html.about_en()))
+      case Lang(language, _) if language == "pt" => Some(html.index(body = html.about(), menu = mainMenu))
+      case Lang(language, _) if language == "en" => Some(html.index(body = html.about_en(), menu = mainMenu))
       case _ => None
     }
     def findLang(langs: List[Lang]): Html = langs match {
-      case Nil => html.index(body = html.about())
+      case Nil => html.index(body = html.about(), menu = mainMenu)
       case head :: tail => findPage(head).getOrElse(findLang(tail))
     }
 
