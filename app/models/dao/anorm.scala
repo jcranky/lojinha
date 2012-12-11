@@ -33,7 +33,7 @@ object AnormCategoryDAO extends CategoryDAO {
   }
 
   def all(): List[Category] = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM category").as(category *)
+    SQL("SELECT * FROM category ORDER BY name").as(category *)
   }
 }
 
