@@ -30,9 +30,9 @@ trait ItemDAO {
 
   def findById(id: Int): Option[Item]
 
-  def all(): List[Item]
+  def all(sold: Boolean): List[Item]
 
-  def all(cat: Category): List[Item]
+  def all(cat: Category, sold: Boolean): List[Item]
 
   def delete(id: Long)
 }

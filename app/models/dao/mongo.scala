@@ -30,9 +30,9 @@ object MongoItemDAO extends ItemDAO {
 
   def findById(id: Int): Option[Item] = dao.findOne(MongoDBObject("_id" -> id))
 
-  def all(): List[Item] = dao.find(MongoDBObject.empty).toList
+  def all(sold: Boolean): List[Item] = dao.find(MongoDBObject("sold" -> sold)).toList
 
-  def all(cat: Category): List[Item] = dao.find(MongoDBObject("category" -> cat)).toList
+  def all(cat: Category, sold: Boolean): List[Item] = dao.find(MongoDBObject("category" -> cat, "sold" -> sold)).toList
 
   def delete(id: Long) = {}
 }

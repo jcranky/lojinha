@@ -60,12 +60,12 @@ object AnormItemDAO extends ItemDAO {
     SQL("SELECT * FROM item WHERE id = {id} AND deleted = false").on('id -> id).as(item singleOpt)
   }
 
-  def all(): List[Item] = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM item WHERE deleted = false ORDER BY sold").as(item *)
+  def all(sold: Boolean): List[Item] = DB.withConnection { implicit c =>
+    SQL("SELECT * FROM item WHERE deleted = false AND sold = {sold}").on('sold -> sold).as(item *)
   }
 
-  def all(cat: Category): List[Item] = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM item WHERE category_id = {catId} AND deleted = false ORDER BY sold").on('catId -> cat.id).as(item *)
+  def all(cat: Category, sold: Boolean): List[Item] = DB.withConnection { implicit c =>
+    SQL("SELECT * FROM item WHERE category_id = {catId} AND deleted = false AND sold = {sold}").on('catId -> cat.id, 'sold -> sold).as(item *)
   }
 
   def delete(id: Long): Unit = DB.withConnection { implicit c =>

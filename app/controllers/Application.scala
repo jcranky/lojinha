@@ -45,7 +45,7 @@ object Application extends Controller {
   }
 
   def index = Action { implicit request =>
-    Ok(html.index(body = html.body(itemDAO.all()), menu = mainMenu))
+    Ok(html.index(body = html.body(itemDAO.all(false)), menu = mainMenu))
   }
 
   def about = Action { implicit request =>

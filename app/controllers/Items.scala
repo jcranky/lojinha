@@ -57,9 +57,18 @@ object Items extends Controller with Secured {
     }
   }
 
-  def list(category: String) = Action { implicit request =>
-    categoryDAO.findByName(category).map { c =>
-      Ok(html.index(body = html.body(itemDAO.all(c)), menu = Application.mainMenu))
-    } getOrElse Redirect("/")
+  def list = l(sold = false)
+  def listSold = l(sold = true)
+
+  def listCat(cat: String) = l(Some(cat), false)
+  def listCatSold(cat: String) = l(Some(cat), true)
+
+  def l(category: Option[String] = None, sold: Boolean) = Action { implicit request =>
+    category.map{ cat => categoryDAO.findByName(cat).map { c =>
+        Ok(html.index(body = html.body(itemDAO.all(c, sold)), menu = Application.mainMenu))
+      } getOrElse Redirect("/")
+    } getOrElse {
+      Ok(html.index(body = html.body(itemDAO.all(sold)), menu = Application.mainMenu))
+    }
   }
 }
