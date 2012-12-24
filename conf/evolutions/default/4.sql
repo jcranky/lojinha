@@ -1,0 +1,6 @@
+
+# --- !Ups
+ALTER TABLE item ADD COLUMN created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+# --- !Downs
+ALTER TABLE item DROP COLUMN created_date;
