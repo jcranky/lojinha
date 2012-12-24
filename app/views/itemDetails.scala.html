@@ -52,8 +52,8 @@
     } else {
       @form(routes.Items.newBid(item.id), args = 'id -> "newBidForm") {
         <legend>Novo Lance:</legend>
-        @inputText(bidForm("email"))
-        @inputText(bidForm("value"))
+        @inputText(bidForm("email"), '_label -> "e-mail")
+        @inputText(bidForm("value"), '_label -> "valor")
         <input type="submit" value="Enviar">
       }
     }
