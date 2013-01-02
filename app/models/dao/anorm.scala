@@ -8,32 +8,34 @@ import play.api.Play.current
 
 object AnormCategoryDAO extends CategoryDAO {
   val category = {
-    int("id") ~ str("name") map {
-      case id~name => Category(id, name)
+    int("id") ~ str("display_name") ~ str("url_name") map {
+      case id~displayName~urlName => Category(id, displayName, urlName)
     }
   }
 
-  def create(name: String) = DB.withConnection { implicit c =>
-    SQL("INSERT INTO category(name) VALUES({name})").on('name -> name).executeUpdate()
+  def create(displayName: String, urlName: String) = DB.withConnection { implicit c =>
+    SQL("INSERT INTO category(display_name, url_name) VALUES({displayName}, {urlName})").on(
+      'displayName -> displayName, 'urlName -> urlName).executeUpdate()
   }
 
   def findById(id: Int): Option[Category] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM category WHERE id = {id}").on('id -> id).as(category singleOpt)
   }
 
-  def findByName(name: String): Option[Category] = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM category WHERE name = {name}").on('name -> name).as(category singleOpt)
+  def findByName(urlName: String): Option[Category] = DB.withConnection { implicit c =>
+    SQL("SELECT * FROM category WHERE url_name = {urlName}").on('urlName -> urlName).as(category singleOpt)
   }
 
+  //TODO: remove this method, implicit creation will not be allowed anymore
   def getByName(name: String): Category = DB.withConnection { implicit c =>
     findByName(name).getOrElse {
-      create(name)
+      create(name, name)
       findByName(name).get
     }
   }
 
   def all(): List[Category] = DB.withConnection { implicit c =>
-    SQL("SELECT * FROM category ORDER BY name").as(category *)
+    SQL("SELECT * FROM category ORDER BY display_name").as(category *)
   }
 }
 

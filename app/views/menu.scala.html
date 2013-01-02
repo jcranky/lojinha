@@ -5,7 +5,7 @@
         <li class="nav-header">@Messages("menu.categories")</li>
         <li><a href="@routes.Application.index">@Messages("menu.all")</a></li>
         @categories.map{ cat =>
-            <li><a href="@routes.Items.listCat(cat.name)">@cat.name</a></li>
+            <li><a href="@routes.Items.listCat(cat.urlName)">@cat.displayName</a></li>
         }
     </ul>
 </div>

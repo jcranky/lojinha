@@ -2,7 +2,7 @@ package models.dao
 
 import org.joda.time.DateTime
 
-case class Category(id: Int, name: String)
+case class Category(id: Int, displayName: String, urlName: String)
 case class Item(id: Int, name: String, description: String, imageKeys: Option[String], cat: Category, sold: Boolean = false)
 case class Bid(id: Int, bidderEmail: String, value: BigDecimal, dateTime: DateTime, item: Item) extends Ordered[Bid] {
   def compare(otherBid: Bid) = (value - otherBid.value).toInt
@@ -13,7 +13,7 @@ object Bid {
 }
 
 trait CategoryDAO {
-  def create(name: String)
+  def create(displayName: String, urlName: String)
 
   def findById(id: Int): Option[Category]
   def findByName(name: String): Option[Category]
