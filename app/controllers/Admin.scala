@@ -22,6 +22,13 @@ object Admin extends Controller with Secured {
     )
   )
 
+  val catForm = Form(
+    tuple(
+      "displayName" -> nonEmptyText,
+      "urlName" -> nonEmptyText
+    )
+  )
+
   def adminHome(user: Option[User], changePassForm: Form[(String, String, String)] = changePassForm)(implicit request: Request[AnyContent]) =
     user.map { u =>
       Ok(html.index(body = html.admin.body(changePassForm), menu = html.admin.menu(), user = Some(u)))
@@ -50,6 +57,23 @@ object Admin extends Controller with Secured {
         }
 
         itemDAO.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")), categoryDAO.getByName(itemTuple._3))
+        Redirect(routes.Application.index)
+      }
+    )
+  }
+
+  def categoryFormPage(form: Form[(String, String)] = catForm) =
+    html.index(body = html.admin.newCategoryForm(form), menu = html.admin.menu())
+
+  def newCategoryForm = Action {
+    Ok(categoryFormPage())
+  }
+
+  def newCategory = Action { implicit request =>
+    catForm.bindFromRequest.fold(
+      formWithErrors => BadRequest(categoryFormPage(formWithErrors)),
+      catTuple => {
+        categoryDAO.create(catTuple._1, catTuple._2)
         Redirect(routes.Application.index)
       }
     )
