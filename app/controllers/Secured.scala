@@ -3,7 +3,7 @@ package controllers
 import models.dao.{DAOFactory, User}
 import play.api.mvc._
 
-trait Secured {
+trait Secured extends Controller {
   val userDAO = DAOFactory.userDAO
 
   private def username(request: RequestHeader) = request.session.get("email")
@@ -12,6 +12,10 @@ trait Secured {
 
   def IsAuthenticated(f: => String => Request[AnyContent] => Result) = Security.Authenticated(username, onUnauthorized) { user =>
     Action(request => f(user)(request))
+  }
+
+  def IsAuthenticatedMultipart(f: => String => Request[play.api.mvc.MultipartFormData[play.api.libs.Files.TemporaryFile]] => Result) = Security.Authenticated(username, onUnauthorized) { user =>
+    Action(parse.multipartFormData) { request => f(user)(request) }
   }
 
   implicit def emailToUser(email: String): Option[User] = userDAO.findByEmail(email)

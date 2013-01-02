@@ -1,94 +1,17 @@
 package controllers
 
-import java.io.File
 import play.api.data._
 import play.api.data.Forms._
 import play.api.mvc._
 
+import controllers.admin._
 import models._
 import models.dao._
 import views._
 
-object Admin extends Controller with Secured {
+object Admin extends Controller with Secured with CategoryAdmin with ItemAdmin {
   val categoryDAO = DAOFactory.categoryDAO
   val itemDAO = DAOFactory.itemDAO
-
-  val addItemForm = Form(
-    tuple(
-      "name" -> nonEmptyText,
-      "description" -> nonEmptyText,
-      "category" -> nonEmptyText,
-      "pictures" -> list(text)
-    )
-  )
-
-  val catForm = Form(
-    tuple(
-      "displayName" -> nonEmptyText,
-      "urlName" -> nonEmptyText
-    )
-  )
-
-  def adminHome(user: Option[User], changePassForm: Form[(String, String, String)] = changePassForm)(implicit request: Request[AnyContent]) =
-    user.map { u =>
-      Ok(html.index(body = html.admin.body(changePassForm), menu = html.admin.menu(), user = Some(u)))
-    }.getOrElse(
-      Forbidden
-    )
-
-  def index = IsAuthenticated { username => implicit request => adminHome(username) }
-
-  def itemAddFormPage(form: Form[(String, String, String, List[String])] = addItemForm) =
-    html.index(body = html.admin.newItemForm(form), menu = html.admin.menu())
-
-  def newItemForm = Action {
-    Ok(itemAddFormPage())
-  }
-
-  def newItem = Action(parse.multipartFormData) { implicit request =>
-    addItemForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(itemAddFormPage(formWithErrors)),
-      itemTuple => {
-        val pictureKeys = request.body.files map {filePart =>
-          val newFile = File.createTempFile("temp-uploaded-", filePart.filename)
-          filePart.ref.moveTo(newFile, true)
-
-          Images.processImage(newFile)
-        }
-
-        itemDAO.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")), categoryDAO.getByName(itemTuple._3))
-        Redirect(routes.Application.index)
-      }
-    )
-  }
-
-  def categoryFormPage(form: Form[(String, String)] = catForm) =
-    html.index(body = html.admin.newCategoryForm(form), menu = html.admin.menu())
-
-  def newCategoryForm = Action {
-    Ok(categoryFormPage())
-  }
-
-  def newCategory = Action { implicit request =>
-    catForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(categoryFormPage(formWithErrors)),
-      catTuple => {
-        categoryDAO.create(catTuple._1, catTuple._2)
-        Redirect(routes.Application.index)
-      }
-    )
-  }
-
-  def itemSold(id: Int) = IsAuthenticated { username => implicit request =>
-    itemDAO.sell(id).map(item => Ok(Items.itemDetailsPage(item))).getOrElse(NotFound)
-  }
-
-  def deleteItem(id: Int) = IsAuthenticated { username => implicit request =>
-    itemDAO.delete(id)
-    adminHome(username)
-  }
-
-  // user management
 
   val changePassForm = Form(
     tuple(
@@ -100,6 +23,15 @@ object Admin extends Controller with Secured {
       }
     )
   )
+
+  def adminHome(user: Option[User], changePassForm: Form[(String, String, String)] = changePassForm)(implicit request: Request[AnyContent]) =
+    user.map { u =>
+      Ok(html.index(body = html.admin.body(changePassForm), menu = html.admin.menu(), user = Some(u)))
+    }.getOrElse(
+      Forbidden
+    )
+
+  def index = IsAuthenticated { username => implicit request => adminHome(username) }
 
   def changePass = IsAuthenticated { username => implicit request =>
     changePassForm.bindFromRequest.fold(
