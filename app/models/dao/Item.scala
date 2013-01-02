@@ -18,8 +18,6 @@ trait CategoryDAO {
   def findById(id: Int): Option[Category]
   def findByName(name: String): Option[Category]
 
-  def getByName(name: String): Category
-
   def all(): List[Category]
 }
 

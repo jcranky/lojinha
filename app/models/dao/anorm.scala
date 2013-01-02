@@ -26,14 +26,6 @@ object AnormCategoryDAO extends CategoryDAO {
     SQL("SELECT * FROM category WHERE url_name = {urlName}").on('urlName -> urlName).as(category singleOpt)
   }
 
-  //TODO: remove this method, implicit creation will not be allowed anymore
-  def getByName(name: String): Category = DB.withConnection { implicit c =>
-    findByName(name).getOrElse {
-      create(name, name)
-      findByName(name).get
-    }
-  }
-
   def all(): List[Category] = DB.withConnection { implicit c =>
     SQL("SELECT * FROM category ORDER BY display_name").as(category *)
   }

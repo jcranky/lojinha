@@ -24,7 +24,8 @@ trait ItemAdmin extends Controller with Secured {
   )
 
   def itemAddFormPage(form: Form[(String, String, String, List[String])] = addItemForm) =
-    html.index(body = html.admin.newItemForm(form), menu = html.admin.menu())
+    html.index(body = html.admin.newItemForm(form, categoryDAO.all.map(c => c.urlName -> c.displayName)),
+               menu = html.admin.menu())
 
   def newItemForm = IsAuthenticated { username => implicit request =>
     Ok(itemAddFormPage())
@@ -41,7 +42,7 @@ trait ItemAdmin extends Controller with Secured {
           Images.processImage(newFile)
         }
 
-        itemDAO.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")), categoryDAO.getByName(itemTuple._3))
+        itemDAO.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")), categoryDAO.findByName(itemTuple._3).get)
         Redirect(routes.Application.index)
       }
     )
