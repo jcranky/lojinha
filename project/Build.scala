@@ -8,7 +8,7 @@ object ApplicationBuild extends Build {
   val appVersion      = "1.0-SNAPSHOT"
 
   val appDependencies = Seq(
-    "com.amazonaws" % "aws-java-sdk" % "1.3.14",
+    "com.amazonaws" % "aws-java-sdk" % "1.3.27",
     "postgresql" % "postgresql" % "9.1-901.jdbc4" % "runtime",
     "org.mockito" % "mockito-core" % "1.9.0" % "test"
   ) map (_.withSources)
