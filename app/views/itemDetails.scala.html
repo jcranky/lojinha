@@ -1,4 +1,4 @@
-@(item: Item, highestBid: Option[Bid], bidForm: Form[(String, Int)])(implicit request: Request[AnyContent])
+@(item: Item, highestBid: Option[Bid], bidForm: Form[(String, Int, Boolean)])(implicit request: Request[AnyContent])
 
 @import helper._
 @import helper.twitterBootstrap._
@@ -54,6 +54,7 @@
         <legend>Novo Lance:</legend>
         @inputText(bidForm("email"), '_label -> "e-mail")
         @inputText(bidForm("value"), '_label -> "valor")
+        @checkbox(bidForm("notifyBetterBids"), '_label -> "avisar se o lance for superado")
         <input type="submit" value="Enviar">
       }
     }

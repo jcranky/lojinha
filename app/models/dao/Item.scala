@@ -4,12 +4,15 @@ import org.joda.time.DateTime
 
 case class Category(id: Int, displayName: String, urlName: String)
 case class Item(id: Int, name: String, description: String, imageKeys: Option[String], cat: Category, sold: Boolean = false)
-case class Bid(id: Int, bidderEmail: String, value: BigDecimal, dateTime: DateTime, item: Item) extends Ordered[Bid] {
+case class Bid(id: Int, bidderEmail: String, value: BigDecimal, dateTime: DateTime,
+               notifyBetterBids: Boolean, item: Item) extends Ordered[Bid] {
+
   def compare(otherBid: Bid) = (value - otherBid.value).toInt
 }
 
 object Bid {
-  def apply(bidderEmail: String, value: BigDecimal, item: Item): Bid = Bid(0, bidderEmail, value, new DateTime, item)
+  def apply(bidderEmail: String, value: BigDecimal, notifyBetterBids: Boolean, item: Item): Bid =
+    Bid(0, bidderEmail, value, new DateTime, notifyBetterBids, item)
 }
 
 trait CategoryDAO {

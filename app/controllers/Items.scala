@@ -17,11 +17,12 @@ object Items extends Controller with Secured {
   val bidForm = Form(
     tuple(
       "email" -> email,
-      "value" -> number
+      "value" -> number,
+      "notifyBetterBids" -> boolean
     )
   )
 
-  def itemDetailsPage(item: Item, form: Form[(String, Int)] = bidForm)(implicit request: Request[AnyContent]) = {
+  def itemDetailsPage(item: Item, form: Form[(String, Int, Boolean)] = bidForm)(implicit request: Request[AnyContent]) = {
     val user: Option[User] = request.session.get("email").map(emailToUser(_).get)
 
     html.index(body = html.itemDetails(item, bidDAO.highest(item.id), form),
@@ -34,7 +35,7 @@ object Items extends Controller with Secured {
         bidForm.bindFromRequest.fold(
           formWithErrors => BadRequest(itemDetailsPage(item, formWithErrors)),
           bidTuple => {
-            BidHelper.processBid(bidTuple._1, bidTuple._2, itemId)
+            BidHelper.processBid(bidTuple._1, bidTuple._2, bidTuple._3, itemId)
             Redirect(routes.Items.details(itemId))
           }
         )
