@@ -35,8 +35,9 @@ object AnormItemDAO extends ItemDAO {
   val categoryDAO = DAOFactory.categoryDAO
 
   val item = {
-    int("id") ~ str("name") ~ str("description") ~ get[Option[String]]("imageKeys") ~ int("category_id") ~ bool("sold") map {
-      case id~name~description~picturePath~catId~sold => Item(id, name, description, picturePath, categoryDAO.findById(catId).get, sold)
+    int("id")~str("name")~str("description")~get[Option[String]]("imageKeys")~int("category_id")~date("created_date")~bool("sold") map {
+      case id~name~description~picturePath~catId~createdDate~sold =>
+        Item(id, name, description, picturePath, categoryDAO.findById(catId).get, new DateTime(createdDate), sold)
     }
   }
 

@@ -3,7 +3,10 @@ package models.dao
 import org.joda.time.DateTime
 
 case class Category(id: Int, displayName: String, urlName: String)
-case class Item(id: Int, name: String, description: String, imageKeys: Option[String], cat: Category, sold: Boolean = false)
+
+case class Item(id: Int, name: String, description: String, imageKeys: Option[String],
+                cat: Category, createdDate: DateTime = new DateTime(), sold: Boolean = false)
+
 case class Bid(id: Int, bidderEmail: String, value: BigDecimal, dateTime: DateTime,
                notifyBetterBids: Boolean, item: Item) extends Ordered[Bid] {
 
