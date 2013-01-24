@@ -22,8 +22,8 @@ class FeedGenerator(itemDAO: ItemDAO) {
       {items.map { item =>
           <entry>
             <title>{item.name}</title>
-            <link href={baseURL + "/items/1"}/>
-            <id>{baseURL + "/items/1"}</id>
+            <link href={"%s/items/%d".format(baseURL, item.id)}/>
+            <id>{"%s/items/%d".format(baseURL, item.id)}</id>
             <updated>2013-01-24T17:13:21Z</updated>
             <summary>{item.description}</summary>
           </entry>
