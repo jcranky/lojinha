@@ -33,7 +33,7 @@
                                 <a href="@routes.Application.about">About</a>
                             </li>
                             <li>
-                                <a href="@routes.Feeds.latest"><img src="@routes.Assets.at("images/atom.gif")"></a>
+                                <a href="@routes.Feeds.latest" type="application/rss+xml"><img src="@routes.Assets.at("images/atom.gif")"></a>
                             </li>
                         </ul>
                         @user.map{u => <span class="user nav pull-right">@u.name</span>}
