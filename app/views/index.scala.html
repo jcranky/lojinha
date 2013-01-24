@@ -8,6 +8,8 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="description" content="Lojinha onde estou vendendo muitas das minhas coisas que não uso mais, entre e faça um lance justo!">
 
+        <link rel="alternate" type="application/rss+xml" title="Feed da Lojinha!" href="@routes.Feeds.latest" >
+
         <link rel="stylesheet" media="screen" href='@routes.Assets.at("bootstrap/css/bootstrap.min.css")'>
         <link rel="stylesheet" media="screen" href='@routes.Assets.at("bootstrap/css/bootstrap-responsive.min.css")'>
         <link rel="stylesheet" media="screen" href='@routes.Assets.at("stylesheets/main.css")'>
@@ -29,6 +31,9 @@
                             </li>
                             <li>
                                 <a href="@routes.Application.about">About</a>
+                            </li>
+                            <li>
+                                <a href="@routes.Feeds.latest"><img src="@routes.Assets.at("images/atom.gif")"></a>
                             </li>
                         </ul>
                         @user.map{u => <span class="user nav pull-right">@u.name</span>}
