@@ -41,8 +41,9 @@ trait ItemAdmin extends Controller with Secured {
 
           Images.processImage(newFile)
         }
+        val imageKeys = if(pictureKeys.size == 0) None else Some(pictureKeys.mkString("|"))
 
-        itemDAO.create(itemTuple._1, itemTuple._2, Option(pictureKeys.mkString("|")), categoryDAO.findByName(itemTuple._3).get)
+        itemDAO.create(itemTuple._1, itemTuple._2, imageKeys, categoryDAO.findByName(itemTuple._3).get)
         Redirect(routes.Application.index)
       }
     )
