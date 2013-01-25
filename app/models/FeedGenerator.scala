@@ -14,6 +14,7 @@ class FeedGenerator(itemDAO: ItemDAO) {
     <feed xmlns="http://www.w3.org/2005/Atom">
       <title>Feed da Lojinha</title>
       <link href={baseURL}/>
+      <link href={"%s/feed".format(baseURL)} rel="self"/>
       <updated>{new DateTime().toString(ISODateTimeFormat.dateTime())}</updated>
       <author>
         <name>jcranky</name>
