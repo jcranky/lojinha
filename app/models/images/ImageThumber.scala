@@ -4,7 +4,6 @@ import java.awt.AlphaComposite
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
-import models.Images
 
 class ImageThumber(image: File, imageKey: String) {
   def generateThumbs(): List[(File, String)] = ImageThumber.sizes map generateThumb

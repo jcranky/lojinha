@@ -1,11 +1,9 @@
-package models
+package models.images
 
 import akka.actor._
 import akka.routing.SmallestMailboxRouter
 import java.io.File
 import models.aws.S3Sender
-import models.images.ImageThumber
-import models.images.ThumbSize
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import scala.util.Random

@@ -1,7 +1,7 @@
 package models
 
 import models.dao.ItemDAO
-import models.images.LargeThumb
+import models.images.{Images, LargeThumb}
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import scala.xml.NodeSeq

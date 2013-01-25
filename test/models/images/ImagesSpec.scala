@@ -1,7 +1,6 @@
-package models
+package models.images
 
 import akka.actor.ActorSystem
-import models.images.LargeThumb
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import play.api.test._

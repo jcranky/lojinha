@@ -8,6 +8,7 @@ import play.api.mvc._
 import controllers._
 import models._
 import models.dao._
+import models.images._
 import views._
 
 trait ItemAdmin extends Controller with Secured {
