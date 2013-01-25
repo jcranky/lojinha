@@ -34,17 +34,17 @@ trait ItemAdmin extends Controller with Secured {
   def newItem = IsAuthenticatedMultipart { username => implicit request =>
     addItemForm.bindFromRequest.fold(
       formWithErrors => BadRequest(itemAddFormPage(formWithErrors)),
-      itemTuple => {
-        val pictureKeys = request.body.files map {filePart =>
-          val newFile = File.createTempFile("temp-uploaded-", filePart.filename)
-          filePart.ref.moveTo(newFile, true)
+      { case (name, descr, cat, imgs) =>
+          val pictureKeys = request.body.files map {filePart =>
+            val newFile = File.createTempFile("temp-uploaded-", filePart.filename)
+            filePart.ref.moveTo(newFile, true)
 
-          Images.processImage(newFile)
-        }
-        val imageKeys = if(pictureKeys.size == 0) None else Some(pictureKeys.mkString("|"))
+            Images.processImage(newFile)
+          }
+          val imageKeys = if(pictureKeys.size == 0) None else Some(pictureKeys.mkString("|"))
 
-        itemDAO.create(itemTuple._1, itemTuple._2, imageKeys, categoryDAO.findByName(itemTuple._3).get)
-        Redirect(routes.Application.index)
+          itemDAO.create(name, descr, imageKeys, categoryDAO.findByName(cat).get)
+          Redirect(routes.Application.index)
       }
     )
   }
