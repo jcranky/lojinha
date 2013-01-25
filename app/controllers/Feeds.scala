@@ -11,9 +11,9 @@ import models.dao._
 object Feeds extends Controller {
   val feedGen = new FeedGenerator(DAOFactory.itemDAO)
 
-  def latest = Action {
-    val feedXml = Cache.getOrElse[NodeSeq]("allItems.feed") {
-      feedGen.allItemsFeed
+  def latest = Action { implicit request =>
+    val feedXml = Cache.getOrElse[NodeSeq]("allItems.feed", 3600) {
+      feedGen.allItemsFeed("http://" + request.host)
     }
 
     Ok(feedXml)
