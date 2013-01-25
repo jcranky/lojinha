@@ -1,9 +1,9 @@
 package models.dao
 
-import anorm._
-import anorm.SqlParser._
-import play.api.db.DB
+import _root_.anorm._
+import _root_.anorm.SqlParser._
 import org.joda.time.DateTime
+import play.api.db.DB
 import play.api.Play.current
 
 object AnormCategoryDAO extends CategoryDAO {
