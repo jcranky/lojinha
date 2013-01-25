@@ -2,9 +2,9 @@ package models.dao.anorm
 
 import anorm._
 import anorm.SqlParser._
-import models.dao.{FeedStats, FeedStatsDAO}
 import play.api.db.DB
 import play.api.Play.current
+import models.dao.{FeedStats, FeedStatsDAO}
 
 object AnormFeedStatsDAO extends FeedStatsDAO {
   val feedStats = {
