@@ -7,7 +7,6 @@ import org.joda.time.format.ISODateTimeFormat
 import scala.xml.NodeSeq
 
 class FeedGenerator(itemDAO: ItemDAO) {
-
   def allItemsFeed(baseURL: String): NodeSeq = {
     val items = itemDAO.all(false)
 
@@ -24,15 +23,20 @@ class FeedGenerator(itemDAO: ItemDAO) {
       {items.map { item =>
           <entry>
             <title>{item.name}</title>
-            <link href={"%s/items/%d".format(baseURL, item.id)}/>
-            <id>{"%s/items/%d".format(baseURL, item.id)}</id>
+            <link rel="alternate" type="text/html" href={"%s/items/%d".format(baseURL, item.id)}/>
             <updated>{item.createdDate.toString(ISODateTimeFormat.dateTime())}</updated>
-            <summary>{item.description}</summary>
-            {item.imageKeys.map { imgKeys =>
-                <content src={Images.generateUrl(imgKeys.split('|').head, LargeThumb)} type="image/png"/>
-              }.getOrElse() }
+            <id>{"%s/items/%d".format(baseURL, item.id)}</id>
+            <content type="xhtml">
+              <div xmlns="http://www.w3.org/1999/xhtml">
+                <p>{item.description}</p>
+                {item.imageKeys.map { imgKeys =>
+                    <p><img src={Images.generateUrl(imgKeys.split('|').head, LargeThumb)}/></p>
+                  }.getOrElse() }
+              </div>
+            </content>
           </entry>
-        }}
+        }
+      }
     </feed>
   }
 }
