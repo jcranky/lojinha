@@ -25,6 +25,7 @@ class FeedGenerator(itemDAO: ItemDAO) {
             <title>{item.name}</title>
             <link rel="alternate" type="text/html" href={"%s/items/%d".format(baseURL, item.id)}/>
             <updated>{item.createdDate.toString(ISODateTimeFormat.dateTime())}</updated>
+            <published>{item.createdDate.toString(ISODateTimeFormat.dateTime())}</published>
             <id>{"%s/items/%d".format(baseURL, item.id)}</id>
             <content type="xhtml">
               <div xmlns="http://www.w3.org/1999/xhtml">
