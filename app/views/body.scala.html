@@ -9,7 +9,7 @@
                 <div class="pic-m-thumb">
                     @item.imageKeys.map {imageKeys => <img src="@Images.generateUrl(imageKeys.split('|').head, MediumThumb)" class="img-polaroid">}
                 </div>
-                <p>@item.name<br>@item.description</p>
+                <p>@item.name<br><pre>@item.description</pre></p>
                 @if(item.sold) {<p class="text-error"><strong>Vendido!</strong></p>}
             </a>
           </li>

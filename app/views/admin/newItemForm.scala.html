@@ -16,7 +16,7 @@
 
     @form(action = routes.Admin.newItem, 'enctype -> "multipart/form-data") {
       @inputText(itemForm("name"), '_label -> "Name: ")
-      @inputText(itemForm("description"), '_label -> "Description: ")
+      @textarea(itemForm("description"), '_label -> "Description: ")
       @select(itemForm("category"), options = categories, '_label -> "Category: ")
 
       <div class="pictures">
