@@ -12,7 +12,7 @@ class ItemsSpec extends Specification {
         categoryDAO.create("Books", "books")
         itemDAO.create("effective java", "book description", None, categoryDAO.findByName("books").get)
 
-        val Some(result) = routeAndCall(FakeRequest(GET, "/items/1"))
+        val Some(result) = route(FakeRequest(GET, "/items/1"))
 
         status(result) must equalTo(OK)
         contentAsString(result) must not contain("soldButton")
@@ -26,7 +26,7 @@ class ItemsSpec extends Specification {
         itemDAO.create("effective java", "book description", None, categoryDAO.findByName("books").get)
         itemDAO.delete(1)
 
-        val Some(result) = routeAndCall(FakeRequest(GET, "/items/1"))
+        val Some(result) = route(FakeRequest(GET, "/items/1"))
 
         status(result) must equalTo(NOT_FOUND)
       }
