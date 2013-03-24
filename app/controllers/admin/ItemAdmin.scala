@@ -19,12 +19,13 @@ trait ItemAdmin extends Controller with Secured {
     tuple(
       "name" -> nonEmptyText,
       "description" -> nonEmptyText,
+      "minValue" -> bigDecimal(8, 2),
       "category" -> nonEmptyText,
       "pictures" -> list(text)
     )
   )
 
-  def itemAddFormPage(form: Form[(String, String, String, List[String])] = addItemForm) =
+  def itemAddFormPage(form: Form[(String, String, BigDecimal, String, List[String])] = addItemForm) =
     html.index(body = html.admin.newItemForm(form, categoryDAO.all.map(c => c.urlName -> c.displayName)),
                menu = html.admin.menu())
 
@@ -35,7 +36,7 @@ trait ItemAdmin extends Controller with Secured {
   def newItem = IsAuthenticatedMultipart { username => implicit request =>
     addItemForm.bindFromRequest.fold(
       formWithErrors => BadRequest(itemAddFormPage(formWithErrors)),
-      { case (name, descr, cat, imgs) =>
+      { case (name, descr, minValue, cat, imgs) =>
           val pictureKeys = request.body.files map {filePart =>
             val newFile = File.createTempFile("temp-uploaded-", filePart.filename)
             filePart.ref.moveTo(newFile, true)
@@ -44,7 +45,7 @@ trait ItemAdmin extends Controller with Secured {
           }
           val imageKeys = if(pictureKeys.size == 0) None else Some(pictureKeys.mkString("|"))
 
-          itemDAO.create(name, descr, imageKeys, categoryDAO.findByName(cat).get)
+          itemDAO.create(name, descr, minValue, imageKeys, categoryDAO.findByName(cat).get)
           Redirect(routes.Application.index)
       }
     )

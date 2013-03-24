@@ -11,15 +11,16 @@ object AnormItemDAO extends ItemDAO {
   val categoryDAO = DAOFactory.categoryDAO
 
   val item = {
-    int("id")~str("name")~str("description")~get[Option[String]]("imageKeys")~int("category_id")~date("created_date")~bool("sold") map {
-      case id~name~description~picturePath~catId~createdDate~sold =>
-        Item(id, name, description, picturePath, categoryDAO.findById(catId).get, new DateTime(createdDate), sold)
+    int("id") ~ str("name") ~ str("description") ~ get[java.math.BigDecimal]("min_value") ~
+    get[Option[String]]("imageKeys")~int("category_id")~date("created_date")~bool("sold") map {
+      case id~name~description~minValue~picturePath~catId~createdDate~sold =>
+        Item(id, name, description, minValue, picturePath, categoryDAO.findById(catId).get, new DateTime(createdDate), sold)
     }
   }
 
-  def create(name: String, description: String, imageKeys: Option[String], cat: Category) = DB.withConnection { implicit c =>
-    SQL("INSERT INTO item(name, description, imageKeys, category_id) VALUES({name}, {description}, {imageKeys}, {catId})").on(
-      'name -> name, 'description -> description, 'imageKeys -> imageKeys, 'catId -> cat.id).executeUpdate()
+  def create(name: String, description: String, minValue: BigDecimal, imageKeys: Option[String], cat: Category) = DB.withConnection { implicit c =>
+    SQL("INSERT INTO item(name, description, min_value, imageKeys, category_id) VALUES({name}, {description}, {minValue}, {imageKeys}, {catId})").on(
+      'name -> name, 'description -> description, 'minValue -> minValue.bigDecimal, 'imageKeys -> imageKeys, 'catId -> cat.id).executeUpdate()
   }
 
   def sell(id: Int): Option[Item] = DB.withConnection { implicit c =>

@@ -18,6 +18,10 @@
             <td>Maior lance</td>
             <td class="highestBid">@highestBid.map(_.value).getOrElse("-")</td>
         </tr>
+        <tr>
+            <td>Lance m&iacute;nimo</td>
+            <td>@item.minValue</td>
+        </tr>
 
         @request.session.get("email").map { username =>
             <tr>
