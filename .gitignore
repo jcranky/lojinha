@@ -11,3 +11,4 @@ dist
 /build.xml
 /conf/secret.conf
 /RUNNING_PID
+.classpath_nb
