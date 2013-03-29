@@ -19,7 +19,7 @@ class AdminSpec extends Specification {
     "return to the item details page without showing the bid form for a valid item sold click" in {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
         categoryDAO.create("Books", "books")
-        itemDAO.create("effective java", "book description", None, categoryDAO.findByName("books").get)
+        itemDAO.create("effective java", "book description", 0, None, categoryDAO.findByName("books").get)
 
         val Some(result) = route(FakeRequest(POST, "/admin/items/1/sold").withSession("email" -> "admin@lojinha.com"))
 

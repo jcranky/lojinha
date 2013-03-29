@@ -21,8 +21,8 @@ class FeedGeneratorSpec extends Specification with Mockito {
 
     val itemDAO = mock[ItemDAO]
     itemDAO.all(false) returns List(
-      Item(1, "Zelda 64", "The Legend of Zelda 64", None, cat),
-      Item(2, "Mario 64", "Super Mario 64", None, cat)
+      Item(1, "Zelda 64", "The Legend of Zelda 64", 0, None, cat),
+      Item(2, "Mario 64", "Super Mario 64", 0, None, cat)
     )
 
     val feedGen = new FeedGenerator(itemDAO)

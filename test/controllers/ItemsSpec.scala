@@ -10,7 +10,7 @@ class ItemsSpec extends Specification {
     "not have the sold and delete buttons for not logged in users" in {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
         categoryDAO.create("Books", "books")
-        itemDAO.create("effective java", "book description", None, categoryDAO.findByName("books").get)
+        itemDAO.create("effective java", "book description", 0, None, categoryDAO.findByName("books").get)
 
         val Some(result) = route(FakeRequest(GET, "/items/1"))
 
@@ -23,7 +23,7 @@ class ItemsSpec extends Specification {
     "return NotFound for a deleted item" in {
       running(FakeApplication(additionalConfiguration = inMemoryDatabase())) {
         categoryDAO.create("Books", "books")
-        itemDAO.create("effective java", "book description", None, categoryDAO.findByName("books").get)
+        itemDAO.create("effective java", "book description", 0, None, categoryDAO.findByName("books").get)
         itemDAO.delete(1)
 
         val Some(result) = route(FakeRequest(GET, "/items/1"))
