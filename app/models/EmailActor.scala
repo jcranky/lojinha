@@ -11,13 +11,13 @@ object EMail {
 
 class EmailActor extends Actor {
   def receive = {
-    case EmailMessage(msg, to) =>
+    case EmailMessage(name, url, to) =>
       val mail = use[MailerPlugin].email
       mail.setSubject("better bid received")
       mail.addRecipient(to)
       mail.addFrom("Lojinha JCranky <noreply@jcranky.com>")
-      mail.send(msg)
+      mail.sendHtml(views.html.email.bidTopped.render(name, url).body)
   }
 }
 
-case class EmailMessage(msg: String, to: String)
+case class EmailMessage(name: String, url: String, to: String)

@@ -9,8 +9,8 @@ import models.dao._
 object BidHelper {
   val masterBidActor = Akka.system.actorOf(Props[MasterBidActor], "master-bid-actor")
 
-  def processBid(email: String, value: BigDecimal, notifyBetterBids: Boolean, itemId: Int) = {
-    masterBidActor ! ProcessBid(email, value, notifyBetterBids, itemId)
+  def processBid(email: String, value: BigDecimal, notifyBetterBids: Boolean, itemId: Int, itemUrl: String) = {
+    masterBidActor ! ProcessBid(email, value, notifyBetterBids, itemId, itemUrl)
   }
 }
 
@@ -19,7 +19,7 @@ class MasterBidActor extends Actor {
   var bidProcessors = HashMap[Int, ActorRef]()
 
   def receive = {
-    case p @ ProcessBid(email, value, notifyBetterBids, itemId) =>
+    case p @ ProcessBid(email, value, notifyBetterBids, itemId, itemUrl) =>
       bidProcessors.get(itemId).getOrElse(newBidProcessActor(itemId)) ! p
   }
 
@@ -35,9 +35,9 @@ class BidProcessActor(itemId: Int) extends Actor {
   val bidProcessor = new BidProcessor(itemId)
 
   def receive = {
-    case ProcessBid(email, value, notifyBetterBids, itemId) =>
+    case ProcessBid(email, value, notifyBetterBids, itemId, itemUrl) =>
       bidProcessor.itemBids.bidsList.lastOption.foreach { bid => if (bid.notifyBetterBids)
-        EMail.actor ! EmailMessage("seu lance no item %s foi superado".format(bidProcessor.item.name), bid.bidderEmail)
+        EMail.actor ! EmailMessage(bidProcessor.item.name, itemUrl, bid.bidderEmail)
       }
       bidProcessor.addBid(Bid(email, value, notifyBetterBids, bidProcessor.item))
   }
@@ -58,4 +58,4 @@ class BidProcessor(itemId: Int) {
 }
 
 // messages
-case class ProcessBid(email: String, value: BigDecimal, notifyBetterBids: Boolean, itemId: Int)
+case class ProcessBid(email: String, value: BigDecimal, notifyBetterBids: Boolean, itemId: Int, itemUrl: String)

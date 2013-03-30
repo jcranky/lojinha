@@ -35,7 +35,7 @@ object Items extends Controller with Secured {
         bidForm.bindFromRequest.fold(
           formWithErrors => BadRequest(itemDetailsPage(item, formWithErrors)),
           bidTuple => {
-            BidHelper.processBid(bidTuple._1, bidTuple._2, bidTuple._3, itemId)
+            BidHelper.processBid(bidTuple._1, bidTuple._2, bidTuple._3, itemId, routes.Items.details(itemId).absoluteURL())
             Redirect(routes.Items.details(itemId))
           }
         )
