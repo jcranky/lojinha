@@ -12,7 +12,7 @@ object EMail {
 class EmailActor extends Actor {
   def receive = {
     case m: BidToppedMessage => sendEmail(m, views.html.email.bidTopped.render(m.itemName, m.itemUrl).body)
-    case m: BidAcceptedMessage => sendEmail(m, views.html.email.bidAccepted.render(m.itemName, m.itemUrl).body)
+    case m: BidReceivedMessage => sendEmail(m, views.html.email.bidReceived.render(m.itemName, m.itemUrl).body)
   }
   
   def sendEmail(m: EmailMessage, body: String) {
@@ -35,6 +35,6 @@ case class BidToppedMessage(itemName: String, itemUrl: String, to: String) exten
   val subject = "better bid received"
 }
 
-case class BidAcceptedMessage(itemName: String, itemUrl: String, to: String) extends EmailMessage {
-  val subject = "your bid has been accepted"
+case class BidReceivedMessage(itemName: String, itemUrl: String, to: String) extends EmailMessage {
+  val subject = "your bid has been received"
 }
