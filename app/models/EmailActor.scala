@@ -11,13 +11,30 @@ object EMail {
 
 class EmailActor extends Actor {
   def receive = {
-    case EmailMessage(name, url, to) =>
-      val mail = use[MailerPlugin].email
-      mail.setSubject("better bid received")
-      mail.addRecipient(to)
-      mail.addFrom("Lojinha JCranky <noreply@jcranky.com>")
-      mail.sendHtml(views.html.email.bidTopped.render(name, url).body)
+    case m: BidToppedMessage => sendEmail(m, views.html.email.bidTopped.render(m.itemName, m.itemUrl).body)
+    case m: BidAcceptedMessage => sendEmail(m, views.html.email.bidAccepted.render(m.itemName, m.itemUrl).body)
+  }
+  
+  def sendEmail(m: EmailMessage, body: String) {
+    val mail = use[MailerPlugin].email
+    mail.setSubject(m.subject)
+    mail.addRecipient(m.to)
+    mail.addFrom("Lojinha JCranky <noreply@jcranky.com>")
+    mail.sendHtml(body)
   }
 }
 
-case class EmailMessage(name: String, url: String, to: String)
+sealed trait EmailMessage {
+  val itemName: String
+  val itemUrl: String
+  val to: String
+  val subject: String
+}
+
+case class BidToppedMessage(itemName: String, itemUrl: String, to: String) extends EmailMessage {
+  val subject = "better bid received"
+}
+
+case class BidAcceptedMessage(itemName: String, itemUrl: String, to: String) extends EmailMessage {
+  val subject = "your bid has been accepted"
+}
