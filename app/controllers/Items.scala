@@ -14,15 +14,15 @@ object Items extends Controller with Secured {
   val itemDAO = DAOFactory.itemDAO
   val bidDAO = DAOFactory.bidDAO
 
-  val bidForm = Form(
+  def bidForm(minValue: Int = 1) = Form(
     tuple(
       "email" -> email,
-      "value" -> number,
+      "value" -> number(min = minValue),
       "notifyBetterBids" -> boolean
     )
   )
 
-  def itemDetailsPage(item: Item, form: Form[(String, Int, Boolean)] = bidForm)(implicit request: Request[AnyContent]) = {
+  def itemDetailsPage(item: Item, form: Form[(String, Int, Boolean)] = bidForm())(implicit request: Request[AnyContent]) = {
     val user: Option[User] = request.session.get("email").map(emailToUser(_).get)
 
     html.index(body = html.itemDetails(item, bidDAO.highest(item.id), form),
@@ -32,11 +32,11 @@ object Items extends Controller with Secured {
   def newBid(itemId: Int) = Action { implicit request =>
     itemDAO.findById(itemId) match {
       case Some(item) =>
-        bidForm.bindFromRequest.fold(
+        bidForm(bidDAO.highest(itemId).map(_.value.toInt + 1).getOrElse(1)).bindFromRequest.fold(
           formWithErrors => BadRequest(itemDetailsPage(item, formWithErrors)),
-          bidTuple => {
-            BidHelper.processBid(bidTuple._1, bidTuple._2, bidTuple._3, itemId, routes.Items.details(itemId).absoluteURL())
-            Redirect(routes.Items.details(itemId))
+          { case (email, value, notify) =>
+              BidHelper.processBid(email, value, notify, itemId, routes.Items.details(itemId).absoluteURL())
+              Redirect(routes.Items.details(itemId))
           }
         )
 
