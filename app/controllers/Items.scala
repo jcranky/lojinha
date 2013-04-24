@@ -32,7 +32,10 @@ object Items extends Controller with Secured {
   def newBid(itemId: Int) = Action { implicit request =>
     itemDAO.findById(itemId) match {
       case Some(item) =>
-        bidForm(bidDAO.highest(itemId).map(_.value.toInt + 1).getOrElse(1)).bindFromRequest.fold(
+        val maxBid = bidDAO.highest(itemId).map(_.value.toInt + 1).getOrElse(1)
+        val minValue = math.max(maxBid, item.minValue.toInt)
+        
+        bidForm(minValue).bindFromRequest.fold(
           formWithErrors => BadRequest(itemDetailsPage(item, formWithErrors)),
           { case (email, value, notify) =>
               BidHelper.processBid(email, value, notify, itemId, routes.Items.details(itemId).absoluteURL())
