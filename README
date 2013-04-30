@@ -5,5 +5,7 @@ Play! Framework 2.0 and should be deployable anywhere a play application can run
 Before deploying, remember to configure your database (can be relational or mongo)
 and your amazon aws credentials in the application.conf file.
 
-You can see Lojinha in production here: http://lojinha.paulosiqueira.com.br/
+You can see Lojinha in production here: http://lojinha.paulosiqueira.com.br/ and some
+development videos about this project in this youtube channel:
+http://youtube.com/user/jcrankydev (in portuguese).
 
