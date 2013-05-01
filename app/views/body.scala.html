@@ -1,16 +1,18 @@
-@(items: Seq[Item])
+@(items: Seq[(Item, Option[Bid])])
 @import models.images.{Images, MediumThumb}
 
 <div class="well">
     <ul class="unstyled">
-        @items.map { item =>
+        @items.map { case (item, bidOpt) =>
           <li class='item-li @{if(item.sold) "sold-item-li"}'>
             <a href="@routes.Items.details(item.id)">
                 <div class="pic-m-thumb">
                     @item.imageKeys.map {imageKeys => <img src="@Images.generateUrl(imageKeys.split('|').head, MediumThumb)" class="img-polaroid">}
                 </div>
                 <p>
-                    @item.name (lance m&iacute;nimo: @item.minValue)<br>
+                    @item.name
+                    <br>lance m&iacute;nimo: @item.minValue
+                    <br>maior lance: @bidOpt.map(_.value).getOrElse("n/a")
                     <pre>@item.description</pre>
                 </p>
                 @if(item.sold) {<p class="text-error"><strong>Vendido!</strong></p>}

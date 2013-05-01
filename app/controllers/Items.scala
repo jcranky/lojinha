@@ -69,10 +69,12 @@ object Items extends Controller with Secured {
 
   def l(category: Option[String] = None, sold: Boolean) = Action { implicit request =>
     category.map{ cat => categoryDAO.findByName(cat).map { c =>
-        Ok(html.index(body = html.body(itemDAO.all(c, sold)), menu = Application.mainMenu))
+        Ok(html.index(body = html.body(itemsHigherBids(itemDAO.all(c, sold))), menu = Application.mainMenu))
       } getOrElse Redirect("/")
     } getOrElse {
-      Ok(html.index(body = html.body(itemDAO.all(sold)), menu = Application.mainMenu))
+      Ok(html.index(body = html.body(itemsHigherBids(itemDAO.all(sold))), menu = Application.mainMenu))
     }
   }
+  
+  def itemsHigherBids(items: Seq[Item]) = items.map(i => (i, bidDAO.highest(i.id)))
 }
