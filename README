@@ -1,4 +1,6 @@
 
+# Lojinha - by JCranky
+
 Lojinha is a small application for a personal auction site. It is developed using the
 Play! Framework 2.0 and should be deployable anywhere a play application can run.
 
@@ -9,3 +11,7 @@ You can see Lojinha in production here: http://lojinha.paulosiqueira.com.br/ and
 development videos about this project in this youtube channel:
 http://youtube.com/user/jcrankydev (in portuguese).
 
+
+# License
+
+All source code created for this project (`.scala`, `.sh`, `.sbt` etc) are licensed under GPLv3.
