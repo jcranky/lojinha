@@ -10,6 +10,7 @@
     <a class="removePicture btn danger">Remove</a>
   }
 }
+@pictureField(itemForm("pictures[x]"), className = "picture_template")
 
 <div class="well">
     <h2>Adicionar um novo item</h2>
@@ -24,7 +25,6 @@
           @repeat(itemForm("pictures"), min = 0) {picField =>
             @pictureField(picField)
           }
-          @pictureField(itemForm("pictures[x]"), className = "picture_template")
 
           <div class="clearfix">
               <div class="input">
@@ -40,8 +40,8 @@
 <script type="text/javascript" charset="utf-8">
     $('.addPicture').live('click', function(e) {
         var pictures = $(this).parents('.pictures');
-        var template = $('.picture_template', pictures);
-        template.before('<div class="clearfix picture">' + template.html() + '</div>');
+        var template = $('.picture_template');
+        pictures.children().last().before('<div class="clearfix picture">' + template.html() + '</div>');
         renumberPics();
     });
 
