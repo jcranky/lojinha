@@ -42,11 +42,11 @@
     </table>
 
     <div>
-        @item.imageKeys.getOrElse("").split('|').map {imageKey =>
-          <a href="@Images.generateUrl(imageKey, OriginalSize)">
-              <img src="@Images.generateUrl(imageKey, LargeThumb)" class="img-polaroid">
+        @item.imageKeys.map(_.split('|').map {imageKey =>
+          <a href={Images.generateUrl(imageKey, OriginalSize)}>
+              <img src={Images.generateUrl(imageKey, LargeThumb)} class="img-polaroid" />
           </a>
-        }
+        }).getOrElse("")
     </div>
 
     <hr />
