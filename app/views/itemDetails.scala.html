@@ -43,10 +43,21 @@
 
     <div>
         @item.imageKeys.map(_.split('|').map {imageKey =>
-          <a href={Images.generateUrl(imageKey, OriginalSize)}>
+        <a href="#imgModal" data-toggle="modal"
+           onclick={"$('#imgTag').attr('src', '" + Images.generateUrl(imageKey, OriginalSize) + "')"}>
               <img src={Images.generateUrl(imageKey, LargeThumb)} class="img-polaroid" />
           </a>
         }).getOrElse("")
+        
+        <div id="imgModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">@item.name</h3>
+            </div>
+            <div class="modal-body">
+                <img id="imgTag">
+            </div>
+        </div>
     </div>
 
     <hr />
