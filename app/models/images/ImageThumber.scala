@@ -37,7 +37,7 @@ class ImageThumber(image: File, imageKey: String) {
 }
 
 object ImageThumber {
-  val sizes = List(SmallThumb, MediumThumb, LargeThumb)
+  val sizes = List(SmallThumb, MediumThumb, LargeThumb, VeryLargeThumb)
 
   def newSizesFor(thumbSize: ThumbSize, originalWidth: Int, originalHeight: Int): (Int, Int) = {
     var newWidth: Double = originalWidth
@@ -61,4 +61,5 @@ sealed case class ThumbSize(width: Int, height: Int, suffix: String)
 object SmallThumb extends ThumbSize(100, 100, "-small")
 object MediumThumb extends ThumbSize(200, 200, "-medium")
 object LargeThumb extends ThumbSize(300, 300, "-large")
+object VeryLargeThumb extends ThumbSize(600, 600, "-verylarge")
 object OriginalSize extends ThumbSize(0, 0, "")

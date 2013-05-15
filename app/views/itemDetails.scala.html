@@ -2,7 +2,7 @@
 
 @import helper._
 @import helper.twitterBootstrap._
-@import models.images.{Images, LargeThumb, OriginalSize}
+@import models.images._
 
 <div class="well">
     <table style="width: 100%">
@@ -44,7 +44,7 @@
     <div>
         @item.imageKeys.map(_.split('|').map {imageKey =>
         <a href="#imgModal" data-toggle="modal"
-           onclick={"$('#imgTag').attr('src', '" + Images.generateUrl(imageKey, OriginalSize) + "')"}>
+           onclick={"$('#imgTag').attr('src', '" + Images.generateUrl(imageKey, VeryLargeThumb) + "')"}>
               <img src={Images.generateUrl(imageKey, LargeThumb)} class="img-polaroid" />
           </a>
         }).getOrElse("")
