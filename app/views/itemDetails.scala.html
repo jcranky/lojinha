@@ -44,7 +44,7 @@
     <div>
         @item.imageKeys.map(_.split('|').map {imageKey =>
         <a href="#imgModal" data-toggle="modal"
-           onclick={"$('#imgTag').attr('src', '" + Images.generateUrl(imageKey, VeryLargeThumb) + "')"}>
+           onclick={"javascript:changeModalImg('" + Images.generateUrl(imageKey, VeryLargeThumb) + "')"}>
               <img src={Images.generateUrl(imageKey, LargeThumb)} class="img-polaroid" />
           </a>
         }).getOrElse("")
@@ -83,4 +83,9 @@
       setTimeout(worker, 5000);
     });
   })();
+  
+  function changeModalImg(src) {
+    $('#imgTag').attr('src', '');
+    $('#imgTag').attr('src', src);
+  }
 </script>
