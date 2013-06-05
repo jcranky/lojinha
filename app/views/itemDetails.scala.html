@@ -63,7 +63,7 @@
     <hr />
 
     @if(item.sold) {
-      <p class="text-warning">Vendido!</p>
+      <p id="soldWarning" class="text-warning">Vendido!</p>
     } else {
       @form(routes.Items.newBid(item.id), args = 'id -> "newBidForm") {
         <legend>Novo Lance:</legend>
