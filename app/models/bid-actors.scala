@@ -53,7 +53,7 @@ class BidProcessor(itemId: Int) {
     throw new IllegalArgumentException("cannot have a BidProcessActor for an inexistent Item"))
   var itemBids = new ItemBids(bidDAO.all(itemId), item)
 
-  def addBid(bid: Bid) = {
+  def addBid(bid: Bid) = if (itemBids.higherBid.filter(_.value > bid.value).isEmpty) {
     itemBids = itemBids.withBid(bid)
     bidDAO.create(bid)
   }
