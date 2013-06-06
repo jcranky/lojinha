@@ -1,7 +1,9 @@
 package controllers
 
 import play.api._
+import play.api.Play.current
 import play.api.data._
+import play.api.cache.Cached
 import play.api.data.Forms._
 import play.api.i18n.Lang
 import play.api.mvc._
@@ -44,8 +46,10 @@ object Application extends Controller {
     )
   }
 
-  def index = Action { implicit request =>
-    Ok(html.index(body = html.body(Items.itemsHigherBids(itemDAO.all(false))), menu = mainMenu))
+  def index = Cached("index") {
+    Action { implicit request =>
+      Ok(html.index(body = html.body(Items.itemsHigherBids(itemDAO.all(false))), menu = mainMenu))
+    }
   }
 
   def about = Action { implicit request =>
