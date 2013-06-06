@@ -1,7 +1,9 @@
 package controllers
 
 import play.api._
+import play.api.Play.current
 import play.api.data._
+import play.api.cache.Cached
 import play.api.data.Forms._
 import play.api.mvc._
 
@@ -47,10 +49,12 @@ object Items extends Controller with Secured {
     }
   }
 
-  def details(itemId: Int) = Action { implicit request =>
-    itemDAO.findById(itemId) match {
-      case Some(item) => Ok(itemDetailsPage(item))
-      case None => NotFound("that product doesn't exist!")  //TODO: create a nice 404 page
+  def details(itemId: Int) = Cached(s"item-${itemId}") {
+    Action { implicit request =>
+      itemDAO.findById(itemId) match {
+        case Some(item) => Ok(itemDetailsPage(item))
+        case None => NotFound("that product doesn't exist!")  //TODO: create a nice 404 page
+      }
     }
   }
 
