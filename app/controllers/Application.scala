@@ -7,10 +7,10 @@ import play.api.cache.Cached
 import play.api.data.Forms._
 import play.api.i18n.Lang
 import play.api.mvc._
+import play.api.templates.Html
 
 import models._
 import models.dao._
-import play.api.templates.Html
 import views._
 
 object Application extends Controller {
@@ -46,7 +46,7 @@ object Application extends Controller {
     )
   }
 
-  def index = Cached("index") {
+  def index = Cached("index", 5) {
     Action { implicit request =>
       Ok(html.index(body = html.body(Items.itemsHigherBids(itemDAO.all(false))), menu = mainMenu))
     }

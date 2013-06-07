@@ -49,7 +49,7 @@ object Items extends Controller with Secured {
     }
   }
 
-  def details(itemId: Int) = Cached(s"item-${itemId}") {
+  def details(itemId: Int) = Cached(s"item-${itemId}", 5) {
     Action { implicit request =>
       itemDAO.findById(itemId) match {
         case Some(item) => Ok(itemDetailsPage(item))
