@@ -26,7 +26,7 @@ class ApplicationSpec extends Specification {
 
     "return the about page in portuguese when the pt header is present" in {
       running(FakeApplication()) {
-        val Some(result) = route(FakeRequest(GET, "/about").withHeaders("Accept-Language" -> "en,pt-BR"))
+        val Some(result) = route(FakeRequest(GET, "/about").withHeaders("Accept-Language" -> "pt-BR,en"))
 
         status(result) must equalTo(OK)
         contentAsString(result) must not contain("mini-store")
