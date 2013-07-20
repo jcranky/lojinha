@@ -9,7 +9,7 @@ object ApplicationBuild extends Build {
 
   val appDependencies = Seq(
     jdbc, anorm,
-    "com.amazonaws" % "aws-java-sdk" % "1.4.4.2",
+    "com.amazonaws" % "aws-java-sdk" % "1.5.1",
     "com.typesafe" %% "play-plugins-mailer" % "2.1.0",
     "postgresql" % "postgresql" % "9.1-901.jdbc4" % "runtime",
     "org.mockito" % "mockito-core" % "1.9.0" % "test"
@@ -18,6 +18,8 @@ object ApplicationBuild extends Build {
   val main = play.Project(appName, appVersion, appDependencies).settings(
     templatesImport ++= Seq(
       "models.dao._"
-    )
+    ),
+    
+    resolvers += "Local Maven Repository" at "file://"+Path.userHome.absolutePath+"/.m2/repository"
   )
 }
