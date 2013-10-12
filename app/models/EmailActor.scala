@@ -18,8 +18,8 @@ class EmailActor extends Actor {
   def sendEmail(m: EmailMessage, body: String) {
     val mail = use[MailerPlugin].email
     mail.setSubject(m.subject)
-    mail.addRecipient(m.to)
-    mail.addFrom("Lojinha JCranky <noreply@jcranky.com>")
+    mail.setRecipient(m.to)
+    mail.setFrom("Lojinha JCranky <noreply@jcranky.com>")
     mail.sendHtml(body)
   }
 }
