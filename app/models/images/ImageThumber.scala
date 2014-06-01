@@ -14,17 +14,13 @@ class ImageThumber(image: File, imageKey: String) {
     val width = imageBuf.getWidth
 
     val imageName = Images.imageName(imageKey, thumbSize)
+    val (newWidth, newHeight) = ImageThumber.newSizesFor(thumbSize, width, height)
 
-    if (width <= thumbSize.width && height <= thumbSize.height)
-      (image, imageName)
-    else {
-      val (newWidth, newHeight) = ImageThumber.newSizesFor(thumbSize, width, height)
-      (writeImage(newWidth, newHeight, imageBuf, thumbSize, imageName), imageName)
-    }
+    (writeImage(newWidth, newHeight, imageBuf, thumbSize, imageName), imageName)
   }
 
   private def writeImage(width: Int, height: Int, imageBuf: BufferedImage, thumbSize: ThumbSize, imageName: String) = {
-    val scaledImage = new BufferedImage(width, height,  BufferedImage.TYPE_INT_RGB)
+    val scaledImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     val g = scaledImage.createGraphics
     g.setComposite(AlphaComposite.Src)
     g.drawImage(imageBuf, 0, 0, width, height, null);
@@ -43,7 +39,7 @@ object ImageThumber {
     var newWidth: Double = originalWidth
     var newHeight: Double = originalHeight
 
-    if (newWidth > thumbSize.width){
+    if (newWidth > thumbSize.width) {
       newWidth = thumbSize.width
       newHeight = originalHeight * newWidth / originalWidth
     }
