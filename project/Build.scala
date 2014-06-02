@@ -6,6 +6,7 @@ object ApplicationBuild extends Build {
 
   val appName         = "lojinha"
   val appVersion      = "1.0-SNAPSHOT"
+  val scalaVersion    = "2.10.4"
 
   val appDependencies = Seq(
     cache, jdbc, anorm,
