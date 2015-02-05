@@ -10,11 +10,11 @@ object ApplicationBuild extends Build {
 
   val appDependencies = Seq(
     cache, jdbc, anorm,
-    "com.amazonaws" % "aws-java-sdk" % "1.6.12",
+    "com.amazonaws" % "aws-java-sdk" % "1.9.17",
     "com.typesafe" %% "play-plugins-mailer" % "2.2.0",
     "postgresql" % "postgresql" % "9.1-901.jdbc4" % "runtime",
     "org.mockito" % "mockito-core" % "1.9.0" % "test"
-  ) map (_.withSources)
+  )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
     templatesImport ++= Seq(
