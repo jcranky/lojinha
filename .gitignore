@@ -1,9 +1,7 @@
 logs
 project/project
-project/target
 target
 tmp
-.history
 dist
 /nbproject/private/
 /nbproject/netbeans.cache
@@ -13,3 +11,5 @@ dist
 /RUNNING_PID
 .classpath_nb
 .cache
+
+.idea
