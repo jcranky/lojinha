@@ -46,7 +46,7 @@ object Application extends Controller {
     )
   }
 
-  def index = Cached("index", 5) {
+  def index = Cached((_: RequestHeader) => "index", 5) {
     Action { implicit request =>
       Ok(html.index(body = html.body(Items.itemsHigherBids(itemDAO.all(false))), menu = mainMenu))
     }

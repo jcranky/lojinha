@@ -22,7 +22,7 @@ class FeedGenerator(itemDAO: ItemDAO) {
             <p>{item.description}</p>
             {item.imageKeys.map { imgKeys =>
                 <p><img src={Images.generateUrl(imgKeys.split('|').head, LargeThumb)}/></p>
-              }.getOrElse() }
+              }.getOrElse("") }
           </div>
         </content>
       </entry>

@@ -1,14 +1,12 @@
 package controllers
 
-import play.api._
-import play.api.Play.current
-import play.api.data._
-import play.api.cache.Cached
-import play.api.data.Forms._
-import play.api.mvc._
-
 import models.BidHelper
 import models.dao.{DAOFactory, Item, User}
+import play.api.Play.current
+import play.api.cache.Cached
+import play.api.data.Forms._
+import play.api.data._
+import play.api.mvc._
 import views._
 
 object Items extends Controller with Secured {
@@ -49,7 +47,7 @@ object Items extends Controller with Secured {
     }
   }
 
-  def details(itemId: Int) = Cached(s"item-${itemId}", 5) {
+  def details(itemId: Int) = Cached((_: RequestHeader) => s"item-${itemId}", 5) {
     Action { implicit request =>
       itemDAO.findById(itemId) match {
         case Some(item) => Ok(itemDetailsPage(item))

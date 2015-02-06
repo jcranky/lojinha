@@ -1,11 +1,11 @@
 package models
 
 import akka.actor._
-import com.typesafe.plugin._
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
+import play.api.libs.mailer._
 
-object EMail {
+object EMailActor {
   val actor = Akka.system.actorOf(Props[EmailActor])
 }
 
@@ -16,11 +16,13 @@ class EmailActor extends Actor {
   }
   
   def sendEmail(m: EmailMessage, body: String) {
-    val mail = use[MailerPlugin].email
-    mail.setSubject(m.subject)
-    mail.setRecipient(m.to)
-    mail.setFrom("Lojinha JCranky <noreply@jcranky.com>")
-    mail.sendHtml(body)
+    val email = Email(
+      m.subject,
+      "Lojinha JCranky <noreply@jcranky.com>",
+      Seq(m.to),
+      bodyText = Some(body)
+    )
+    MailerPlugin.send(email)
   }
 }
 

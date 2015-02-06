@@ -36,9 +36,9 @@ class BidProcessActor(itemId: Int) extends Actor {
 
   def receive = {
     case ProcessBid(email, value, notifyBetterBids, itemId, itemUrl) =>
-      EMail.actor ! BidReceivedMessage(bidProcessor.item.name, itemUrl, email)
+      EMailActor.actor ! BidReceivedMessage(bidProcessor.item.name, itemUrl, email)
       bidProcessor.itemBids.bidsList.lastOption.foreach { bid => if (bid.notifyBetterBids)
-        EMail.actor ! BidToppedMessage(bidProcessor.item.name, itemUrl, bid.bidderEmail)
+        EMailActor.actor ! BidToppedMessage(bidProcessor.item.name, itemUrl, bid.bidderEmail)
       }
       
       bidProcessor.addBid(Bid(email, value, notifyBetterBids, bidProcessor.item))
