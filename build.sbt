@@ -4,13 +4,13 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.11.6"
 
 libraryDependencies ++= Seq(
   cache,
   jdbc,
   anorm,
-  "com.amazonaws" % "aws-java-sdk" % "1.9.17",
+  "com.amazonaws" % "aws-java-sdk" % "1.9.31",
   "com.typesafe.play" %% "play-mailer" % "2.4.0",
   "postgresql" % "postgresql" % "9.1-901.jdbc4" % "runtime",
   "org.mockito" % "mockito-core" % "1.10.19" % "test"
