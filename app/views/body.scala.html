@@ -2,7 +2,7 @@
 @import models.images.{Images, MediumThumb}
 
 <div class="well">
-    <ul class="unstyled">
+    <ul class="list-unstyled">
         @items.map { case (item, bidOpt) =>
           <li class='item-li @{if(item.sold) "sold-item-li"}'>
             <a href="@routes.Items.details(item.id)">
@@ -15,7 +15,7 @@
                     <br>maior lance: @bidOpt.map(_.value).getOrElse("n/a")
                     <pre>@item.description</pre>
                 </p>
-                @if(item.sold) {<p class="text-error"><strong>Vendido!</strong></p>}
+                @if(item.sold) {<p class="text-danger"><strong>Vendido!</strong></p>}
             </a>
           </li>
         }

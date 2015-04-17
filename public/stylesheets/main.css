@@ -1,7 +1,5 @@
 
 body {
-    padding-top: 60px;
-    padding-bottom: 40px;
     font: 13px "Lucida Grande", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialised;
     -webkit-user-select: none;
@@ -36,10 +34,6 @@ a:hover {
 
 .sidebar-nav {
     padding: 9px 0;
-}
-
-.nav-collapse .nav {
-    padding-left: 10px
 }
 
 .pictures div:first-child label {

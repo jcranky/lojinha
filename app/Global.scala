@@ -1,10 +1,14 @@
 
+import org.h2.jdbc.JdbcSQLException
 import play.api._
 import models.dao.anorm._
 
 object Global extends GlobalSettings {
-  override def onStart(app: Application) =
+  override def onStart(app: Application) = try {
     if (app.mode == Mode.Dev) DevData.insert()
+  } catch {
+    case e: JdbcSQLException => // ignore, data is probably inserted in the database already
+  }
 }
 
 object DevData {

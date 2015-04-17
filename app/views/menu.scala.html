@@ -1,11 +1,9 @@
 @(categories: List[Category])
 
-<div class="well sidebar-nav">
-    <ul class="nav nav-list">
-        <li class="nav-header">@Messages("menu.categories")</li>
-        <li><a href="@routes.Application.index">@Messages("menu.all")</a></li>
-        @categories.map{ cat =>
-            <li><a href="@routes.Items.listCat(cat.urlName)">@cat.displayName</a></li>
-        }
-    </ul>
+<div class="list-group">
+    <a class="list-group-item" href="#">@Messages("menu.categories")</a>
+    <a class="list-group-item" href="@routes.Application.index">@Messages("menu.all")</a>
+    @categories.map { cat =>
+        <a href="@routes.Items.listCat(cat.urlName)" class="list-group-item">@cat.displayName</a>
+    }
 </div>
