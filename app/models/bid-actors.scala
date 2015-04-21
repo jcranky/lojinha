@@ -15,12 +15,11 @@ object BidHelper {
 }
 
 class MasterBidActor extends Actor {
-  import scala.collection.mutable.HashMap
-  var bidProcessors = HashMap[Int, ActorRef]()
+  var bidProcessors = Map.empty[Int, ActorRef]
 
   def receive = {
     case p @ ProcessBid(email, value, notifyBetterBids, itemId, itemUrl) =>
-      bidProcessors.get(itemId).getOrElse(newBidProcessActor(itemId)) ! p
+      bidProcessors.getOrElse(itemId, newBidProcessActor(itemId)) ! p
   }
 
   def newBidProcessActor(itemId: Int) = {
@@ -35,7 +34,7 @@ class BidProcessActor(itemId: Int) extends Actor {
   val bidProcessor = new BidProcessor(itemId)
 
   def receive = {
-    case ProcessBid(email, value, notifyBetterBids, itemId, itemUrl) =>
+    case ProcessBid(email, value, notifyBetterBids, _, itemUrl) =>
       EMailActor.actor ! BidReceivedMessage(bidProcessor.item.name, itemUrl, email)
       bidProcessor.itemBids.bidsList.lastOption.foreach { bid => if (bid.notifyBetterBids)
         EMailActor.actor ! BidToppedMessage(bidProcessor.item.name, itemUrl, bid.bidderEmail)
