@@ -1,8 +1,9 @@
 
 body {
     font: 13px "Lucida Grande", "Helvetica Neue", sans-serif;
-    -webkit-font-smoothing: antialised;
+    -webkit-font-smoothing: antialiased;
     -webkit-user-select: none;
+    -moz-user-select: none;
 }
 
 a {
@@ -49,7 +50,7 @@ a:hover {
 }
 
 .user {
-    padding: 10px 0px;
+    padding: 10px 0;
     margin: 1px 4px;
 }
 
@@ -58,6 +59,6 @@ a:hover {
     text-transform: uppercase;
     letter-spacing: -1px;
     text-shadow: 1px 1px 0 #000;
-    padding: 10px 0px;
+    padding: 10px 0;
     margin: 1px 4px;
 }
