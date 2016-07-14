@@ -14,7 +14,7 @@ class ImagesSpec extends Specification with Mockito {
     }
 
     "generate the correct AWS s3 URL" in {
-      running(FakeApplication()) {
+      running(FakeApplication(additionalConfiguration = Map("aws.s3.bucket" -> "test-bucket"))) {
         val bucket = play.api.Play.current.configuration.getString("aws.s3.bucket").getOrElse("dummyBucket")
         val imageKey = "my-random-imageKey"
 
