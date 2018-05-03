@@ -4,7 +4,7 @@
 
 # Home page
 GET         /                                controllers.Application.index
-GET         /lang                            controllers.Application.lang(code ?= "en")
+GET         /lang                            controllers.Application.lang(code: String)
 GET         /about                           controllers.Application.about
 
 # Authentication
