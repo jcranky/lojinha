@@ -5,7 +5,7 @@ import play.api.Play.current
 import play.api.data._
 import play.api.cache.Cached
 import play.api.data.Forms._
-import play.api.i18n.Lang
+import play.api.i18n._
 import play.api.mvc._
 import play.api.templates.Html
 
@@ -28,6 +28,7 @@ object Application extends Controller {
         case (email, password) => userDAO.authenticate(email, password).isDefined
       })
   )
+
 
   def login = Action { implicit request =>
     Ok(html.index(body = html.login(loginForm), menu = mainMenu))
@@ -65,4 +66,19 @@ object Application extends Controller {
 
     Ok(findLang(request.acceptLanguages.toList))
   }
+
+  def lang(code: String) = Action { implicit request =>
+   // val referrer = request.headers.get(REFERER).getOrElse(HOME_URL)
+    Redirect(routes.Application.index).withLang(Lang(code))
+  }
+
+  def javascriptRoutes = Action { implicit request =>
+    import routes.javascript._
+    Ok(
+      Routes.javascriptRouter("jsRoutes")(
+        routes.javascript.Application.lang
+      )).as("text/javascript")
+  }
+
+
 }

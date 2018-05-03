@@ -1,4 +1,4 @@
-@(item: Item, highestBid: Option[Bid], bidForm: Form[(String, Int, Boolean)])(implicit request: Request[AnyContent])
+@(item: Item, highestBid: Option[Bid], bidForm: Form[(String, Int, Boolean)])(implicit request: Request[AnyContent], lang: Lang)
 
 @import helper._
 @import models.images._

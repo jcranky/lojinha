@@ -18,14 +18,14 @@ trait CategoryAdmin extends Controller with Secured {
     )
   )
 
-  def categoryFormPage(form: Form[(String, String)] = catForm) =
-    html.index(body = html.admin.newCategoryForm(form), menu = html.admin.menu())
-
   def newCategoryForm = IsAuthenticated { username => implicit request =>
+    def categoryFormPage(form: Form[(String, String)] = catForm) = html.index (body = html.admin.newCategoryForm(form), menu = html.admin.menu())
+
     Ok(categoryFormPage())
   }
 
   def newCategory = IsAuthenticated { username => implicit request =>
+    def categoryFormPage(form: Form[(String, String)] = catForm) = html.index (body = html.admin.newCategoryForm(form), menu = html.admin.menu())
     catForm.bindFromRequest.fold(
       formWithErrors => BadRequest(categoryFormPage(formWithErrors)),
       catTuple => {

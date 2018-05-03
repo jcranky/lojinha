@@ -25,15 +25,17 @@ trait ItemAdmin extends Controller with Secured {
     )
   )
 
-  def itemAddFormPage(form: Form[(String, String, BigDecimal, String, List[String])] = addItemForm) =
-    html.index(body = html.admin.newItemForm(form, categoryDAO.all.map(c => c.urlName -> c.displayName)),
-               menu = html.admin.menu())
-
   def newItemForm = IsAuthenticated { username => implicit request =>
+    def itemAddFormPage(form: Form[(String, String, BigDecimal, String, List[String])] = addItemForm) =
+      html.index(body = html.admin.newItemForm(form, categoryDAO.all.map(c => c.urlName -> c.displayName)),
+        menu = html.admin.menu())
     Ok(itemAddFormPage())
   }
 
   def newItem = IsAuthenticatedMultipart { username => implicit request =>
+    def itemAddFormPage(form: Form[(String, String, BigDecimal, String, List[String])] = addItemForm) =
+      html.index(body = html.admin.newItemForm(form, categoryDAO.all.map(c => c.urlName -> c.displayName)),
+        menu = html.admin.menu())
     addItemForm.bindFromRequest.fold(
       formWithErrors => BadRequest(itemAddFormPage(formWithErrors)),
       { case (name, descr, minValue, cat, imgs) =>

@@ -1,9 +1,9 @@
-@(title: String = "Lojinha! To vendendo!", body: Html, menu: Html, user: Option[User] = None)
+@(title: String = "Lojinha! To vendendo!", body: Html, menu: Html, user: Option[User] = None)(implicit request: play.api.mvc.Request[Any], lang: Lang)
 <!DOCTYPE html>
 
 <html>
     <head>
-        <title>@title</title>
+        <title>@title - @lang.code</title>
 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="description" content="Lojinha onde estou vendendo muitas das minhas coisas que não uso mais, entre e faça um lance justo!">
@@ -15,6 +15,7 @@
         <link rel="stylesheet" href='@routes.WebJarAssets.at(WebJarAssets.locate("css/bootstrap-theme.min.css"))'>
         <link rel="stylesheet" media="screen" href='@routes.Assets.at("stylesheets/main.css")'>
 
+        <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))'></script>
         <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("js/bootstrap.min.js"))'></script>
     </head>
@@ -34,6 +35,15 @@
                             </li>
                         </ul>
                         @user.map{u => <span class="user nav pull-right">@u.name</span>}
+                        <span class="user nav pull-right">
+                            <select id="selectlang" onchange="switchLang()">
+                                @request.acceptLanguages.map { clang =>
+                                <option value="@clang.code" @if(lang.code == clang.code){ selected="selected"}>@clang.code</option>
+                                }
+                            </select>
+
+                        </span>
+
                     </div>
                 </div>
             </nav>
@@ -48,4 +58,20 @@
             </div>
         </div>
     </body>
+    <script>
+
+
+    function switchLang(){
+        var codeLang = $("#selectlang").val();
+        jsRoutes.controllers.Application.lang(codeLang).ajax();
+        $(document).ready(function() {
+          setInterval(function() {
+            cache_clear()
+          }, 800);
+        });
+        function cache_clear() {
+        window.location.reload(true);
+        }
+    }
+    </script>
 </html>
