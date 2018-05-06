@@ -1,9 +1,0 @@
-menu.categories=Categorias
-menu.all=Tudo
-
-# overriding some of the default messages
-format.numeric=Numérico
-format.boolean=sim ou não?
-
-error.number=Valor numérico esperado
-error.email=E-mail válido requerido

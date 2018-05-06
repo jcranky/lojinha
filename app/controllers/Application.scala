@@ -8,10 +8,11 @@ import play.api.data.Forms._
 import play.api.i18n._
 import play.api.mvc._
 import play.api.templates.Html
-
 import models._
 import models.dao._
+import routes.javascript._
 import views._
+
 
 object Application extends Controller {
   def mainMenu(implicit request: Request[AnyContent]) = html.menu(categoryDAO.all())
@@ -68,12 +69,10 @@ object Application extends Controller {
   }
 
   def lang(code: String) = Action { implicit request =>
-   // val referrer = request.headers.get(REFERER).getOrElse(HOME_URL)
     Redirect(routes.Application.index).withLang(Lang(code))
   }
 
   def javascriptRoutes = Action { implicit request =>
-    import routes.javascript._
     Ok(
       Routes.javascriptRouter("jsRoutes")(
         routes.javascript.Application.lang

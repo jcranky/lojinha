@@ -2,7 +2,7 @@ menu.categories=Categories
 menu.all=All
 
 # overriding some of the default messages
-format.numeric=Numérico
+format.numeric=Numeric
 format.boolean=yes ou no?
 
 error.number=Expected numeric value
