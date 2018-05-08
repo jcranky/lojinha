@@ -4,6 +4,7 @@
 
 # Home page
 GET         /                                controllers.Application.index
+GET         /lang                            controllers.Application.lang(code: String)
 GET         /about                           controllers.Application.about
 
 # Authentication
@@ -40,3 +41,6 @@ GET         /assets/*file                    controllers.Assets.at(path="/public
 
 # Enable webjar based resources to be returned
 GET         /webjars/*file                   controllers.WebJarAssets.at(file)
+
+# Javascript routing
+GET         /javascriptRoutes                controllers.Application.javascriptRoutes

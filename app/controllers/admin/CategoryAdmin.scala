@@ -18,7 +18,7 @@ trait CategoryAdmin extends Controller with Secured {
     )
   )
 
-  def categoryFormPage(form: Form[(String, String)] = catForm) =
+  def categoryFormPage(form: Form[(String, String)] = catForm)(implicit request: Request[AnyContent]) =
     html.index(body = html.admin.newCategoryForm(form), menu = html.admin.menu())
 
   def newCategoryForm = IsAuthenticated { username => implicit request =>
