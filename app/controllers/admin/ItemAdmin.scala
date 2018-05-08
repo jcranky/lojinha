@@ -25,30 +25,28 @@ trait ItemAdmin extends Controller with Secured {
     )
   )
 
+  def itemAddFormPage(form: Form[(String, String, BigDecimal, String, List[String])] = addItemForm)(implicit request: Request[_]) =
+    html.index(body = html.admin.newItemForm(form, categoryDAO.all.map(c => c.urlName -> c.displayName)),
+      menu = html.admin.menu())
+
   def newItemForm = IsAuthenticated { username => implicit request =>
-    def itemAddFormPage(form: Form[(String, String, BigDecimal, String, List[String])] = addItemForm) =
-      html.index(body = html.admin.newItemForm(form, categoryDAO.all.map(c => c.urlName -> c.displayName)),
-        menu = html.admin.menu())
     Ok(itemAddFormPage())
   }
 
   def newItem = IsAuthenticatedMultipart { username => implicit request =>
-    def itemAddFormPage(form: Form[(String, String, BigDecimal, String, List[String])] = addItemForm) =
-      html.index(body = html.admin.newItemForm(form, categoryDAO.all.map(c => c.urlName -> c.displayName)),
-        menu = html.admin.menu())
-    addItemForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(itemAddFormPage(formWithErrors)),
+    addItemForm.bindFromRequest().fold(
+      formWithErrors  => BadRequest(itemAddFormPage(formWithErrors)),
       { case (name, descr, minValue, cat, imgs) =>
-          val pictureKeys = request.body.files map {filePart =>
-            val newFile = File.createTempFile("temp-uploaded-", filePart.filename)
-            filePart.ref.moveTo(newFile, true)
+        val pictureKeys = request.body.files map {filePart =>
+          val newFile = File.createTempFile("temp-uploaded-", filePart.filename)
+          filePart.ref.moveTo(newFile, true)
 
-            Images.processImage(newFile)
-          }
-          val imageKeys = if(pictureKeys.size == 0) None else Some(pictureKeys.mkString("|"))
+          Images.processImage(newFile)
+        }
+        val imageKeys = if(pictureKeys.size == 0) None else Some(pictureKeys.mkString("|"))
 
-          itemDAO.create(name, descr, minValue, imageKeys, categoryDAO.findByName(cat).get)
-          Redirect(routes.Application.index)
+        itemDAO.create(name, descr, minValue, imageKeys, categoryDAO.findByName(cat).get)
+        Redirect(routes.Application.index)
       }
     )
   }
