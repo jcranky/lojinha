@@ -37,8 +37,8 @@
                         @user.map{u => <span class="user nav pull-right">@u.name</span>}
                         <span class="user nav pull-right">
                             <select id="selectlang" onchange="switchLang()">
-                                @request.acceptLanguages.map { clang =>
-                                <option value="@clang.code" @if(lang.code == clang.code){ selected="selected"}>@clang.code</option>
+                                @play.Play.application().configuration().getString("application.langs").split(",").map{ langconfig =>
+                                <option value="@langconfig" @if(lang.code == langconfig){ selected="selected"}>@langconfig</option>
                                 }
                             </select>
 

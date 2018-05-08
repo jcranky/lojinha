@@ -13,7 +13,6 @@ import models.dao._
 import routes.javascript._
 import views._
 
-
 object Application extends Controller {
   def mainMenu(implicit request: Request[AnyContent]) = html.menu(categoryDAO.all())
 
