@@ -29,7 +29,6 @@ object Application extends Controller {
       })
   )
 
-
   def login = Action { implicit request =>
     Ok(html.index(body = html.login(loginForm), menu = mainMenu))
   }
@@ -77,6 +76,5 @@ object Application extends Controller {
         routes.javascript.Application.lang
       )).as("text/javascript")
   }
-
 
 }
