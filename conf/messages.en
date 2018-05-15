@@ -1,0 +1,9 @@
+menu.categories=Categories
+menu.all=All
+
+# overriding some of the default messages
+format.numeric=Numeric
+format.boolean=yes ou no?
+
+error.number=Expected numeric value
+error.email=An valid email is required
