@@ -1,14 +1,14 @@
 package controllers
 
-import models.dao.{DAOFactory, User}
+import models.dao.{DAOFactory, User, UserDAO}
 import play.api.mvc._
 
-trait Secured extends Controller {
-  val userDAO = DAOFactory.userDAO
+trait SecuredController extends Controller {
+  val userDAO: UserDAO = DAOFactory.userDAO
 
   private def username(request: RequestHeader) = request.session.get("email")
 
-  private def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Application.login)
+  private def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Application.login())
 
   def IsAuthenticated(f: => String => Request[AnyContent] => Result) = Security.Authenticated(username, onUnauthorized) { user =>
     Action(request => f(user)(request))

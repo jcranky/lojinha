@@ -1,17 +1,18 @@
 package controllers.admin
 
-import play.api.data._
-import play.api.data.Forms._
-import play.api.mvc._
-
 import controllers._
 import models.dao._
+import play.api.Play.current
+import play.api.data.Forms._
+import play.api.data._
+import play.api.i18n.Messages.Implicits._
+import play.api.mvc._
 import views._
 
-trait CategoryAdmin extends Controller with Secured {
+trait CategoryAdmin extends Controller with SecuredController {
   val categoryDAO: CategoryDAO
 
-  val catForm = Form(
+  val catForm: Form[(String, String)] = Form(
     tuple(
       "displayName" -> nonEmptyText,
       "urlName" -> nonEmptyText

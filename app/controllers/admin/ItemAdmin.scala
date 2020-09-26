@@ -1,19 +1,20 @@
 package controllers.admin
 
 import java.io.File
-import play.api.data._
-import play.api.data.Forms._
-import play.api.mvc._
 
 import controllers._
-import models._
+import javax.inject.Inject
 import models.dao._
 import models.images._
+import play.api.data.Forms._
+import play.api.data._
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc._
 import views._
 
-trait ItemAdmin extends Controller with Secured {
-  val categoryDAO: CategoryDAO
-  val itemDAO: ItemDAO
+class ItemAdmin @Inject() (items: Items, admin: Admin, val messagesApi: MessagesApi) extends Controller with SecuredController with I18nSupport {
+  val categoryDAO: CategoryDAO = DAOFactory.categoryDAO
+  val itemDAO: ItemDAO = DAOFactory.itemDAO
 
   val addItemForm = Form(
     tuple(
@@ -43,20 +44,20 @@ trait ItemAdmin extends Controller with Secured {
 
           Images.processImage(newFile)
         }
-        val imageKeys = if(pictureKeys.size == 0) None else Some(pictureKeys.mkString("|"))
+        val imageKeys = if(pictureKeys.isEmpty) None else Some(pictureKeys.mkString("|"))
 
         itemDAO.create(name, descr, minValue, imageKeys, categoryDAO.findByName(cat).get)
-        Redirect(routes.Application.index)
+        Redirect(controllers.routes.Application.index())
       }
     )
   }
 
   def itemSold(id: Int) = IsAuthenticated { username => implicit request =>
-    itemDAO.sell(id).map(item => Ok(Items.itemDetailsPage(item))).getOrElse(NotFound)
+    itemDAO.sell(id).map(item => Ok(items.itemDetailsPage(item))).getOrElse(NotFound)
   }
 
   def deleteItem(id: Int) = IsAuthenticated { username => implicit request =>
     itemDAO.delete(id)
-    Admin.adminHome(username)
+    admin.adminHome(username)
   }
 }

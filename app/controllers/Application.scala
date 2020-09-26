@@ -1,26 +1,23 @@
 package controllers
 
-import play.api._
+import javax.inject.Inject
+import models.dao._
 import play.api.Play.current
-import play.api.data._
 import play.api.cache.Cached
 import play.api.data.Forms._
-import play.api.i18n._
+import play.api.data._
+import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.mvc._
-import play.api.templates.Html
-import models._
-import models.dao._
-import routes.javascript._
+import play.api.routing.JavaScriptReverseRouter
+import play.twirl.api.Html
 import views._
 
-object Application extends Controller {
-  def mainMenu(implicit request: Request[AnyContent]) = html.menu(categoryDAO.all())
+class Application @Inject() (items: Items, mainMenu: MainMenu, val messagesApi: MessagesApi) extends Controller with I18nSupport {
+  val categoryDAO: CategoryDAO = DAOFactory.categoryDAO
+  val userDAO: UserDAO = DAOFactory.userDAO
+  val itemDAO: ItemDAO = DAOFactory.itemDAO
 
-  val categoryDAO = DAOFactory.categoryDAO
-  val userDAO = DAOFactory.userDAO
-  val itemDAO = DAOFactory.itemDAO
-
-  val loginForm = Form(
+  val loginForm: Form[(String, String)] = Form(
     tuple(
       "email" -> text,
       "password" -> text
@@ -30,36 +27,36 @@ object Application extends Controller {
   )
 
   def login = Action { implicit request =>
-    Ok(html.index(body = html.login(loginForm), menu = mainMenu))
+    Ok(html.index(body = html.login(loginForm), menu = mainMenu.menu))
   }
 
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(html.index(body = html.login(formWithErrors), menu = mainMenu)),
-      user => Redirect(routes.Admin.index).withSession("email" -> user._1)
+      formWithErrors => BadRequest(html.index(body = html.login(formWithErrors), menu = mainMenu.menu)),
+      user => Redirect(routes.Admin.index()).withSession("email" -> user._1)
     )
   }
 
   def logout = Action {
-    Redirect(routes.Application.login).withNewSession.flashing(
+    Redirect(routes.Application.login()).withNewSession.flashing(
       "success" -> "You've been logged out"
     )
   }
 
   def index = Cached((_: RequestHeader) => "index", 5) {
     Action { implicit request =>
-      Ok(html.index(body = html.body(Items.itemsHigherBids(itemDAO.all(false))), menu = mainMenu))
+      Ok(html.index(body = html.body(items.itemsHigherBids(itemDAO.all(false))), menu = mainMenu.menu))
     }
   }
 
   def about = Action { implicit request =>
     def findPage(l: Lang) = l match {
-      case Lang(language, _) if language == "pt" => Some(html.index(body = html.about(), menu = mainMenu))
-      case Lang(language, _) if language == "en" => Some(html.index(body = html.about_en(), menu = mainMenu))
+      case Lang(language, _) if language == "pt" => Some(html.index(body = html.about(), menu = mainMenu.menu))
+      case Lang(language, _) if language == "en" => Some(html.index(body = html.about_en(), menu = mainMenu.menu))
       case _ => None
     }
     def findLang(langs: List[Lang]): Html = langs match {
-      case Nil => html.index(body = html.about(), menu = mainMenu)
+      case Nil => html.index(body = html.about(), menu = mainMenu.menu)
       case head :: tail => findPage(head).getOrElse(findLang(tail))
     }
 
@@ -67,14 +64,12 @@ object Application extends Controller {
   }
 
   def lang(code: String) = Action { implicit request =>
-    Redirect(routes.Application.index).withLang(Lang(code))
+    Redirect(routes.Application.index()).withLang(Lang(code))
   }
 
   def javascriptRoutes = Action { implicit request =>
     Ok(
-      Routes.javascriptRouter("jsRoutes")(
-        routes.javascript.Application.lang
-      )).as("text/javascript")
+      JavaScriptReverseRouter("jsRoutes")(routes.javascript.Application.lang)
+    ).as("text/javascript")
   }
-
 }
