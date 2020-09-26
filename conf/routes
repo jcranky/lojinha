@@ -20,8 +20,8 @@ POST        /admin/items                     controllers.admin.ItemAdmin.newItem
 POST        /admin/items/:id/sold            controllers.admin.ItemAdmin.itemSold(id: Int)
 POST        /admin/items/:id/deleted         controllers.admin.ItemAdmin.deleteItem(id: Int)
 
-GET         /admin/cat/form                  controllers.Admin.newCategoryForm
-POST        /admin/cat                       controllers.Admin.newCategory
+GET         /admin/cat/form                  controllers.admin.CategoryAdmin.newCategoryForm
+POST        /admin/cat                       controllers.admin.CategoryAdmin.newCategory
 
 # public stuff
 GET         /items                           controllers.Items.list
