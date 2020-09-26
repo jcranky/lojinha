@@ -1,4 +1,4 @@
-@(item: Item, highestBid: Option[Bid], bidForm: Form[(String, Int, Boolean)])(implicit request: Request[AnyContent], lang: Lang)
+@(item: Item, highestBid: Option[Bid], bidForm: Form[(String, Int, Boolean)])(implicit request: Request[AnyContent], messages: Messages)
 
 @import helper._
 @import models.images._
@@ -26,13 +26,13 @@
             <tr>
               @if(!item.sold) {
                 <td>
-                  @form(routes.Admin.itemSold(item.id)) {
+                  @form(controllers.admin.routes.ItemAdmin.itemSold(item.id)) {
                     <input type="submit" id="soldButton" value="Vendido!">
                   }
                 </td>
               }
               <td>
-                @form(routes.Admin.deleteItem(item.id)) {
+                @form(controllers.admin.routes.ItemAdmin.deleteItem(item.id)) {
                     <input type="submit" id="deleteButton" value="Delete!">
                 }
               </td>

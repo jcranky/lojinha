@@ -1,7 +1,6 @@
-@(itemForm: Form[(String, String, BigDecimal, String, List[String])], categories: Seq[(String, String)])
+@(itemForm: Form[(String, String, BigDecimal, String, List[String])], categories: Seq[(String, String)])(implicit messages: Messages)
 
 @import helper._
-@import helper.twitterBootstrap._
 
 @* re-usable picture field *@
 @pictureField(field: Field, className: String = "picture") = {
@@ -15,7 +14,7 @@
 <div class="well">
     <h2>Adicionar um novo item</h2>
 
-    @form(action = routes.Admin.newItem, 'enctype -> "multipart/form-data") {
+    @form(action = controllers.admin.routes.ItemAdmin.newItem, 'enctype -> "multipart/form-data") {
       @inputText(itemForm("name"), '_label -> "Name: ")
       @textarea(itemForm("description"), '_label -> "Description: ")
       @inputText(itemForm("minValue"), '_label -> "Lance mínimo: ")

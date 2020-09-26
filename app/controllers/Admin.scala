@@ -1,19 +1,19 @@
 package controllers
 
-import play.api.data._
-import play.api.data.Forms._
-import play.api.mvc._
-
 import controllers.admin._
-import models._
+import javax.inject.Inject
 import models.dao._
+import play.api.data.Forms._
+import play.api.data._
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc._
 import views._
 
-object Admin extends Controller with Secured with CategoryAdmin with ItemAdmin {
-  val categoryDAO = DAOFactory.categoryDAO
-  val itemDAO = DAOFactory.itemDAO
+class Admin @Inject() (val messagesApi: MessagesApi) extends Controller with SecuredController with CategoryAdmin with I18nSupport {
+  val categoryDAO: CategoryDAO = DAOFactory.categoryDAO
+  val itemDAO: ItemDAO = DAOFactory.itemDAO
 
-  val changePassForm = Form(
+  val changePassForm: Form[(String, String, String)] = Form(
     tuple(
       "currPass" -> nonEmptyText,
       "newPass" -> nonEmptyText,
@@ -36,7 +36,7 @@ object Admin extends Controller with Secured with CategoryAdmin with ItemAdmin {
   def changePass = IsAuthenticated { username => implicit request =>
     changePassForm.bindFromRequest.fold(
       formWithErrors => {
-        adminHome(username, formWithErrors.fill("", "", ""))
+        adminHome(username, formWithErrors.fill(("", "", "")))
       },
       itemTuple => {
         userDAO.authenticate(username, itemTuple._1).map {user =>

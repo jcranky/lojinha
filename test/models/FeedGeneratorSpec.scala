@@ -10,13 +10,14 @@ class FeedGeneratorSpec extends Specification with Mockito {
   "the feed generator" should {
     "generate a feed with the right amount of entries" in new FeedScope {
       val feed = feedGen.allItemsFeed("http://localhost:9000")
+
       (feed \\ "entry").size must_== 2
       (feed \\ "entry" \ "title")(0).text must_== "Zelda 64"
       (feed \\ "entry" \ "id")(1).text must_== "http://localhost:9000/items/2"
     }
   }
 
-  trait FeedScope extends Scope with Mockito {
+  trait FeedScope extends Scope {
     val cat = Category(1, "Games", "games")
 
     val itemDAO = mock[ItemDAO]

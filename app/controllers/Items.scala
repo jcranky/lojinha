@@ -1,20 +1,22 @@
 package controllers
 
+import javax.inject.Inject
 import models.BidHelper
-import models.dao.{DAOFactory, Item, User}
+import models.dao._
 import play.api.Play.current
 import play.api.cache.Cached
 import play.api.data.Forms._
 import play.api.data._
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import views._
 
-object Items extends Controller with Secured {
-  val categoryDAO = DAOFactory.categoryDAO
-  val itemDAO = DAOFactory.itemDAO
-  val bidDAO = DAOFactory.bidDAO
+class Items @Inject() (mainMenu: MainMenu, val messagesApi: MessagesApi) extends Controller with SecuredController with I18nSupport {
+  val categoryDAO: CategoryDAO = DAOFactory.categoryDAO
+  val itemDAO: ItemDAO = DAOFactory.itemDAO
+  val bidDAO: BidDAO = DAOFactory.bidDAO
 
-  def bidForm(minValue: Int = 1) = Form(
+  def bidForm(minValue: Int = 1): Form[(String, Int, Boolean)] = Form(
     tuple(
       "email" -> email,
       "value" -> number(min = minValue),
@@ -26,7 +28,7 @@ object Items extends Controller with Secured {
     val user: Option[User] = request.session.get("email").map(emailToUser(_).get)
 
     html.index(body = html.itemDetails(item, bidDAO.highest(item.id), form),
-               menu = Application.mainMenu, user = user)
+               menu = mainMenu.menu, user = user)
   }
 
   def newBid(itemId: Int) = Action { implicit request =>
@@ -71,10 +73,10 @@ object Items extends Controller with Secured {
 
   def l(category: Option[String] = None, sold: Boolean) = Action { implicit request =>
     category.map{ cat => categoryDAO.findByName(cat).map { c =>
-        Ok(html.index(body = html.body(itemsHigherBids(itemDAO.all(c, sold))), menu = Application.mainMenu))
+        Ok(html.index(body = html.body(itemsHigherBids(itemDAO.all(c, sold))), menu = mainMenu.menu))
       } getOrElse Redirect("/")
     } getOrElse {
-      Ok(html.index(body = html.body(itemsHigherBids(itemDAO.all(sold))), menu = Application.mainMenu))
+      Ok(html.index(body = html.body(itemsHigherBids(itemDAO.all(sold))), menu = mainMenu.menu))
     }
   }
   

@@ -1,12 +1,14 @@
 package models.aws
 
-import com.amazonaws.auth.BasicAWSCredentials
-import com.amazonaws.services.s3.AmazonS3Client
-import com.amazonaws.services.s3.model._
 import java.io.File
-import play.api.Logger
+
+import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials}
+import com.amazonaws.services.s3.model._
+import com.amazonaws.services.s3.{AmazonS3, AmazonS3ClientBuilder}
+import play.api.{Configuration, Logger}
 
 class S3Sender(image: File, imageName: String) {
+
   def send() = {
     val putRequest = new PutObjectRequest(S3Sender.bucket.get, imageName, image)
     putRequest.setCannedAcl(CannedAccessControlList.PublicRead)
@@ -19,8 +21,12 @@ class S3Sender(image: File, imageName: String) {
 }
 
 object S3Sender {
-  val config = play.api.Play.current.configuration
-  val bucket = config.getString("aws.s3.bucket")
-  val s3 = new AmazonS3Client(
-    new BasicAWSCredentials(config.getString("aws.accessKey").get, config.getString("aws.secretKey").get))
+  val config: Configuration = play.api.Play.current.configuration
+  val bucket: Option[String] = config.getString("aws.s3.bucket")
+
+  val s3: AmazonS3 = AmazonS3ClientBuilder.standard().withCredentials(
+    new AWSStaticCredentialsProvider(
+      new BasicAWSCredentials(config.getString("aws.accessKey").get, config.getString("aws.secretKey").get)
+    )
+  ).build()
 }

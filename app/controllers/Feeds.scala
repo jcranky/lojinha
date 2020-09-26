@@ -1,14 +1,14 @@
 package controllers
 
+import models._
+import models.dao._
 import play.api.Play.current
 import play.api.cache.Cache
 import play.api.mvc._
+
 import scala.xml.NodeSeq
 
-import models._
-import models.dao._
-
-object Feeds extends Controller {
+class Feeds extends Controller {
   val feedGen = new FeedGenerator(DAOFactory.itemDAO)
 
   def latest = Action { implicit request =>
