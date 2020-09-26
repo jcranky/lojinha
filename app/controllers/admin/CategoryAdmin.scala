@@ -1,16 +1,16 @@
 package controllers.admin
 
 import controllers._
+import javax.inject.Inject
 import models.dao._
-import play.api.Play.current
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import views._
 
-trait CategoryAdmin extends Controller with SecuredController {
-  val categoryDAO: CategoryDAO
+class CategoryAdmin @Inject() (val messagesApi: MessagesApi) extends SecuredController with I18nSupport {
+  val categoryDAO: CategoryDAO = DAOFactory.categoryDAO
 
   val catForm: Form[(String, String)] = Form(
     tuple(

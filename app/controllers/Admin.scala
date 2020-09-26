@@ -1,6 +1,5 @@
 package controllers
 
-import controllers.admin._
 import javax.inject.Inject
 import models.dao._
 import play.api.data.Forms._
@@ -9,7 +8,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import views._
 
-class Admin @Inject() (val messagesApi: MessagesApi) extends Controller with SecuredController with CategoryAdmin with I18nSupport {
+class Admin @Inject() (val messagesApi: MessagesApi) extends SecuredController with I18nSupport {
   val categoryDAO: CategoryDAO = DAOFactory.categoryDAO
   val itemDAO: ItemDAO = DAOFactory.itemDAO
 
