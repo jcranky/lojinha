@@ -2,7 +2,8 @@ package controllers
 
 import javax.inject.Inject
 import models.dao._
-import play.api.Play.current
+import models.images.Images
+import play.api.Configuration
 import play.api.cache.Cached
 import play.api.data.Forms._
 import play.api.data._
@@ -12,10 +13,9 @@ import play.api.routing.JavaScriptReverseRouter
 import play.twirl.api.Html
 import views._
 
-class Application @Inject() (items: Items, mainMenu: MainMenu, val messagesApi: MessagesApi) extends Controller with I18nSupport {
-  val categoryDAO: CategoryDAO = DAOFactory.categoryDAO
-  val userDAO: UserDAO = DAOFactory.userDAO
-  val itemDAO: ItemDAO = DAOFactory.itemDAO
+class Application @Inject() (items: Items, mainMenu: MainMenu, userDAO: UserDAO, itemDAO: ItemDAO, categoryDAO: CategoryDAO,
+                             val messagesApi: MessagesApi, cached: Cached)
+                            (implicit webJarAssets: WebJarAssets, configuration: Configuration, images: Images) extends Controller with I18nSupport {
 
   val loginForm: Form[(String, String)] = Form(
     tuple(
@@ -43,7 +43,7 @@ class Application @Inject() (items: Items, mainMenu: MainMenu, val messagesApi: 
     )
   }
 
-  def index = Cached((_: RequestHeader) => "index", 5) {
+  def index = cached((_: RequestHeader) => "index", 5) {
     Action { implicit request =>
       Ok(html.index(body = html.body(items.itemsHigherBids(itemDAO.all(false))), menu = mainMenu.menu))
     }
@@ -51,8 +51,8 @@ class Application @Inject() (items: Items, mainMenu: MainMenu, val messagesApi: 
 
   def about = Action { implicit request =>
     def findPage(l: Lang) = l match {
-      case Lang(language, _) if language == "pt" => Some(html.index(body = html.about(), menu = mainMenu.menu))
-      case Lang(language, _) if language == "en" => Some(html.index(body = html.about_en(), menu = mainMenu.menu))
+      case Lang(locale) if locale.getLanguage == "pt" => Some(html.index(body = html.about(), menu = mainMenu.menu))
+      case Lang(locale) if locale.getLanguage == "en" => Some(html.index(body = html.about_en(), menu = mainMenu.menu))
       case _ => None
     }
     def findLang(langs: List[Lang]): Html = langs match {

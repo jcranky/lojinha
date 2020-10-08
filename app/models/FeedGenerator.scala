@@ -6,7 +6,7 @@ import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import scala.xml.NodeSeq
 
-class FeedGenerator(itemDAO: ItemDAO) {
+class FeedGenerator(itemDAO: ItemDAO, images: Images) {
   def allItemsFeed(baseURL: String): NodeSeq = {
     val items = itemDAO.all(false)
 
@@ -21,7 +21,7 @@ class FeedGenerator(itemDAO: ItemDAO) {
           <div xmlns="http://www.w3.org/1999/xhtml">
             <p>{item.description}</p>
             {item.imageKeys.map { imgKeys =>
-                <p><img src={Images.generateUrl(imgKeys.split('|').head, LargeThumb)}/></p>
+                <p><img src={images.generateUrl(imgKeys.split('|').head, LargeThumb)}/></p>
               }.getOrElse("") }
           </div>
         </content>

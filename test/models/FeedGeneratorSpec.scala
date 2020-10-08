@@ -2,8 +2,8 @@ package models
 
 import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
-
 import models.dao._
+import models.images.Images
 import org.specs2.specification.Scope
 
 class FeedGeneratorSpec extends Specification with Mockito {
@@ -26,6 +26,8 @@ class FeedGeneratorSpec extends Specification with Mockito {
       Item(2, "Mario 64", "Super Mario 64", 0, None, cat)
     )
 
-    val feedGen = new FeedGenerator(itemDAO)
+    val images = mock[Images]
+
+    val feedGen = new FeedGenerator(itemDAO, images)
   }
 }

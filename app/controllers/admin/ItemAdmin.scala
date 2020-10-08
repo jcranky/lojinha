@@ -6,17 +6,17 @@ import controllers._
 import javax.inject.Inject
 import models.dao._
 import models.images._
+import play.api.Configuration
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import views._
 
-class ItemAdmin @Inject() (items: Items, admin: Admin, val messagesApi: MessagesApi) extends Controller with SecuredController with I18nSupport {
-  val categoryDAO: CategoryDAO = DAOFactory.categoryDAO
-  val itemDAO: ItemDAO = DAOFactory.itemDAO
+class ItemAdmin @Inject() (items: Items, admin: Admin, images: Images, itemDAO: ItemDAO, categoryDAO: CategoryDAO, val userDAO: UserDAO, val messagesApi: MessagesApi)
+                          (implicit webJarAssets: WebJarAssets, configuration: Configuration) extends SecuredController with I18nSupport {
 
-  val addItemForm = Form(
+  val addItemForm: Form[(String, String, BigDecimal, String, List[String])] = Form(
     tuple(
       "name" -> nonEmptyText,
       "description" -> nonEmptyText,
@@ -42,7 +42,7 @@ class ItemAdmin @Inject() (items: Items, admin: Admin, val messagesApi: Messages
           val newFile = File.createTempFile("temp-uploaded-", filePart.filename)
           filePart.ref.moveTo(newFile, true)
 
-          Images.processImage(newFile)
+          images.processImage(newFile)
         }
         val imageKeys = if(pictureKeys.isEmpty) None else Some(pictureKeys.mkString("|"))
 

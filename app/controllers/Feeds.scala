@@ -1,20 +1,23 @@
 package controllers
 
+import javax.inject.Inject
 import models._
 import models.dao._
-import play.api.Play.current
-import play.api.cache.Cache
+import models.images.Images
+import play.api.cache.CacheApi
 import play.api.mvc._
 
+import scala.concurrent.duration.FiniteDuration
 import scala.xml.NodeSeq
 
-class Feeds extends Controller {
-  val feedGen = new FeedGenerator(DAOFactory.itemDAO)
+class Feeds @Inject() (images: Images, itemDAO: ItemDAO, feedStatsHelper: FeedStatsHelper, cache: CacheApi) extends Controller {
+  // fixme: inject this instead of creating it here
+  val feedGen = new FeedGenerator(itemDAO, images)
 
   def latest = Action { implicit request =>
-    FeedStatsHelper.incrementDownloadCount(request.remoteAddress)
+    feedStatsHelper.incrementDownloadCount(request.remoteAddress)
 
-    val feedXml = Cache.getOrElse[NodeSeq]("allItems.feed", 3600) {
+    val feedXml = cache.getOrElse[NodeSeq]("allItems.feed", FiniteDuration(3600, "seconds")) {
       feedGen.allItemsFeed("http://" + request.host)
     }
 

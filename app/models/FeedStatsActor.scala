@@ -1,22 +1,23 @@
 package models
 
-import akka.actor.{Actor, Props}
-import models.dao.DAOFactory
-import play.api.Play.current
-import play.api.libs.concurrent.Akka
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import javax.inject.{Inject, Singleton}
+import models.dao.FeedStatsDAO
 
-class FeedStatsActor extends Actor {
-  val feedStatsDAO = DAOFactory.feedStatsDAO
-
+class FeedStatsActor(feedStatsDAO: FeedStatsDAO) extends Actor {
   def receive = {
     case IncrementDownloadCount(origin) => feedStatsDAO.incrementDownloadCount(origin)
   }
 }
 
-object FeedStatsHelper {
-  val feedStatsActor = Akka.system.actorOf(Props[FeedStatsActor], "feed-stats-actor")
+@Singleton
+class FeedStatsHelper @Inject() (system: ActorSystem, feedStatsDAO: FeedStatsDAO) {
 
-  def incrementDownloadCount(origin: String) = feedStatsActor ! IncrementDownloadCount(origin)
+  val feedStatsActor: ActorRef =
+    system.actorOf(Props(new FeedStatsActor(feedStatsDAO)), "feed-stats-actor")
+
+  def incrementDownloadCount(origin: String) =
+    feedStatsActor ! IncrementDownloadCount(origin)
 }
 
 case class IncrementDownloadCount(origin: String)
