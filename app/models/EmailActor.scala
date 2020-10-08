@@ -1,15 +1,8 @@
 package models
 
 import akka.actor._
-import play.api.Play.current
-import play.api.libs.concurrent.Akka
+import javax.inject.{Inject, Singleton}
 import play.api.libs.mailer._
-
-object EMailActor {
-  val actor: ActorRef = Akka.system.actorOf(Props(
-    new EmailActor(new SMTPMailer(new SMTPConfiguration("localhost", 25)))
-  ))
-}
 
 class EmailActor(mailerClient: MailerClient) extends Actor {
   def receive = {
@@ -26,6 +19,13 @@ class EmailActor(mailerClient: MailerClient) extends Actor {
     )
     mailerClient.send(email)
   }
+}
+
+@Singleton
+class EMailActorHelper @Inject() (system: ActorSystem) {
+  val actor: ActorRef = system.actorOf(Props(
+    new EmailActor(new SMTPMailer(new SMTPConfiguration("localhost", 25)))
+  ))
 }
 
 sealed trait EmailMessage {

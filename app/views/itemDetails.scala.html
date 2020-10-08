@@ -1,7 +1,6 @@
-@(item: Item, highestBid: Option[Bid], bidForm: Form[(String, Int, Boolean)])(implicit request: Request[AnyContent], messages: Messages)
+@(item: Item, highestBid: Option[Bid], bidForm: Form[(String, Int, Boolean)])(implicit request: Request[AnyContent], messages: Messages, images: Images)
 
 @import helper._
-@import models.images._
 
 <div class="well">
     <table style="width: 100%">
@@ -43,8 +42,8 @@
     <div>
         @item.imageKeys.map(_.split('|').map {imageKey =>
         <a href="#imgModal" data-toggle="modal"
-           onclick={"javascript:changeModalImg('" + Images.generateUrl(imageKey, VeryLargeThumb) + "')"}>
-              <img src={Images.generateUrl(imageKey, LargeThumb)} class="img-polaroid" />
+           onclick={"javascript:changeModalImg('" + images.generateUrl(imageKey, VeryLargeThumb) + "')"}>
+              <img src={images.generateUrl(imageKey, LargeThumb)} class="img-polaroid" />
           </a>
         }).getOrElse("")
         

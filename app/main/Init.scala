@@ -1,25 +1,28 @@
+package main
 
+import javax.inject.{Inject, Singleton}
+import models.dao.{CategoryDAO, ItemDAO}
 import org.h2.jdbc.JdbcSQLException
 import play.api._
-import models.dao.anorm._
 
-object Global extends GlobalSettings {
-  override def onStart(app: Application) = try {
-    if (app.mode == Mode.Dev) DevData.insert()
+@Singleton
+class Init @Inject() (environment: Environment,  itemDAO: ItemDAO, categoryDAO: CategoryDAO) {
+  try {
+    if (environment.mode == Mode.Dev) new DevData(itemDAO, categoryDAO).insert()
   } catch {
-    case e: JdbcSQLException => // ignore, data is probably inserted in the database already
+    case _: JdbcSQLException => // ignore, data is probably inserted in the database already
   }
 }
 
-object DevData {
-  def insert() = {
+class DevData(itemDAO: ItemDAO, categoryDAO: CategoryDAO) {
+  def insert(): Unit = {
     Seq(
       "Games" -> "games", "Books" -> "books", "CDs" -> "cds").foreach {
-        case (displayName, urlName) => AnormCategoryDAO.create(displayName, urlName)
-      }
-    val gamesCat = AnormCategoryDAO.findByName("games").get
-    val booksCat = AnormCategoryDAO.findByName("books").get
-    val cdsCat = AnormCategoryDAO.findByName("cds").get
+        case (displayName, urlName) => categoryDAO.create(displayName, urlName)
+    }
+    val gamesCat = categoryDAO.findByName("games").get
+    val booksCat = categoryDAO.findByName("books").get
+    val cdsCat = categoryDAO.findByName("cds").get
 
     Seq(
       ("Mario 64", "Mario 64 para Nintendo 64", 80, None, gamesCat),
@@ -33,7 +36,7 @@ object DevData {
       ("Horror Show", "Horror Show, An Iced Earth CD", 20, None, cdsCat),
       ("Fuel", "Fuel, A Metallica CD", 15, None, cdsCat),
       ("Black Album", "Black Album, A Metallica CD", 19, None, cdsCat)).foreach {
-        case (name, description, minValue, imgs, cat) => AnormItemDAO.create(name, description, minValue, imgs, cat)
-      }
+        case (name, description, minValue, imgs, cat) => itemDAO.create(name, description, minValue, imgs, cat)
+    }
   }
 }

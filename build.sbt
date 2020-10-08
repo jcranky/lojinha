@@ -8,8 +8,6 @@ lazy val root =
 
 scalaVersion := "2.11.12"
 
-routesGenerator := InjectedRoutesGenerator
-
 scalacOptions ++= Seq(
   "-deprecation",
   "-feature",
@@ -24,7 +22,7 @@ scalacOptions ++= Seq(
 )
 
 val webJars = Seq(
-  "org.webjars"       %% "webjars-play" % "2.4.0-2",
+  "org.webjars"       %% "webjars-play" % "2.5.0-4",
   "org.webjars"       %  "jquery"       % "2.2.4",
   "org.webjars"       %  "bootstrap"    % "3.4.1"
 )
@@ -38,12 +36,14 @@ libraryDependencies ++= Seq(
   cache,
   jdbc,
   evolutions,
-  "com.amazonaws"     %  "aws-java-sdk" % "1.11.870",
+  // excludes netty, since it was bringing a version incompatible with the one Play 2.5 uses
+  "com.amazonaws"     %  "aws-java-sdk" % "1.11.878" excludeAll(ExclusionRule(organization = "io.netty")),
   "com.typesafe.play" %% "anorm"        % "2.5.3",
-  "com.typesafe.play" %% "play-mailer"  % "4.0.0",
+  "com.typesafe.play" %% "play-mailer"  % "5.0.0",
   "postgresql"        %  "postgresql"   % "9.1-901.jdbc4" % Runtime
 ) ++ webJars ++ testLibs
 
 TwirlKeys.templateImports ++= Seq(
-  "models.dao._"
+  "models.dao._",
+  "models.images._"
 )

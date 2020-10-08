@@ -1,5 +1,7 @@
 package models.dao
 
+import com.google.inject.ImplementedBy
+import models.dao.anorm.{AnormBidDAO, AnormCategoryDAO, AnormItemDAO}
 import org.joda.time.DateTime
 
 case class Category(id: Int, displayName: String, urlName: String)
@@ -18,6 +20,7 @@ object Bid {
     Bid(0, bidderEmail, value, new DateTime, notifyBetterBids, item)
 }
 
+@ImplementedBy(classOf[AnormCategoryDAO])
 trait CategoryDAO {
   def create(displayName: String, urlName: String)
 
@@ -27,6 +30,7 @@ trait CategoryDAO {
   def all(): List[Category]
 }
 
+@ImplementedBy(classOf[AnormItemDAO])
 trait ItemDAO {
   def create(name: String, description: String, minValue: BigDecimal, imageKeys: Option[String], cat: Category)
 
@@ -41,6 +45,7 @@ trait ItemDAO {
   def delete(id: Long)
 }
 
+@ImplementedBy(classOf[AnormBidDAO])
 trait BidDAO {
   def create(bid: Bid)
 

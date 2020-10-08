@@ -4,19 +4,18 @@ import java.io.File
 
 import akka.actor._
 import akka.routing.SmallestMailboxPool
+import javax.inject.{Inject, Singleton}
 import models.aws.S3Sender
-import play.api.Play.current
-import play.api.libs.concurrent.Akka
+import play.api.Configuration
 
 import scala.util.Random
 
-object Images extends Images(Akka.system)
-
-class Images(system: ActorSystem) {
+@Singleton
+class Images @Inject() (system: ActorSystem, configuration: Configuration) {
   val thumberRouter: ActorRef =
-    system.actorOf(Props[ImageThumberActor].withRouter(SmallestMailboxPool(2)), "thumber-router")
+    system.actorOf(Props(new ImageThumberActor()).withRouter(SmallestMailboxPool(2)), "thumber-router")
   val s3SenderRouter: ActorRef =
-    system.actorOf(Props[S3SenderActor].withRouter(SmallestMailboxPool(4)), "s3-sender-router")
+    system.actorOf(Props(new S3SenderActor(configuration)).withRouter(SmallestMailboxPool(4)), "s3-sender-router")
 
   /**
    * Generates a key for the image and returns it immediatelly, while sending the
@@ -32,10 +31,12 @@ class Images(system: ActorSystem) {
 
   def generateUrl(imageKey: String, thumbSize: ThumbSize): String =
     "https://s3.amazonaws.com/%s/%s".format(
-      current.configuration.getString("aws.s3.bucket").get,
-      imageName(imageKey, thumbSize)
+      configuration.getString("aws.s3.bucket").get,
+      Images.imageName(imageKey, thumbSize)
     )
+}
 
+object Images {
   def imageName(imageKey: String, thumbSize: ThumbSize): String = imageKey + thumbSize.suffix + ".png"
 }
 
@@ -55,11 +56,11 @@ class ImageThumberActor extends Actor with ActorLogging {
   }
 }
 
-class S3SenderActor extends Actor with ActorLogging {
+class S3SenderActor(configuration: Configuration) extends Actor with ActorLogging {
   def receive = {
     case SendToS3(image, imageKey) =>
       log.info("about to send {} to s3", imageKey)
-      new S3Sender(image, imageKey).send()
+      new S3Sender(configuration)(image, imageKey).send()
   }
 }
 

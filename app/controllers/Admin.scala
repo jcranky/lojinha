@@ -2,15 +2,15 @@ package controllers
 
 import javax.inject.Inject
 import models.dao._
+import play.api.Configuration
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import views._
 
-class Admin @Inject() (val messagesApi: MessagesApi) extends SecuredController with I18nSupport {
-  val categoryDAO: CategoryDAO = DAOFactory.categoryDAO
-  val itemDAO: ItemDAO = DAOFactory.itemDAO
+class Admin @Inject() (itemDAO: ItemDAO, categoryDAO: CategoryDAO, val userDAO: UserDAO, val messagesApi: MessagesApi)
+                      (implicit webJarAssets: WebJarAssets, configuration: Configuration) extends SecuredController with I18nSupport {
 
   val changePassForm: Form[(String, String, String)] = Form(
     tuple(

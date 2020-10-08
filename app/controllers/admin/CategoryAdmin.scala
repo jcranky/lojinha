@@ -3,14 +3,15 @@ package controllers.admin
 import controllers._
 import javax.inject.Inject
 import models.dao._
+import play.api.Configuration
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import views._
 
-class CategoryAdmin @Inject() (val messagesApi: MessagesApi) extends SecuredController with I18nSupport {
-  val categoryDAO: CategoryDAO = DAOFactory.categoryDAO
+class CategoryAdmin @Inject() (categoryDAO: CategoryDAO, val userDAO: UserDAO, val messagesApi: MessagesApi)
+                              (implicit webJarAssets: WebJarAssets, configuration: Configuration) extends SecuredController with I18nSupport {
 
   val catForm: Form[(String, String)] = Form(
     tuple(
@@ -31,7 +32,7 @@ class CategoryAdmin @Inject() (val messagesApi: MessagesApi) extends SecuredCont
       formWithErrors => BadRequest(categoryFormPage(formWithErrors)),
       catTuple => {
         categoryDAO.create(catTuple._1, catTuple._2)
-        Redirect(controllers.routes.Application.index)
+        Redirect(controllers.routes.Application.index())
       }
     )
   }

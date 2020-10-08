@@ -3,7 +3,8 @@ package controllers
 import javax.inject.Inject
 import models.BidHelper
 import models.dao._
-import play.api.Play.current
+import models.images.Images
+import play.api.Configuration
 import play.api.cache.Cached
 import play.api.data.Forms._
 import play.api.data._
@@ -11,10 +12,9 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 import views._
 
-class Items @Inject() (mainMenu: MainMenu, val messagesApi: MessagesApi) extends Controller with SecuredController with I18nSupport {
-  val categoryDAO: CategoryDAO = DAOFactory.categoryDAO
-  val itemDAO: ItemDAO = DAOFactory.itemDAO
-  val bidDAO: BidDAO = DAOFactory.bidDAO
+class Items @Inject() (mainMenu: MainMenu, itemDAO: ItemDAO, bidDAO: BidDAO, categoryDAO: CategoryDAO, val userDAO: UserDAO,
+                       bidHelper: BidHelper, val messagesApi: MessagesApi, cached: Cached)
+                      (implicit webJarAssets: WebJarAssets, configuration: Configuration, images: Images) extends SecuredController with I18nSupport {
 
   def bidForm(minValue: Int = 1): Form[(String, Int, Boolean)] = Form(
     tuple(
@@ -40,7 +40,7 @@ class Items @Inject() (mainMenu: MainMenu, val messagesApi: MessagesApi) extends
         bidForm(minValue).bindFromRequest.fold(
           formWithErrors => BadRequest(itemDetailsPage(item, formWithErrors)),
           { case (email, value, notify) =>
-              BidHelper.processBid(email, value, notify, itemId, routes.Items.details(itemId).absoluteURL())
+              bidHelper.processBid(email, value, notify, itemId, routes.Items.details(itemId).absoluteURL())
               Redirect(routes.Items.details(itemId))
           }
         )
@@ -49,7 +49,7 @@ class Items @Inject() (mainMenu: MainMenu, val messagesApi: MessagesApi) extends
     }
   }
 
-  def details(itemId: Int) = Cached((_: RequestHeader) => s"item-${itemId}", 5) {
+  def details(itemId: Int) = cached((_: RequestHeader) => s"item-${itemId}", 5) {
     Action { implicit request =>
       itemDAO.findById(itemId) match {
         case Some(item) => Ok(itemDetailsPage(item))

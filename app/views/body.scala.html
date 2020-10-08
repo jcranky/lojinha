@@ -1,5 +1,4 @@
-@(items: Seq[(Item, Option[Bid])])(implicit messages: Messages)
-@import models.images.{Images, MediumThumb}
+@(items: Seq[(Item, Option[Bid])])(implicit messages: Messages, images: Images)
 
 <div class="well">
     <ul class="list-unstyled">
@@ -7,7 +6,7 @@
           <li class='item-li @{if(item.sold) "sold-item-li"}'>
             <a href="@routes.Items.details(item.id)">
                 <div class="pic-m-thumb">
-                    @item.imageKeys.map {imageKeys => <img src="@Images.generateUrl(imageKeys.split('|').head, MediumThumb)" class="img-polaroid">}
+                    @item.imageKeys.map {imageKeys => <img src="@images.generateUrl(imageKeys.split('|').head, MediumThumb)" class="img-polaroid">}
                 </div>
                 <p>
                     @item.name
