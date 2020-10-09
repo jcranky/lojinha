@@ -13,8 +13,9 @@ import play.api.mvc._
 import views._
 
 class Items @Inject() (mainMenu: MainMenu, itemDAO: ItemDAO, bidDAO: BidDAO, categoryDAO: CategoryDAO, val userDAO: UserDAO,
-                       bidHelper: BidHelper, val messagesApi: MessagesApi, cached: Cached)
-                      (implicit webJarAssets: WebJarAssets, configuration: Configuration, images: Images) extends SecuredController with I18nSupport {
+                       bidHelper: BidHelper, cached: Cached, val controllerComponents: ControllerComponents,
+                       indexTemplate: views.html.index)
+                      (implicit configuration: Configuration, images: Images) extends SecuredController with I18nSupport {
 
   def bidForm(minValue: Int = 1): Form[(String, Int, Boolean)] = Form(
     tuple(
@@ -27,8 +28,7 @@ class Items @Inject() (mainMenu: MainMenu, itemDAO: ItemDAO, bidDAO: BidDAO, cat
   def itemDetailsPage(item: Item, form: Form[(String, Int, Boolean)] = bidForm())(implicit request: Request[AnyContent]) = {
     val user: Option[User] = request.session.get("email").map(emailToUser(_).get)
 
-    html.index(body = html.itemDetails(item, bidDAO.highest(item.id), form),
-               menu = mainMenu.menu, user = user)
+    indexTemplate(body = html.itemDetails(item, bidDAO.highest(item.id), form), menu = mainMenu.menu, user = user)
   }
 
   def newBid(itemId: Int) = Action { implicit request =>
@@ -73,10 +73,10 @@ class Items @Inject() (mainMenu: MainMenu, itemDAO: ItemDAO, bidDAO: BidDAO, cat
 
   def l(category: Option[String] = None, sold: Boolean) = Action { implicit request =>
     category.map{ cat => categoryDAO.findByName(cat).map { c =>
-        Ok(html.index(body = html.body(itemsHigherBids(itemDAO.all(c, sold))), menu = mainMenu.menu))
+        Ok(indexTemplate(body = html.body(itemsHigherBids(itemDAO.all(c, sold))), menu = mainMenu.menu))
       } getOrElse Redirect("/")
     } getOrElse {
-      Ok(html.index(body = html.body(itemsHigherBids(itemDAO.all(sold))), menu = mainMenu.menu))
+      Ok(indexTemplate(body = html.body(itemsHigherBids(itemDAO.all(sold))), menu = mainMenu.menu))
     }
   }
   

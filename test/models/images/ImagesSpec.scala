@@ -15,7 +15,7 @@ class ImagesSpec extends Specification with Mockito {
 
     "generate the correct AWS s3 URL" in new ApplicationWithDAOs(Map("aws.s3.bucket" -> "test-bucket")) {
       running(app) {
-        val bucket = app.configuration.getString("aws.s3.bucket").getOrElse("dummyBucket")
+        val bucket = app.configuration.getOptional[String]("aws.s3.bucket").getOrElse("dummyBucket")
         val imageKey = "my-random-imageKey"
 
         new Images(mock[ActorSystem], app.configuration)

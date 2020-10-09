@@ -6,7 +6,7 @@ lazy val root =
   (project in file("."))
     .enablePlugins(PlayScala)
 
-scalaVersion := "2.11.12"
+scalaVersion := "2.12.12"
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -14,17 +14,25 @@ scalacOptions ++= Seq(
   "-unchecked",
   "-language:postfixOps",
   "-language:implicitConversions",
-  "-Ywarn-unused",
 // fixme: cannot be used for now because lots of erros pop up in routes and templates
+//  "-Ywarn-unused",
 //  "-Ywarn-unused-import",
-  "-Xfatal-warnings",
-  "-Xlint"
+//  "-Xlint",
+  "-Xfatal-warnings"
 )
 
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 val webJars = Seq(
-  "org.webjars"       %% "webjars-play" % "2.5.0-4",
-  "org.webjars"       %  "jquery"       % "2.2.4",
-  "org.webjars"       %  "bootstrap"    % "3.4.1"
+  "org.webjars" %% "webjars-play" % "2.6.3",
+  "org.webjars" %  "jquery"       % "2.2.4",
+  "org.webjars" %  "bootstrap"    % "3.4.1"
+)
+
+val databaseDeps = Seq(
+  jdbc,
+  evolutions,
+  "com.h2database" % "h2" % "1.4.200"
 )
 
 val testLibs = Seq(
@@ -33,15 +41,14 @@ val testLibs = Seq(
 ).map(_ % Test)
 
 libraryDependencies ++= Seq(
-  cache,
-  jdbc,
-  evolutions,
+  guice,
+  ehcache,
   // excludes netty, since it was bringing a version incompatible with the one Play 2.5 uses
-  "com.amazonaws"     %  "aws-java-sdk" % "1.11.878" excludeAll(ExclusionRule(organization = "io.netty")),
+  "com.amazonaws"     %  "aws-java-sdk" % "1.11.879" excludeAll(ExclusionRule(organization = "io.netty")),
   "com.typesafe.play" %% "anorm"        % "2.5.3",
-  "com.typesafe.play" %% "play-mailer"  % "5.0.0",
+  "com.typesafe.play" %% "play-mailer"  % "6.0.1",
   "postgresql"        %  "postgresql"   % "9.1-901.jdbc4" % Runtime
-) ++ webJars ++ testLibs
+) ++ webJars ++ databaseDeps ++ testLibs
 
 TwirlKeys.templateImports ++= Seq(
   "models.dao._",

@@ -6,12 +6,13 @@ import models.dao._
 import play.api.Configuration
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
 import play.api.mvc._
 import views._
 
-class CategoryAdmin @Inject() (categoryDAO: CategoryDAO, val userDAO: UserDAO, val messagesApi: MessagesApi)
-                              (implicit webJarAssets: WebJarAssets, configuration: Configuration) extends SecuredController with I18nSupport {
+class CategoryAdmin @Inject() (categoryDAO: CategoryDAO, val userDAO: UserDAO,
+                               val controllerComponents: ControllerComponents, indexTemplate: views.html.index)
+                              (implicit configuration: Configuration) extends SecuredController with I18nSupport {
 
   val catForm: Form[(String, String)] = Form(
     tuple(
@@ -21,7 +22,7 @@ class CategoryAdmin @Inject() (categoryDAO: CategoryDAO, val userDAO: UserDAO, v
   )
 
   def categoryFormPage(form: Form[(String, String)] = catForm)(implicit request: Request[AnyContent]) =
-    html.index(body = html.admin.newCategoryForm(form), menu = html.admin.menu())
+    indexTemplate(body = html.admin.newCategoryForm(form), menu = html.admin.menu())
 
   def newCategoryForm = IsAuthenticated { username => implicit request =>
     Ok(categoryFormPage())

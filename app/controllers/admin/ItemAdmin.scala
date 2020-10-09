@@ -9,12 +9,14 @@ import models.images._
 import play.api.Configuration
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
 import play.api.mvc._
 import views._
 
-class ItemAdmin @Inject() (items: Items, admin: Admin, images: Images, itemDAO: ItemDAO, categoryDAO: CategoryDAO, val userDAO: UserDAO, val messagesApi: MessagesApi)
-                          (implicit webJarAssets: WebJarAssets, configuration: Configuration) extends SecuredController with I18nSupport {
+class ItemAdmin @Inject() (items: Items, admin: Admin, images: Images, itemDAO: ItemDAO, categoryDAO: CategoryDAO,
+                           val userDAO: UserDAO, val controllerComponents: ControllerComponents,
+                           indexTemplate: views.html.index)
+                          (implicit configuration: Configuration) extends SecuredController with I18nSupport {
 
   val addItemForm: Form[(String, String, BigDecimal, String, List[String])] = Form(
     tuple(
@@ -27,7 +29,7 @@ class ItemAdmin @Inject() (items: Items, admin: Admin, images: Images, itemDAO: 
   )
 
   def itemAddFormPage(form: Form[(String, String, BigDecimal, String, List[String])] = addItemForm)(implicit request: Request[_]) =
-    html.index(body = html.admin.newItemForm(form, categoryDAO.all.map(c => c.urlName -> c.displayName)),
+    indexTemplate(body = html.admin.newItemForm(form, categoryDAO.all.map(c => c.urlName -> c.displayName)),
       menu = html.admin.menu())
 
   def newItemForm = IsAuthenticated { username => implicit request =>

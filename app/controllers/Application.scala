@@ -7,15 +7,15 @@ import play.api.Configuration
 import play.api.cache.Cached
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.{I18nSupport, Lang, MessagesApi}
+import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import play.api.routing.JavaScriptReverseRouter
 import play.twirl.api.Html
 import views._
 
-class Application @Inject() (items: Items, mainMenu: MainMenu, userDAO: UserDAO, itemDAO: ItemDAO, categoryDAO: CategoryDAO,
-                             val messagesApi: MessagesApi, cached: Cached)
-                            (implicit webJarAssets: WebJarAssets, configuration: Configuration, images: Images) extends Controller with I18nSupport {
+class Application @Inject() (items: Items, mainMenu: MainMenu, userDAO: UserDAO, itemDAO: ItemDAO,
+                             cached: Cached, val controllerComponents: ControllerComponents, indexTemplate: views.html.index)
+                            (implicit configuration: Configuration, images: Images) extends BaseController with I18nSupport {
 
   val loginForm: Form[(String, String)] = Form(
     tuple(
@@ -27,12 +27,12 @@ class Application @Inject() (items: Items, mainMenu: MainMenu, userDAO: UserDAO,
   )
 
   def login = Action { implicit request =>
-    Ok(html.index(body = html.login(loginForm), menu = mainMenu.menu))
+    Ok(indexTemplate(body = html.login(loginForm), menu = mainMenu.menu))
   }
 
   def authenticate = Action { implicit request =>
     loginForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(html.index(body = html.login(formWithErrors), menu = mainMenu.menu)),
+      formWithErrors => BadRequest(indexTemplate(body = html.login(formWithErrors), menu = mainMenu.menu)),
       user => Redirect(routes.Admin.index()).withSession("email" -> user._1)
     )
   }
@@ -45,18 +45,18 @@ class Application @Inject() (items: Items, mainMenu: MainMenu, userDAO: UserDAO,
 
   def index = cached((_: RequestHeader) => "index", 5) {
     Action { implicit request =>
-      Ok(html.index(body = html.body(items.itemsHigherBids(itemDAO.all(false))), menu = mainMenu.menu))
+      Ok(indexTemplate(body = html.body(items.itemsHigherBids(itemDAO.all(false))), menu = mainMenu.menu))
     }
   }
 
   def about = Action { implicit request =>
     def findPage(l: Lang) = l match {
-      case Lang(locale) if locale.getLanguage == "pt" => Some(html.index(body = html.about(), menu = mainMenu.menu))
-      case Lang(locale) if locale.getLanguage == "en" => Some(html.index(body = html.about_en(), menu = mainMenu.menu))
+      case Lang(locale) if locale.getLanguage == "pt" => Some(indexTemplate(body = html.about(), menu = mainMenu.menu))
+      case Lang(locale) if locale.getLanguage == "en" => Some(indexTemplate(body = html.about_en(), menu = mainMenu.menu))
       case _ => None
     }
     def findLang(langs: List[Lang]): Html = langs match {
-      case Nil => html.index(body = html.about(), menu = mainMenu.menu)
+      case Nil => indexTemplate(body = html.about(), menu = mainMenu.menu)
       case head :: tail => findPage(head).getOrElse(findLang(tail))
     }
 

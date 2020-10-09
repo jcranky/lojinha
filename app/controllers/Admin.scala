@@ -5,12 +5,12 @@ import models.dao._
 import play.api.Configuration
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
 import play.api.mvc._
 import views._
 
-class Admin @Inject() (itemDAO: ItemDAO, categoryDAO: CategoryDAO, val userDAO: UserDAO, val messagesApi: MessagesApi)
-                      (implicit webJarAssets: WebJarAssets, configuration: Configuration) extends SecuredController with I18nSupport {
+class Admin @Inject() (val userDAO: UserDAO, val controllerComponents: ControllerComponents, indexTemplate: views.html.index)
+                      (implicit configuration: Configuration) extends SecuredController with I18nSupport {
 
   val changePassForm: Form[(String, String, String)] = Form(
     tuple(
@@ -18,14 +18,16 @@ class Admin @Inject() (itemDAO: ItemDAO, categoryDAO: CategoryDAO, val userDAO: 
       "newPass" -> nonEmptyText,
       "newPassRepeat" -> nonEmptyText
     ) verifying ("new password and the repeated new password are different", fields => fields match {
-        case (currPass, newPass, newPassRepeat) => newPass == newPassRepeat
+        case (_, newPass, newPassRepeat) =>
+          // fixme: check current password before proceeding!
+          newPass == newPassRepeat
       }
     )
   )
 
   def adminHome(user: Option[User], changePassForm: Form[(String, String, String)] = changePassForm)(implicit request: Request[AnyContent]) =
     user.map { u =>
-      Ok(html.index(body = html.admin.body(changePassForm), menu = html.admin.menu(), user = Some(u)))
+      Ok(indexTemplate(body = html.admin.body(changePassForm), menu = html.admin.menu(), user = Some(u)))
     }.getOrElse(
       Forbidden
     )
@@ -40,9 +42,9 @@ class Admin @Inject() (itemDAO: ItemDAO, categoryDAO: CategoryDAO, val userDAO: 
       itemTuple => {
         userDAO.authenticate(username, itemTuple._1).map {user =>
           userDAO.changePassword(user.email, itemTuple._2)
-          Redirect(routes.Admin.index).flashing("chgPassMsg" -> "password changed successfully")
+          Redirect(routes.Admin.index()).flashing("chgPassMsg" -> "password changed successfully")
         }.getOrElse {
-          Redirect(routes.Admin.index).flashing("chgPassMsg" -> "current password is wrong")
+          Redirect(routes.Admin.index()).flashing("chgPassMsg" -> "current password is wrong")
         }
       }
     )

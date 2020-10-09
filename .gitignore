@@ -11,5 +11,5 @@ dist
 /RUNNING_PID
 .classpath_nb
 .cache
-
+.bsp
 .idea

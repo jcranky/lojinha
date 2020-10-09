@@ -1,4 +1,5 @@
-@(title: String = "Lojinha! To vendendo!", body: Html, menu: Html, user: Option[User] = None)(implicit request: play.api.mvc.Request[Any], messages: Messages, webJarAssets: WebJarAssets, configuration: play.api.Configuration)
+@this(webJarsUtil: org.webjars.play.WebJarsUtil)
+@(title: String = "Lojinha! To vendendo!", body: Html, menu: Html, user: Option[User] = None)(implicit request: play.api.mvc.Request[Any], messages: Messages, configuration: play.api.Configuration)
 <!DOCTYPE html>
 
 <html>
@@ -11,13 +12,13 @@
         <link rel="shortcut icon" type="image/png" href='@routes.Assets.versioned("images/favicon.png")'>
         <link rel="alternate" type="application/atom+xml" title="Feed da Lojinha!" href="@routes.Feeds.latest" >
 
-        <link rel="stylesheet" href='@routes.WebJarAssets.at(webJarAssets.locate("css/bootstrap.min.css"))'>
-        <link rel="stylesheet" href='@routes.WebJarAssets.at(webJarAssets.locate("css/bootstrap-theme.min.css"))'>
+        @webJarsUtil.locate("bootstrap.min.css").css()
+        @webJarsUtil.locate("bootstrap-theme.min.css").css()
         <link rel="stylesheet" media="screen" href='@routes.Assets.versioned("stylesheets/main.css")'>
 
         <script type="text/javascript" src="@routes.Application.javascriptRoutes"></script>
-        <script type='text/javascript' src='@routes.WebJarAssets.at(webJarAssets.locate("jquery.min.js"))'></script>
-        <script type='text/javascript' src='@routes.WebJarAssets.at(webJarAssets.locate("js/bootstrap.min.js"))'></script>
+        @webJarsUtil.locate("jquery.min.js").script()
+        @webJarsUtil.locate("js/bootstrap.min.js").script()
     </head>
     <body>
         <div class="container">
@@ -37,13 +38,11 @@
                         @user.map{u => <span class="user nav pull-right">@u.name</span>}
                         <span class="user nav pull-right">
                             <select id="selectlang" onchange="switchLang()">
-                                @configuration.getStringSeq("play.i18n.langs").getOrElse(Seq.empty[String]).map { langCode =>
+                                @configuration.get[Seq[String]]("play.i18n.langs").map { langCode =>
                                     <option value="@langCode" @if(messages.lang.code == langCode){ selected="selected"}>@langCode</option>
                                 }
                             </select>
-
                         </span>
-
                     </div>
                 </div>
             </nav>
@@ -59,6 +58,9 @@
         </div>
     </body>
     <script>
+
+<!--  TODO: switching languages is not working, and there are a few errors in the Js Console in the browser -->
+
     function switchLang(){
         var codeLang = $("#selectlang").val();
         jsRoutes.controllers.Application.lang(codeLang).ajax();

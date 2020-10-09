@@ -31,7 +31,7 @@ class Images @Inject() (system: ActorSystem, configuration: Configuration) {
 
   def generateUrl(imageKey: String, thumbSize: ThumbSize): String =
     "https://s3.amazonaws.com/%s/%s".format(
-      configuration.getString("aws.s3.bucket").get,
+      configuration.get[String]("aws.s3.bucket"), // fixme: replace get with getOptional
       Images.imageName(imageKey, thumbSize)
     )
 }
