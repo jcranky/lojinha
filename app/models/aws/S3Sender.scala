@@ -8,15 +8,19 @@ import com.amazonaws.services.s3.{AmazonS3, AmazonS3ClientBuilder}
 import play.api.{Configuration, Logger}
 
 class S3Sender(configuration: Configuration)(image: File, imageName: String) {
-  val bucket: Option[String] = configuration.getString("aws.s3.bucket")
+  val bucket: Option[String] = configuration.getOptional[String]("aws.s3.bucket")
 
   val s3: AmazonS3 = AmazonS3ClientBuilder.standard().withCredentials(
     new AWSStaticCredentialsProvider(
-      new BasicAWSCredentials(configuration.getString("aws.accessKey").get, configuration.getString("aws.secretKey").get)
+      new BasicAWSCredentials(
+        // fixme: replace get with getOptional
+        configuration.get[String]("aws.accessKey"),
+        configuration.get[String]("aws.secretKey")
+      )
     )
   ).build()
 
-  def send() = {
+  def send(): Unit = {
     val putRequest = new PutObjectRequest(bucket.get, imageName, image)
     putRequest.setCannedAcl(CannedAccessControlList.PublicRead)
     
