@@ -8,14 +8,22 @@ import play.api._
 @Singleton
 class Init @Inject() (environment: Environment,  itemDAO: ItemDAO, categoryDAO: CategoryDAO) {
   try {
-    if (environment.mode == Mode.Dev) new DevData(itemDAO, categoryDAO).insert()
+    if (environment.mode == Mode.Dev) new DevData(itemDAO, categoryDAO).ensureData()
   } catch {
     case _: JdbcSQLException => // ignore, data is probably inserted in the database already
   }
 }
 
 class DevData(itemDAO: ItemDAO, categoryDAO: CategoryDAO) {
-  def insert(): Unit = {
+  def ensureData(): Int = {
+    val mario64 = itemDAO.findByName("Mario 64")
+    mario64 match {
+      case Some(_) => 0
+      case None => createData()
+    }
+  }
+
+  private def createData(): Int = {
     Seq(
       "Games" -> "games", "Books" -> "books", "CDs" -> "cds").foreach {
         case (displayName, urlName) => categoryDAO.create(displayName, urlName)
@@ -35,8 +43,8 @@ class DevData(itemDAO: ItemDAO, categoryDAO: CategoryDAO) {
       ("Live in Athens", "Live in Athens, An Iced Earth CD", 30, None, cdsCat),
       ("Horror Show", "Horror Show, An Iced Earth CD", 20, None, cdsCat),
       ("Fuel", "Fuel, A Metallica CD", 15, None, cdsCat),
-      ("Black Album", "Black Album, A Metallica CD", 19, None, cdsCat)).foreach {
+      ("Black Album", "Black Album, A Metallica CD", 19, None, cdsCat)).map {
         case (name, description, minValue, imgs, cat) => itemDAO.create(name, description, minValue, imgs, cat)
-    }
+    }.sum
   }
 }

@@ -9,6 +9,7 @@
     </appender>
 
     <logger name="com.zaxxer.hikari" level="warn"/>
+    <logger name="play.filters.csrf" value="trace"/>
 
     <root level="info">
         <appender-ref ref="STDOUT" />

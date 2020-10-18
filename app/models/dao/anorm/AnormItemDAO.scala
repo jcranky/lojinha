@@ -18,7 +18,7 @@ class AnormItemDAO @Inject() (db: Database, categoryDAO: CategoryDAO) extends It
     }
   }
 
-  def create(name: String, description: String, minValue: BigDecimal, imageKeys: Option[String], cat: Category): Unit = db.withConnection { implicit c =>
+  def create(name: String, description: String, minValue: BigDecimal, imageKeys: Option[String], cat: Category): Int = db.withConnection { implicit c =>
     SQL("INSERT INTO item(name, description, min_value, imageKeys, category_id) VALUES({name}, {description}, {minValue}, {imageKeys}, {catId})").on(
       'name -> name, 'description -> description, 'minValue -> minValue.bigDecimal, 'imageKeys -> imageKeys, 'catId -> cat.id).executeUpdate()
   }
@@ -30,6 +30,10 @@ class AnormItemDAO @Inject() (db: Database, categoryDAO: CategoryDAO) extends It
 
   def findById(id: Int): Option[Item] = db.withConnection { implicit c =>
     SQL("SELECT * FROM item WHERE id = {id} AND deleted = false").on('id -> id).as(item singleOpt)
+  }
+
+  def findByName(name: String): Option[Item] = db.withConnection { implicit c =>
+    SQL("SELECT * FROM item WHERE name = {name} AND deleted = false").on('name -> name).as(item singleOpt)
   }
 
   def all(sold: Boolean): List[Item] = db.withConnection { implicit c =>

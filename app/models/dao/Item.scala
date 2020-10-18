@@ -32,11 +32,13 @@ trait CategoryDAO {
 
 @ImplementedBy(classOf[AnormItemDAO])
 trait ItemDAO {
-  def create(name: String, description: String, minValue: BigDecimal, imageKeys: Option[String], cat: Category)
+  def create(name: String, description: String, minValue: BigDecimal, imageKeys: Option[String], cat: Category): Int
 
   def sell(id: Int): Option[Item]
 
   def findById(id: Int): Option[Item]
+
+  def findByName(name: String): Option[Item]
 
   def all(sold: Boolean): List[Item]
 

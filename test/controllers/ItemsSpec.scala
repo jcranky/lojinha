@@ -1,11 +1,9 @@
 package controllers
 
 import helpers.ApplicationWithDAOs
-import org.specs2.mutable.Specification
-import play.api.test.Helpers._
 import play.api.test._
 
-class ItemsSpec extends Specification {
+class ItemsSpec extends PlaySpecification {
 
   "the Items controller" should {
     "not have the sold and delete buttons for not logged in users" in new ApplicationWithDAOs() {

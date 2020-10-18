@@ -8,7 +8,7 @@ import play.api.Configuration
 import play.api.cache.Cached
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
 import play.api.mvc._
 import views._
 
@@ -49,7 +49,8 @@ class Items @Inject() (mainMenu: MainMenu, itemDAO: ItemDAO, bidDAO: BidDAO, cat
     }
   }
 
-  def details(itemId: Int) = cached((_: RequestHeader) => s"item-${itemId}", 5) {
+  // fixme: re-enable this cache in play 2.7, when replacing ehcache with caffeine
+  def details(itemId: Int) = { // cached((_: RequestHeader) => s"item-${itemId}", 5) {
     Action { implicit request =>
       itemDAO.findById(itemId) match {
         case Some(item) => Ok(itemDetailsPage(item))

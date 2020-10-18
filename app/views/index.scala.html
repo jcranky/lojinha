@@ -58,9 +58,6 @@
         </div>
     </body>
     <script>
-
-<!--  TODO: switching languages is not working, and there are a few errors in the Js Console in the browser -->
-
     function switchLang(){
         var codeLang = $("#selectlang").val();
         jsRoutes.controllers.Application.lang(codeLang).ajax();

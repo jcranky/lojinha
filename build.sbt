@@ -42,9 +42,9 @@ val testLibs = Seq(
 
 libraryDependencies ++= Seq(
   guice,
+  // fixme: replace ehcache with caffeine in play 2.7 to make this more testable
   ehcache,
-  // excludes netty, since it was bringing a version incompatible with the one Play 2.5 uses
-  "com.amazonaws"     %  "aws-java-sdk" % "1.11.879" excludeAll(ExclusionRule(organization = "io.netty")),
+  "com.amazonaws"     %  "aws-java-sdk" % "1.11.882",
   "com.typesafe.play" %% "anorm"        % "2.5.3",
   "com.typesafe.play" %% "play-mailer"  % "6.0.1",
   "postgresql"        %  "postgresql"   % "9.1-901.jdbc4" % Runtime
