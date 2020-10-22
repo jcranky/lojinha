@@ -2,16 +2,12 @@ package main
 
 import javax.inject.{Inject, Singleton}
 import models.dao.{CategoryDAO, ItemDAO}
-import org.h2.jdbc.JdbcSQLException
 import play.api._
 
 @Singleton
-class Init @Inject() (environment: Environment,  itemDAO: ItemDAO, categoryDAO: CategoryDAO) {
-  try {
-    if (environment.mode == Mode.Dev) new DevData(itemDAO, categoryDAO).ensureData()
-  } catch {
-    case _: JdbcSQLException => // ignore, data is probably inserted in the database already
-  }
+class Init @Inject()(environment: Environment, itemDAO: ItemDAO, categoryDAO: CategoryDAO) {
+  if (environment.mode == Mode.Dev)
+    new DevData(itemDAO, categoryDAO).ensureData()
 }
 
 class DevData(itemDAO: ItemDAO, categoryDAO: CategoryDAO) {

@@ -6,7 +6,7 @@ lazy val root =
   (project in file("."))
     .enablePlugins(PlayScala)
 
-scalaVersion := "2.12.12"
+scalaVersion := "2.13.3"
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -18,13 +18,13 @@ scalacOptions ++= Seq(
 //  "-Ywarn-unused",
 //  "-Ywarn-unused-import",
 //  "-Xlint",
-  "-Xfatal-warnings"
+//  "-Xfatal-warnings"
 )
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 val webJars = Seq(
-  "org.webjars" %% "webjars-play" % "2.6.3",
+  "org.webjars" %% "webjars-play" % "2.7.3",
   "org.webjars" %  "jquery"       % "2.2.4",
   "org.webjars" %  "bootstrap"    % "3.4.1"
 )
@@ -32,21 +32,20 @@ val webJars = Seq(
 val databaseDeps = Seq(
   jdbc,
   evolutions,
-  "com.h2database" % "h2" % "1.4.200"
+  "org.playframework.anorm" %% "anorm" % "2.6.7",
+  "com.h2database"           % "h2"    % "1.4.200"
 )
 
 val testLibs = Seq(
-  "org.mockito" % "mockito-core" % "3.5.11",
+  "org.mockito" % "mockito-core" % "3.5.15",
   specs2
 ).map(_ % Test)
 
 libraryDependencies ++= Seq(
   guice,
-  // fixme: replace ehcache with caffeine in play 2.7 to make this more testable
-  ehcache,
-  "com.amazonaws"     %  "aws-java-sdk" % "1.11.882",
-  "com.typesafe.play" %% "anorm"        % "2.5.3",
-  "com.typesafe.play" %% "play-mailer"  % "6.0.1",
+  caffeine,
+  "com.amazonaws"     %  "aws-java-sdk" % "1.11.885",
+  "com.typesafe.play" %% "play-mailer"  % "7.0.2",
   "postgresql"        %  "postgresql"   % "9.1-901.jdbc4" % Runtime
 ) ++ webJars ++ databaseDeps ++ testLibs
 

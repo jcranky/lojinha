@@ -43,8 +43,7 @@ class Application @Inject() (items: Items, mainMenu: MainMenu, userDAO: UserDAO,
     )
   }
 
-  // fixme: re-enable this cache in play 2.7, when replacing ehcache with caffeine
-  def index = { //cached((_: RequestHeader) => "index", 5) {
+  def index = cached((_: RequestHeader) => "index", 5) {
     Action { implicit request =>
       Ok(indexTemplate(body = html.body(items.itemsHigherBids(itemDAO.all(false))), menu = mainMenu.menu))
     }

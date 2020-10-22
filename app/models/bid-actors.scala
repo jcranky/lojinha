@@ -52,7 +52,7 @@ class BidProcessor(itemId: Int, itemDAO: ItemDAO, bidDAO: BidDAO) {
 
   var itemBids = new ItemBids(bidDAO.all(itemId), item)
 
-  def addBid(bid: Bid) = if (itemBids.higherBid.filter(_.value > bid.value).isEmpty) {
+  def addBid(bid: Bid) = if (!itemBids.higherBid.exists(_.value > bid.value)) {
     itemBids = itemBids.withBid(bid)
     bidDAO.create(bid)
   }
