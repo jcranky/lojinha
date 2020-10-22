@@ -49,8 +49,7 @@ class Items @Inject() (mainMenu: MainMenu, itemDAO: ItemDAO, bidDAO: BidDAO, cat
     }
   }
 
-  // fixme: re-enable this cache in play 2.7, when replacing ehcache with caffeine
-  def details(itemId: Int) = { // cached((_: RequestHeader) => s"item-${itemId}", 5) {
+  def details(itemId: Int) = cached((_: RequestHeader) => s"item-${itemId}", 5) {
     Action { implicit request =>
       itemDAO.findById(itemId) match {
         case Some(item) => Ok(itemDetailsPage(item))

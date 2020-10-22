@@ -42,7 +42,7 @@ class ItemAdmin @Inject() (items: Items, admin: Admin, images: Images, itemDAO: 
       { case (name, descr, minValue, cat, imgs) =>
         val pictureKeys = request.body.files map {filePart =>
           val newFile = File.createTempFile("temp-uploaded-", filePart.filename)
-          filePart.ref.moveTo(newFile, true)
+          filePart.ref.moveFileTo(newFile, true)
 
           images.processImage(newFile)
         }
