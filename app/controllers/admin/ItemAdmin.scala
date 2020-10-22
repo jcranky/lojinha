@@ -29,7 +29,7 @@ class ItemAdmin @Inject() (items: Items, admin: Admin, images: Images, itemDAO: 
   )
 
   def itemAddFormPage(form: Form[(String, String, BigDecimal, String, List[String])] = addItemForm)(implicit request: Request[_]) =
-    indexTemplate(body = html.admin.newItemForm(form, categoryDAO.all.map(c => c.urlName -> c.displayName)),
+    indexTemplate(body = html.admin.newItemForm(form, categoryDAO.all().map(c => c.urlName -> c.displayName)),
       menu = html.admin.menu())
 
   def newItemForm = IsAuthenticated { username => implicit request =>
@@ -42,7 +42,7 @@ class ItemAdmin @Inject() (items: Items, admin: Admin, images: Images, itemDAO: 
       { case (name, descr, minValue, cat, imgs) =>
         val pictureKeys = request.body.files map {filePart =>
           val newFile = File.createTempFile("temp-uploaded-", filePart.filename)
-          filePart.ref.moveFileTo(newFile, true)
+          filePart.ref.moveTo(newFile, replace = true)
 
           images.processImage(newFile)
         }

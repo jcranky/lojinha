@@ -7,12 +7,12 @@
     <p>You probably should not be here!!</p>
 
     <p class="text-success">@flash.get("chgPassMsg")</p>
-    @form(action = routes.Admin.changePass) {
+    @form(action = routes.Admin.changePass()) {
       <legend>Change your password:</legend>
 
-      @inputPassword(changePassForm("currPass"), '_label -> "Current Password: ")
-      @inputPassword(changePassForm("newPass"), '_label -> "New Password: ")
-      @inputPassword(changePassForm("newPassRepeat"), '_label -> "New Password Again: ")
+      @inputPassword(changePassForm("currPass"), Symbol("_label") -> "Current Password: ")
+      @inputPassword(changePassForm("newPass"), Symbol("_label") -> "New Password: ")
+      @inputPassword(changePassForm("newPassRepeat"), Symbol("_label") -> "New Password Again: ")
 
       <input type="submit" value="Enviar">
     }

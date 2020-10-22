@@ -10,13 +10,14 @@ class EmailActor(mailerClient: MailerClient) extends Actor {
     case m: BidReceivedMessage => sendEmail(m, views.html.email.bidReceived.render(m.itemName, m.itemUrl).body)
   }
   
-  def sendEmail(m: EmailMessage, body: String) {
+  def sendEmail(m: EmailMessage, body: String): Unit = {
     val email = Email(
       m.subject,
       "Lojinha JCranky <noreply@jcranky.com>",
       Seq(m.to),
       bodyText = Some(body)
     )
+
     mailerClient.send(email)
   }
 }

@@ -4,7 +4,7 @@
 
 @* re-usable picture field *@
 @pictureField(field: Field, className: String = "picture") = {
-  @input(field, '_label -> "Pictures", '_class -> className) { (id, name, value, _) =>
+  @input(field, Symbol("_label") -> "Pictures", Symbol("_class") -> className) { (_, name, value, _) =>
     <input class="input-file btn" type="file" name="@name" value="@value">
     <a class="removePicture btn danger">Remove</a>
   }
@@ -14,11 +14,11 @@
 <div class="well">
     <h2>Adicionar um novo item</h2>
 
-    @form(action = controllers.admin.routes.ItemAdmin.newItem, 'enctype -> "multipart/form-data") {
-      @inputText(itemForm("name"), '_label -> "Name: ")
-      @textarea(itemForm("description"), '_label -> "Description: ")
-      @inputText(itemForm("minValue"), '_label -> "Lance mínimo: ")
-      @select(itemForm("category"), options = categories, '_label -> "Category: ")
+    @form(action = controllers.admin.routes.ItemAdmin.newItem(), Symbol("enctype") -> "multipart/form-data") {
+      @inputText(itemForm("name"), Symbol("_label") -> "Name: ")
+      @textarea(itemForm("description"), Symbol("_label") -> "Description: ")
+      @inputText(itemForm("minValue"), Symbol("_label") -> "Lance mínimo: ")
+      @select(itemForm("category"), options = categories, Symbol("_label") -> "Category: ")
 
       <div class="pictures">
           @repeat(itemForm("pictures"), min = 0) {picField =>

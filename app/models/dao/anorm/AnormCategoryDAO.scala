@@ -15,16 +15,18 @@ class AnormCategoryDAO @Inject() (db: Database) extends CategoryDAO {
   }
 
   def create(displayName: String, urlName: String) = db.withConnection { implicit c =>
-    SQL("INSERT INTO category(display_name, url_name) VALUES({displayName}, {urlName})").on(
-      'displayName -> displayName, 'urlName -> urlName).executeUpdate()
+    SQL("INSERT INTO category(display_name, url_name) VALUES({displayName}, {urlName})")
+      .on(Symbol("displayName") -> displayName, Symbol("urlName") -> urlName).executeUpdate()
   }
 
   def findById(id: Int): Option[Category] = db.withConnection { implicit c =>
-    SQL("SELECT * FROM category WHERE id = {id}").on('id -> id).as(category singleOpt)
+    SQL("SELECT * FROM category WHERE id = {id}")
+      .on(Symbol("id") -> id).as(category singleOpt)
   }
 
   def findByName(urlName: String): Option[Category] = db.withConnection { implicit c =>
-    SQL("SELECT * FROM category WHERE url_name = {urlName}").on('urlName -> urlName).as(category singleOpt)
+    SQL("SELECT * FROM category WHERE url_name = {urlName}")
+      .on(Symbol("urlName") -> urlName).as(category singleOpt)
   }
 
   def all(): List[Category] = db.withConnection { implicit c =>

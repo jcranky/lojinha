@@ -19,33 +19,46 @@ class AnormItemDAO @Inject() (db: Database, categoryDAO: CategoryDAO) extends It
   }
 
   def create(name: String, description: String, minValue: BigDecimal, imageKeys: Option[String], cat: Category): Int = db.withConnection { implicit c =>
-    SQL("INSERT INTO item(name, description, min_value, imageKeys, category_id) VALUES({name}, {description}, {minValue}, {imageKeys}, {catId})").on(
-      'name -> name, 'description -> description, 'minValue -> minValue.bigDecimal, 'imageKeys -> imageKeys, 'catId -> cat.id).executeUpdate()
+    SQL("INSERT INTO item(name, description, min_value, imageKeys, category_id) VALUES({name}, {description}, {minValue}, {imageKeys}, {catId})")
+      .on(
+        Symbol("name") -> name,
+        Symbol("description") -> description,
+        Symbol("minValue") -> minValue.bigDecimal,
+        Symbol("imageKeys") -> imageKeys,
+        Symbol("catId") -> cat.id
+      ).executeUpdate()
   }
 
   def sell(id: Int): Option[Item] = db.withConnection { implicit c =>
-    SQL("UPDATE item SET sold = true WHERE id = {id}").on('id -> id).executeUpdate()
+    SQL("UPDATE item SET sold = true WHERE id = {id}")
+      .on(Symbol("id") -> id).executeUpdate()
+
     findById(id)
   }
 
   def findById(id: Int): Option[Item] = db.withConnection { implicit c =>
-    SQL("SELECT * FROM item WHERE id = {id} AND deleted = false").on('id -> id).as(item singleOpt)
+    SQL("SELECT * FROM item WHERE id = {id} AND deleted = false")
+      .on(Symbol("id") -> id).as(item singleOpt)
   }
 
   def findByName(name: String): Option[Item] = db.withConnection { implicit c =>
-    SQL("SELECT * FROM item WHERE name = {name} AND deleted = false").on('name -> name).as(item singleOpt)
+    SQL("SELECT * FROM item WHERE name = {name} AND deleted = false")
+      .on(Symbol("name") -> name).as(item singleOpt)
   }
 
   def all(sold: Boolean): List[Item] = db.withConnection { implicit c =>
-    SQL("SELECT * FROM item WHERE deleted = false AND sold = {sold} ORDER BY created_date DESC").on('sold -> sold).as(item *)
+    SQL("SELECT * FROM item WHERE deleted = false AND sold = {sold} ORDER BY created_date DESC").
+      on(Symbol("sold") -> sold).as(item *)
   }
 
   def all(cat: Category, sold: Boolean): List[Item] = db.withConnection { implicit c =>
-    SQL("SELECT * FROM item WHERE category_id = {catId} AND deleted = false AND sold = {sold} ORDER BY created_date DESC").on('catId -> cat.id, 'sold -> sold).as(item *)
+    SQL("SELECT * FROM item WHERE category_id = {catId} AND deleted = false AND sold = {sold} ORDER BY created_date DESC")
+      .on(Symbol("catId") -> cat.id, Symbol("sold") -> sold).as(item *)
   }
 
   def delete(id: Long): Unit = db.withConnection { implicit c =>
-    SQL("UPDATE item SET deleted = true WHERE id = {id}").on('id -> id).executeUpdate()
+    SQL("UPDATE item SET deleted = true WHERE id = {id}")
+      .on(Symbol("id") -> id).executeUpdate()
   }
 }
 
@@ -58,16 +71,23 @@ class AnormBidDAO @Inject() (db: Database, itemDAO: ItemDAO) extends BidDAO {
   }
 
   def create(bid: Bid) = db.withConnection { implicit c =>
-    SQL("INSERT INTO bid(bidder_email, value, dateTime, notify_better_bids, item_id) VALUES({bidderEmail}, {value}, {dateTime}, {notifyBetterBids}, {itemId})").on(
-      'bidderEmail -> bid.bidderEmail, 'value -> bid.value.bigDecimal, 'dateTime -> bid.dateTime.toDate, 'notifyBetterBids -> bid.notifyBetterBids, 'itemId -> bid.item.id).executeUpdate()
+    SQL("INSERT INTO bid(bidder_email, value, dateTime, notify_better_bids, item_id) VALUES({bidderEmail}, {value}, {dateTime}, {notifyBetterBids}, {itemId})")
+      .on(
+        Symbol("bidderEmail") -> bid.bidderEmail,
+        Symbol("value") -> bid.value.bigDecimal,
+        Symbol("dateTime") -> bid.dateTime.toDate,
+        Symbol("notifyBetterBids") -> bid.notifyBetterBids,
+        Symbol("itemId") -> bid.item.id
+      ).executeUpdate()
   }
 
   def all(itemId: Int): List[Bid] = db.withConnection { implicit c =>
-    SQL("SELECT * FROM bid WHERE item_id = {itemId}").on('itemId -> itemId).as(bid *)
+    SQL("SELECT * FROM bid WHERE item_id = {itemId}")
+      .on(Symbol("itemId") -> itemId).as(bid *)
   }
 
   def highest(itemId: Int): Option[Bid] = db.withConnection { implicit c =>
-    SQL("SELECT * FROM bid WHERE item_id = {itemId} AND value = (SELECT max(value) FROM bid where item_id = {itemId})").on(
-      'itemId -> itemId).as(bid singleOpt)
+    SQL("SELECT * FROM bid WHERE item_id = {itemId} AND value = (SELECT max(value) FROM bid where item_id = {itemId})")
+      .on(Symbol("itemId") -> itemId).as(bid singleOpt)
   }
 }

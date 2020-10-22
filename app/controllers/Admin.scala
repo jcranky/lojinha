@@ -17,11 +17,11 @@ class Admin @Inject() (val userDAO: UserDAO, val controllerComponents: Controlle
       "currPass" -> nonEmptyText,
       "newPass" -> nonEmptyText,
       "newPassRepeat" -> nonEmptyText
-    ) verifying ("new password and the repeated new password are different", fields => fields match {
-        case (_, newPass, newPassRepeat) =>
-          // fixme: check current password before proceeding!
-          newPass == newPassRepeat
-      }
+    ).verifying("new password and the repeated new password are different", fields => fields match {
+      case (_, newPass, newPassRepeat) =>
+        // fixme: check current password before proceeding!
+        newPass == newPassRepeat
+    }
     )
   )
 
@@ -35,7 +35,7 @@ class Admin @Inject() (val userDAO: UserDAO, val controllerComponents: Controlle
   def index = IsAuthenticated { username => implicit request => adminHome(username) }
 
   def changePass = IsAuthenticated { username => implicit request =>
-    changePassForm.bindFromRequest.fold(
+    changePassForm.bindFromRequest().fold(
       formWithErrors => {
         adminHome(username, formWithErrors.fill(("", "", "")))
       },

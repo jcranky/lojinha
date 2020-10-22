@@ -21,9 +21,9 @@ class Application @Inject() (items: Items, mainMenu: MainMenu, userDAO: UserDAO,
     tuple(
       "email" -> text,
       "password" -> text
-    ) verifying ("Invalid email or password", result => result match {
-        case (email, password) => userDAO.authenticate(email, password).isDefined
-      })
+    ).verifying("Invalid email or password", result => result match {
+      case (email, password) => userDAO.authenticate(email, password).isDefined
+    })
   )
 
   def login = Action { implicit request =>
@@ -31,7 +31,7 @@ class Application @Inject() (items: Items, mainMenu: MainMenu, userDAO: UserDAO,
   }
 
   def authenticate = Action { implicit request =>
-    loginForm.bindFromRequest.fold(
+    loginForm.bindFromRequest().fold(
       formWithErrors => BadRequest(indexTemplate(body = html.login(formWithErrors), menu = mainMenu.menu)),
       user => Redirect(routes.Admin.index()).withSession("email" -> user._1)
     )

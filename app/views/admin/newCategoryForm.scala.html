@@ -5,9 +5,9 @@
 <div class="well">
     <h2>Adicionar uma nova categoria</h2>
 
-    @form(action = controllers.admin.routes.CategoryAdmin.newCategory) {
-      @inputText(categoryForm("displayName"), '_label -> "Nome para exibir: ")
-      @inputText(categoryForm("urlName"), '_label -> "Nome para url: ")
+    @form(action = controllers.admin.routes.CategoryAdmin.newCategory()) {
+      @inputText(categoryForm("displayName"), Symbol("_label") -> "Nome para exibir: ")
+      @inputText(categoryForm("urlName"), Symbol("_label") -> "Nome para url: ")
 
       <input class="btn primary" type="submit" value="Enviar">
     }
