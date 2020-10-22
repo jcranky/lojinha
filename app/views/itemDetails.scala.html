@@ -63,11 +63,11 @@
     @if(item.sold) {
       <p id="soldWarning" class="text-warning">Vendido!</p>
     } else {
-      @form(routes.Items.newBid(item.id), args = 'id -> "newBidForm") {
+      @form(routes.Items.newBid(item.id), args = Symbol("id") -> "newBidForm") {
         <legend>Novo Lance:</legend>
-        @inputText(bidForm("email"), '_label -> "e-mail")
-        @inputText(bidForm("value"), '_label -> "valor")
-        @checkbox(bidForm("notifyBetterBids"), '_label -> "avisar se o lance for superado")
+        @inputText(bidForm("email"), Symbol("_label") -> "e-mail")
+        @inputText(bidForm("value"), Symbol("_label") -> "valor")
+        @checkbox(bidForm("notifyBetterBids"), Symbol("_label") -> "avisar se o lance for superado")
         <input type="submit" value="Enviar">
       }
     }

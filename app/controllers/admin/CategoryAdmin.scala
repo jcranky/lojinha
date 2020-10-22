@@ -29,7 +29,7 @@ class CategoryAdmin @Inject() (categoryDAO: CategoryDAO, val userDAO: UserDAO,
   }
 
   def newCategory = IsAuthenticated { username => implicit request =>
-    catForm.bindFromRequest.fold(
+    catForm.bindFromRequest().fold(
       formWithErrors => BadRequest(categoryFormPage(formWithErrors)),
       catTuple => {
         categoryDAO.create(catTuple._1, catTuple._2)

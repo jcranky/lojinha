@@ -18,13 +18,13 @@ scalacOptions ++= Seq(
 //  "-Ywarn-unused",
 //  "-Ywarn-unused-import",
 //  "-Xlint",
-//  "-Xfatal-warnings"
+  "-Xfatal-warnings"
 )
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 val webJars = Seq(
-  "org.webjars" %% "webjars-play" % "2.7.3",
+  "org.webjars" %% "webjars-play" % "2.8.0",
   "org.webjars" %  "jquery"       % "2.2.4",
   "org.webjars" %  "bootstrap"    % "3.4.1"
 )
@@ -45,7 +45,7 @@ libraryDependencies ++= Seq(
   guice,
   caffeine,
   "com.amazonaws"     %  "aws-java-sdk" % "1.11.885",
-  "com.typesafe.play" %% "play-mailer"  % "7.0.2",
+  "com.typesafe.play" %% "play-mailer"  % "8.0.1",
   "postgresql"        %  "postgresql"   % "9.1-901.jdbc4" % Runtime
 ) ++ webJars ++ databaseDeps ++ testLibs
 

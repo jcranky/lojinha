@@ -12,7 +12,7 @@ case class Item(id: Int, name: String, description: String, minValue: BigDecimal
 case class Bid(id: Int, bidderEmail: String, value: BigDecimal, dateTime: DateTime,
                notifyBetterBids: Boolean, item: Item) extends Ordered[Bid] {
 
-  def compare(otherBid: Bid) = (value - otherBid.value).toInt
+  def compare(otherBid: Bid): Int = (value - otherBid.value).toInt
 }
 
 object Bid {
@@ -22,7 +22,7 @@ object Bid {
 
 @ImplementedBy(classOf[AnormCategoryDAO])
 trait CategoryDAO {
-  def create(displayName: String, urlName: String)
+  def create(displayName: String, urlName: String): Unit
 
   def findById(id: Int): Option[Category]
   def findByName(name: String): Option[Category]
@@ -44,12 +44,12 @@ trait ItemDAO {
 
   def all(cat: Category, sold: Boolean): List[Item]
 
-  def delete(id: Long)
+  def delete(id: Long): Unit
 }
 
 @ImplementedBy(classOf[AnormBidDAO])
 trait BidDAO {
-  def create(bid: Bid)
+  def create(bid: Bid): Unit
 
   def all(itemId: Int): List[Bid]
 

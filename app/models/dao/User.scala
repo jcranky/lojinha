@@ -11,5 +11,5 @@ trait UserDAO {
 
   def findByEmail(email: String): Option[User]
 
-  def changePassword(email: String, newPasswd: String)
+  def changePassword(email: String, newPasswd: String): Unit
 }

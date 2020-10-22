@@ -2,7 +2,7 @@
 
 <div class="list-group">
     <a class="list-group-item" href="#">@Messages("menu.categories")</a>
-    <a class="list-group-item" href="@routes.Application.index">@Messages("menu.all")</a>
+    <a class="list-group-item" href="@routes.Application.index()">@Messages("menu.all")</a>
     @categories.map { cat =>
         <a href="@routes.Items.listCat(cat.urlName)" class="list-group-item">@cat.displayName</a>
     }

@@ -1,7 +1,7 @@
 @(form: Form[(String,String)])(implicit flash: Flash)
 
 <div class="well">
-@helper.form(routes.Application.authenticate) {
+@helper.form(routes.Application.authenticate()) {
     <h2>Sign in</h2>
 
     @form.globalError.map { error =>

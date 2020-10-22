@@ -16,13 +16,17 @@ class AnormFeedStatsDAO @Inject() (db: Database) extends FeedStatsDAO {
   }
 
   def incrementDownloadCount(origin: String): Unit = db.withConnection { implicit c =>
-    val feedStatOpt = SQL("SELECT * FROM feed_stats WHERE origin = {origin}").on('origin -> origin).as(feedStats singleOpt)
+    val feedStatOpt = SQL("SELECT * FROM feed_stats WHERE origin = {origin}")
+      .on(Symbol("origin") -> origin).as(feedStats singleOpt)
+
     val feedStat = feedStatOpt.getOrElse {
-      SQL("INSERT INTO feed_stats(origin, download_count) VALUES({origin}, 0)").on('origin -> origin).executeUpdate()
+      SQL("INSERT INTO feed_stats(origin, download_count) VALUES({origin}, 0)")
+        .on(Symbol("origin") -> origin).executeUpdate()
+
       FeedStats(origin, 0)
     }
 
-    SQL("UPDATE feed_stats SET download_count = {count} WHERE origin = {origin}").on(
-      'count -> (feedStat.downloadCount + 1), 'origin -> origin).executeUpdate()
+    SQL("UPDATE feed_stats SET download_count = {count} WHERE origin = {origin}")
+      .on(Symbol("count") -> (feedStat.downloadCount + 1), Symbol("origin") -> origin).executeUpdate()
   }
 }

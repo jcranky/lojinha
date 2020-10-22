@@ -15,15 +15,17 @@ class AnormUserDAO @Inject() (db: Database) extends UserDAO {
   }
 
   def authenticate(email: String, passwd: String): Option[User] = db.withConnection { implicit c =>
-    SQL("SELECT * FROM _user WHERE email = {email} AND passwd = {passwd}").on('email -> email, 'passwd -> passwd).as(user singleOpt)
+    SQL("SELECT * FROM _user WHERE email = {email} AND passwd = {passwd}")
+      .on(Symbol("email") -> email, Symbol("passwd") -> passwd).as(user singleOpt)
   }
 
   def findByEmail(email: String): Option[User] = db.withConnection { implicit c =>
-    SQL("SELECT * FROM _user WHERE email = {email}").on('email -> email).as(user singleOpt)
+    SQL("SELECT * FROM _user WHERE email = {email}")
+      .on(Symbol("email") -> email).as(user singleOpt)
   }
 
-  def changePassword(email: String, newPasswd: String) = db.withConnection { implicit c =>
-    SQL("UPDATE _user set passwd = {password} WHERE email = {email}").on(
-      'password -> newPasswd, 'email -> email).executeUpdate()
+  def changePassword(email: String, newPasswd: String): Unit = db.withConnection { implicit c =>
+    SQL("UPDATE _user set passwd = {password} WHERE email = {email}")
+      .on(Symbol("password") -> newPasswd, Symbol("email") -> email).executeUpdate()
   }
 }
