@@ -25,8 +25,8 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 val webJars = Seq(
   "org.webjars" %% "webjars-play" % "2.8.0",
-  "org.webjars" %  "jquery"       % "2.2.4",
-  "org.webjars" %  "bootstrap"    % "3.4.1"
+  "org.webjars" %  "jquery"       % "3.5.1",
+  "org.webjars" %  "bootstrap"    % "4.5.3"
 )
 
 val databaseDeps = Seq(
@@ -37,14 +37,14 @@ val databaseDeps = Seq(
 )
 
 val testLibs = Seq(
-  "org.mockito" % "mockito-core" % "3.5.15",
+  "org.mockito" % "mockito-core" % "3.6.0",
   specs2
 ).map(_ % Test)
 
 libraryDependencies ++= Seq(
   guice,
   caffeine,
-  "com.amazonaws"     %  "aws-java-sdk" % "1.11.885",
+  "com.amazonaws"     %  "aws-java-sdk" % "1.11.891",
   "com.typesafe.play" %% "play-mailer"  % "8.0.1",
   "postgresql"        %  "postgresql"   % "9.1-901.jdbc4" % Runtime
 ) ++ webJars ++ databaseDeps ++ testLibs
