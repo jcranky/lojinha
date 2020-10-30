@@ -46,7 +46,7 @@ libraryDependencies ++= Seq(
   caffeine,
   "com.amazonaws"     %  "aws-java-sdk" % "1.11.891",
   "com.typesafe.play" %% "play-mailer"  % "8.0.1",
-  "postgresql"        %  "postgresql"   % "9.1-901.jdbc4" % Runtime
+  "postgresql"        %  "postgresql"   % "9.1-901-1.jdbc4" % Runtime
 ) ++ webJars ++ databaseDeps ++ testLibs
 
 TwirlKeys.templateImports ++= Seq(
