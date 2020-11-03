@@ -9,7 +9,8 @@ class EmailActor(mailerClient: MailerClient) extends Actor {
     case m: BidToppedMessage => sendEmail(m, views.html.email.bidTopped.render(m.itemName, m.itemUrl).body)
     case m: BidReceivedMessage => sendEmail(m, views.html.email.bidReceived.render(m.itemName, m.itemUrl).body)
   }
-  
+
+  @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
   def sendEmail(m: EmailMessage, body: String): Unit = {
     val email = Email(
       m.subject,
@@ -36,10 +37,10 @@ sealed trait EmailMessage {
   val subject: String
 }
 
-case class BidToppedMessage(itemName: String, itemUrl: String, to: String) extends EmailMessage {
+final case class BidToppedMessage(itemName: String, itemUrl: String, to: String) extends EmailMessage {
   val subject = "better bid received"
 }
 
-case class BidReceivedMessage(itemName: String, itemUrl: String, to: String) extends EmailMessage {
+final case class BidReceivedMessage(itemName: String, itemUrl: String, to: String) extends EmailMessage {
   val subject = "your bid has been received"
 }

@@ -6,10 +6,11 @@ import org.specs2.mutable.Specification
 
 import models.dao._
 
+@SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
 class ItemBidsSpec extends Specification with Mockito {
-  implicit val item = mock[Item]
-  val bid = Bid(1, "someone@jcranky.com", 10, new DateTime, false, item)
-  val itemBids = ItemBids(Some(bid), List(bid))
+  implicit val item: Item = mock[Item]
+  val bid: Bid = Bid(1, "someone@jcranky.com", 10, new DateTime, false, item)
+  val itemBids: ItemBids = ItemBids(Some(bid), List(bid))
 
   "a bid handler" should {
     "add the bid as higherBid if there is no previous bid" in {

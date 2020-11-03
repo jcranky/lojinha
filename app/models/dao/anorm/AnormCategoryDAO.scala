@@ -8,13 +8,14 @@ import play.api.db.Database
 
 @Singleton
 class AnormCategoryDAO @Inject() (db: Database) extends CategoryDAO {
-  val category = {
+
+  private val category: RowParser[Category] = {
     int("id") ~ str("display_name") ~ str("url_name") map {
       case id~displayName~urlName => Category(id, displayName, urlName)
     }
   }
 
-  def create(displayName: String, urlName: String) = db.withConnection { implicit c =>
+  def create(displayName: String, urlName: String): Int = db.withConnection { implicit c =>
     SQL("INSERT INTO category(display_name, url_name) VALUES({displayName}, {urlName})")
       .on(Symbol("displayName") -> displayName, Symbol("urlName") -> urlName).executeUpdate()
   }

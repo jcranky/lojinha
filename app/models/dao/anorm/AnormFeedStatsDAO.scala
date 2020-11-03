@@ -15,6 +15,7 @@ class AnormFeedStatsDAO @Inject() (db: Database) extends FeedStatsDAO {
     }
   }
 
+  @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
   def incrementDownloadCount(origin: String): Unit = db.withConnection { implicit c =>
     val feedStatOpt = SQL("SELECT * FROM feed_stats WHERE origin = {origin}")
       .on(Symbol("origin") -> origin).as(feedStats singleOpt)

@@ -3,6 +3,7 @@ package models
 import helpers.ApplicationWithDAOs
 import play.api.test._
 
+@SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
 class BidProcessorSpec extends PlaySpecification {
   sequential
 

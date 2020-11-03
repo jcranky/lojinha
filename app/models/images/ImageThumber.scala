@@ -19,22 +19,25 @@ class ImageThumber(image: File, imageKey: String) {
     (writeImage(newWidth, newHeight, imageBuf, thumbSize, imageName), imageName)
   }
 
+  @SuppressWarnings(Array("org.wartremover.warts.Null", "org.wartremover.warts.NonUnitStatements"))
   private def writeImage(width: Int, height: Int, imageBuf: BufferedImage, thumbSize: ThumbSize, imageName: String) = {
     val scaledImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     val g = scaledImage.createGraphics
     g.setComposite(AlphaComposite.Src)
     g.drawImage(imageBuf, 0, 0, width, height, null);
-    g.dispose
+    g.dispose()
 
     val destFile = new File(image.getParentFile, imageName)
     ImageIO.write(scaledImage, "png", destFile)
+
     destFile
   }
 }
 
 object ImageThumber {
-  val sizes = List(SmallThumb, MediumThumb, LargeThumb, VeryLargeThumb)
+  private val sizes = List(SmallThumb, MediumThumb, LargeThumb, VeryLargeThumb)
 
+  @SuppressWarnings(Array("org.wartremover.warts.Var"))
   def newSizesFor(thumbSize: ThumbSize, originalWidth: Int, originalHeight: Int): (Int, Int) = {
     var newWidth: Double = originalWidth
     var newHeight: Double = originalHeight

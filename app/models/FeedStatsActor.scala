@@ -16,8 +16,8 @@ class FeedStatsHelper @Inject() (system: ActorSystem, feedStatsDAO: FeedStatsDAO
   val feedStatsActor: ActorRef =
     system.actorOf(Props(new FeedStatsActor(feedStatsDAO)), "feed-stats-actor")
 
-  def incrementDownloadCount(origin: String) =
+  def incrementDownloadCount(origin: String): Unit =
     feedStatsActor ! IncrementDownloadCount(origin)
 }
 
-case class IncrementDownloadCount(origin: String)
+final case class IncrementDownloadCount(origin: String)

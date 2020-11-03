@@ -6,6 +6,7 @@ import org.specs2.mock.Mockito
 import org.specs2.mutable.Specification
 import play.api.test.Helpers._
 
+@SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
 class ImagesSpec extends Specification with Mockito {
 
   "Images" should {

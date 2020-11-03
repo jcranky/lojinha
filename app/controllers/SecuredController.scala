@@ -12,14 +12,16 @@ trait SecuredController extends BaseController {
   private def onUnauthorized(request: RequestHeader): Result =
     Results.Redirect(routes.Application.login())
 
-  def IsAuthenticated(f: => String => Request[AnyContent] => Result) = Security.Authenticated(username, onUnauthorized) { user =>
+  def IsAuthenticated(f: => String => Request[AnyContent] => Result): EssentialAction = Security.Authenticated(username, onUnauthorized) { user =>
     Action(request => f(user)(request))
   }
 
-  def IsAuthenticatedMultipart(f: => String => Request[play.api.mvc.MultipartFormData[play.api.libs.Files.TemporaryFile]] => Result) =
+  def IsAuthenticatedMultipart(f: => String => Request[play.api.mvc.MultipartFormData[play.api.libs.Files.TemporaryFile]] => Result): EssentialAction =
     Security.Authenticated(username, onUnauthorized) { user =>
       Action(parse.multipartFormData) { request => f(user)(request) }
     }
 
-  implicit def emailToUser(email: String): Option[User] = userDAO.findByEmail(email)
+  @SuppressWarnings(Array("org.wartremover.warts.ImplicitConversion"))
+  implicit def emailToUser(email: String): Option[User] =
+    userDAO.findByEmail(email)
 }

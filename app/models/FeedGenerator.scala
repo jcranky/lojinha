@@ -7,6 +7,8 @@ import org.joda.time.format.ISODateTimeFormat
 import scala.xml.NodeSeq
 
 class FeedGenerator(itemDAO: ItemDAO, images: Images) {
+
+  @SuppressWarnings(Array("org.wartremover.warts.JavaSerializable", "org.wartremover.warts.Serializable"))
   def allItemsFeed(baseURL: String): NodeSeq = {
     val items = itemDAO.all(false)
 

@@ -5,6 +5,7 @@ import models.dao.{CategoryDAO, ItemDAO}
 import play.api._
 
 @Singleton
+@SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
 class Init @Inject()(environment: Environment, itemDAO: ItemDAO, categoryDAO: CategoryDAO) {
   if (environment.mode == Mode.Dev)
     new DevData(itemDAO, categoryDAO).ensureData()
@@ -19,6 +20,7 @@ class DevData(itemDAO: ItemDAO, categoryDAO: CategoryDAO) {
     }
   }
 
+  @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
   private def createData(): Int = {
     Seq(
       "Games" -> "games", "Books" -> "books", "CDs" -> "cds").foreach {

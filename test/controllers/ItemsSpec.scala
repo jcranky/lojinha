@@ -3,6 +3,7 @@ package controllers
 import helpers.ApplicationWithDAOs
 import play.api.test._
 
+@SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements", "org.wartremover.warts.OptionPartial"))
 class ItemsSpec extends PlaySpecification {
 
   "the Items controller" should {

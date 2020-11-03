@@ -5,6 +5,7 @@ import org.specs2.mutable.Specification
 import play.api.test.Helpers._
 import play.api.test._
 
+@SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements", "org.wartremover.warts.OptionPartial"))
 class AdminSpec extends Specification {
 
   "the Admin controller handling item sold status" should {

@@ -8,6 +8,7 @@ import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import play.twirl.api.HtmlFormat
 import views._
 
 class CategoryAdmin @Inject() (categoryDAO: CategoryDAO, val userDAO: UserDAO,
@@ -21,14 +22,15 @@ class CategoryAdmin @Inject() (categoryDAO: CategoryDAO, val userDAO: UserDAO,
     )
   )
 
-  def categoryFormPage(form: Form[(String, String)] = catForm)(implicit request: Request[AnyContent]) =
+  def categoryFormPage(form: Form[(String, String)] = catForm)(implicit request: Request[AnyContent]): HtmlFormat.Appendable =
     indexTemplate(body = html.admin.newCategoryForm(form), menu = html.admin.menu())
 
-  def newCategoryForm = IsAuthenticated { username => implicit request =>
+  def newCategoryForm: EssentialAction = IsAuthenticated { username =>implicit request =>
     Ok(categoryFormPage())
   }
 
-  def newCategory = IsAuthenticated { username => implicit request =>
+  @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
+  def newCategory: EssentialAction = IsAuthenticated { username =>implicit request =>
     catForm.bindFromRequest().fold(
       formWithErrors => BadRequest(categoryFormPage(formWithErrors)),
       catTuple => {
