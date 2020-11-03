@@ -64,5 +64,5 @@ class S3SenderActor(configuration: Configuration) extends Actor with ActorLoggin
   }
 }
 
-case class GenThumb(image: File, imageKey: String)
-case class SendToS3(image: File, imageName: String)
+final case class GenThumb(image: File, imageKey: String)
+final case class SendToS3(image: File, imageName: String)

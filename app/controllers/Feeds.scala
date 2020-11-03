@@ -14,9 +14,9 @@ class Feeds @Inject() (images: Images, itemDAO: ItemDAO, feedStatsHelper: FeedSt
                        cache: SyncCacheApi, val controllerComponents: ControllerComponents) extends BaseController {
 
   // fixme: inject this instead of creating it here
-  val feedGen = new FeedGenerator(itemDAO, images)
+  private val feedGen = new FeedGenerator(itemDAO, images)
 
-  def latest = Action { implicit request =>
+  def latest: Action[AnyContent] = Action { implicit request =>
     feedStatsHelper.incrementDownloadCount(request.remoteAddress)
 
     val feedXml = cache.getOrElseUpdate[NodeSeq]("allItems.feed", FiniteDuration(3600, "seconds")) {

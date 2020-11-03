@@ -53,3 +53,18 @@ TwirlKeys.templateImports ++= Seq(
   "models.dao._",
   "models.images._"
 )
+
+// to avoid checking play generated files
+wartremoverExcluded += target.value
+
+wartremoverErrors ++= Warts.allBut(
+  Wart.Any,
+  Wart.Nothing,
+  Wart.ImplicitParameter,
+  Wart.Overloading,
+  Wart.Equals,
+  Wart.MutableDataStructures,
+  Wart.StringPlusAny,
+  Wart.DefaultArguments,
+  Wart.Recursion
+)

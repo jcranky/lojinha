@@ -26,30 +26,30 @@ class Application @Inject() (items: Items, mainMenu: MainMenu, userDAO: UserDAO,
     })
   )
 
-  def login = Action { implicit request =>
+  def login: Action[AnyContent] = Action { implicit request =>
     Ok(indexTemplate(body = html.login(loginForm), menu = mainMenu.menu))
   }
 
-  def authenticate = Action { implicit request =>
+  def authenticate: Action[AnyContent] = Action { implicit request =>
     loginForm.bindFromRequest().fold(
       formWithErrors => BadRequest(indexTemplate(body = html.login(formWithErrors), menu = mainMenu.menu)),
       user => Redirect(routes.Admin.index()).withSession("email" -> user._1)
     )
   }
 
-  def logout = Action {
+  def logout: Action[AnyContent] = Action {
     Redirect(routes.Application.login()).withNewSession.flashing(
       "success" -> "You've been logged out"
     )
   }
 
-  def index = cached((_: RequestHeader) => "index", 5) {
+  def index: EssentialAction = cached((_: RequestHeader) => "index", 5) {
     Action { implicit request =>
       Ok(indexTemplate(body = html.body(items.itemsHigherBids(itemDAO.all(false))), menu = mainMenu.menu))
     }
   }
 
-  def about = Action { implicit request =>
+  def about: Action[AnyContent] = Action { implicit request =>
     def findPage(l: Lang) = l match {
       case Lang(locale) if locale.getLanguage == "pt" => Some(indexTemplate(body = html.about(), menu = mainMenu.menu))
       case Lang(locale) if locale.getLanguage == "en" => Some(indexTemplate(body = html.about_en(), menu = mainMenu.menu))
@@ -63,11 +63,11 @@ class Application @Inject() (items: Items, mainMenu: MainMenu, userDAO: UserDAO,
     Ok(findLang(request.acceptLanguages.toList))
   }
 
-  def lang(code: String) = Action { implicit request =>
+  def lang(code: String): Action[AnyContent] = Action { implicit request =>
     Redirect(routes.Application.index()).withLang(Lang(code))
   }
 
-  def javascriptRoutes = Action { implicit request =>
+  def javascriptRoutes: Action[AnyContent] = Action { implicit request =>
     Ok(
       JavaScriptReverseRouter("jsRoutes")(routes.javascript.Application.lang)
     ).as("text/javascript")

@@ -25,16 +25,17 @@ class Admin @Inject() (val userDAO: UserDAO, val controllerComponents: Controlle
     )
   )
 
-  def adminHome(user: Option[User], changePassForm: Form[(String, String, String)] = changePassForm)(implicit request: Request[AnyContent]) =
+  def adminHome(user: Option[User], changePassForm: Form[(String, String, String)] = changePassForm)(implicit request: Request[AnyContent]): Result =
     user.map { u =>
       Ok(indexTemplate(body = html.admin.body(changePassForm), menu = html.admin.menu(), user = Some(u)))
     }.getOrElse(
       Forbidden
     )
 
-  def index = IsAuthenticated { username => implicit request => adminHome(username) }
+  def index: EssentialAction = IsAuthenticated { username => implicit request => adminHome(username) }
 
-  def changePass = IsAuthenticated { username => implicit request =>
+  @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
+  def changePass: EssentialAction = IsAuthenticated { username =>implicit request =>
     changePassForm.bindFromRequest().fold(
       formWithErrors => {
         adminHome(username, formWithErrors.fill(("", "", "")))

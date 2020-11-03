@@ -5,6 +5,7 @@ import org.specs2.mutable.Specification
 import play.api.test._
 import play.api.test.Helpers._
 
+@SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
 class ApplicationSpec extends Specification {
 
   "the application main controller" should {

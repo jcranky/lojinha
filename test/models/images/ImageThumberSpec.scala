@@ -2,6 +2,7 @@ package models.images
 
 import org.specs2.mutable.Specification
 
+@SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
 class ImageThumberSpec extends Specification {
   "the ImageThumber" should {
     "return the same width and height for sizes smaller than the thumb size" in {

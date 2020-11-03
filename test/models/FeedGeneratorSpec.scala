@@ -6,10 +6,13 @@ import models.dao._
 import models.images.Images
 import org.specs2.specification.Scope
 
+import scala.xml.NodeSeq
+
+@SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
 class FeedGeneratorSpec extends Specification with Mockito {
   "the feed generator" should {
     "generate a feed with the right amount of entries" in new FeedScope {
-      val feed = feedGen.allItemsFeed("http://localhost:9000")
+      val feed: NodeSeq = feedGen.allItemsFeed("http://localhost:9000")
 
       (feed \\ "entry").size must_== 2
       (feed \\ "entry" \ "title")(0).text must_== "Zelda 64"

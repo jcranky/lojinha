@@ -11,6 +11,7 @@ import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.I18nSupport
 import play.api.mvc._
+import play.twirl.api.HtmlFormat
 import views._
 
 class ItemAdmin @Inject() (items: Items, admin: Admin, images: Images, itemDAO: ItemDAO, categoryDAO: CategoryDAO,
@@ -28,15 +29,16 @@ class ItemAdmin @Inject() (items: Items, admin: Admin, images: Images, itemDAO: 
     )
   )
 
-  def itemAddFormPage(form: Form[(String, String, BigDecimal, String, List[String])] = addItemForm)(implicit request: Request[_]) =
+  def itemAddFormPage(form: Form[(String, String, BigDecimal, String, List[String])] = addItemForm)(implicit request: Request[_]): HtmlFormat.Appendable =
     indexTemplate(body = html.admin.newItemForm(form, categoryDAO.all().map(c => c.urlName -> c.displayName)),
       menu = html.admin.menu())
 
-  def newItemForm = IsAuthenticated { username => implicit request =>
+  def newItemForm: EssentialAction = IsAuthenticated { username =>implicit request =>
     Ok(itemAddFormPage())
   }
 
-  def newItem = IsAuthenticatedMultipart { username => implicit request =>
+  @SuppressWarnings(Array("org.wartremover.warts.OptionPartial", "org.wartremover.warts.NonUnitStatements"))
+  def newItem: EssentialAction = IsAuthenticatedMultipart { username =>implicit request =>
     addItemForm.bindFromRequest().fold(
       formWithErrors  => BadRequest(itemAddFormPage(formWithErrors)),
       { case (name, descr, minValue, cat, imgs) =>
@@ -54,11 +56,12 @@ class ItemAdmin @Inject() (items: Items, admin: Admin, images: Images, itemDAO: 
     )
   }
 
-  def itemSold(id: Int) = IsAuthenticated { username => implicit request =>
+  def itemSold(id: Int): EssentialAction = IsAuthenticated { username =>implicit request =>
     itemDAO.sell(id).map(item => Ok(items.itemDetailsPage(item))).getOrElse(NotFound)
   }
 
-  def deleteItem(id: Int) = IsAuthenticated { username => implicit request =>
+  @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
+  def deleteItem(id: Int): EssentialAction = IsAuthenticated { username =>implicit request =>
     itemDAO.delete(id)
     admin.adminHome(username)
   }

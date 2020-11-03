@@ -20,6 +20,7 @@ class S3Sender(configuration: Configuration)(image: File, imageName: String) ext
     )
   ).build()
 
+  @SuppressWarnings(Array("org.wartremover.warts.OptionPartial", "org.wartremover.warts.NonUnitStatements"))
   def send(): Unit = {
     val putRequest = new PutObjectRequest(bucket.get, imageName, image)
     putRequest.setCannedAcl(CannedAccessControlList.PublicRead)

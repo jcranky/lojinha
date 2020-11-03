@@ -8,7 +8,8 @@ import play.api.db.Database
 
 @Singleton
 class AnormUserDAO @Inject() (db: Database) extends UserDAO {
-  val user = {
+
+  private val user: RowParser[User] = {
     int("id") ~ str("email") ~ str("name") ~ str("passwd") map {
       case id~email~name~passwd => User(id, email, name, passwd)
     }
@@ -24,7 +25,7 @@ class AnormUserDAO @Inject() (db: Database) extends UserDAO {
       .on(Symbol("email") -> email).as(user singleOpt)
   }
 
-  def changePassword(email: String, newPasswd: String): Unit = db.withConnection { implicit c =>
+  def changePassword(email: String, newPasswd: String): Int = db.withConnection { implicit c =>
     SQL("UPDATE _user set passwd = {password} WHERE email = {email}")
       .on(Symbol("password") -> newPasswd, Symbol("email") -> email).executeUpdate()
   }
