@@ -1,10 +1,11 @@
 package models
 
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
-import javax.inject.{Inject, Singleton}
+import akka.actor.{ Actor, ActorRef, ActorSystem, Props }
+import javax.inject.{ Inject, Singleton }
 import models.dao.FeedStatsDAO
 
 class FeedStatsActor(feedStatsDAO: FeedStatsDAO) extends Actor {
+
   def receive = {
     case IncrementDownloadCount(origin) => feedStatsDAO.incrementDownloadCount(origin)
   }

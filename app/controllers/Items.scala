@@ -13,21 +13,32 @@ import play.api.mvc._
 import play.twirl.api.HtmlFormat
 import views._
 
-class Items @Inject() (mainMenu: MainMenu, itemDAO: ItemDAO, bidDAO: BidDAO, categoryDAO: CategoryDAO, val userDAO: UserDAO,
-                       bidHelper: BidHelper, cached: Cached, val controllerComponents: ControllerComponents,
-                       indexTemplate: views.html.index)
-                      (implicit configuration: Configuration, images: Images) extends SecuredController with I18nSupport {
+class Items @Inject() (
+  mainMenu: MainMenu,
+  itemDAO: ItemDAO,
+  bidDAO: BidDAO,
+  categoryDAO: CategoryDAO,
+  val userDAO: UserDAO,
+  bidHelper: BidHelper,
+  cached: Cached,
+  val controllerComponents: ControllerComponents,
+  indexTemplate: views.html.index
+)(implicit configuration: Configuration, images: Images)
+    extends SecuredController
+    with I18nSupport {
 
   def bidForm(minValue: Int = 1): Form[(String, Int, Boolean)] = Form(
     tuple(
-      "email" -> email,
-      "value" -> number(min = minValue),
+      "email"            -> email,
+      "value"            -> number(min = minValue),
       "notifyBetterBids" -> boolean
     )
   )
 
   @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
-  def itemDetailsPage(item: Item, form: Form[(String, Int, Boolean)] = bidForm())(implicit request: Request[AnyContent]): HtmlFormat.Appendable = {
+  def itemDetailsPage(item: Item, form: Form[(String, Int, Boolean)] = bidForm())(implicit
+    request: Request[AnyContent]
+  ): HtmlFormat.Appendable = {
     val user: Option[User] = request.session.get("email").map(emailToUser(_).get)
 
     indexTemplate(body = html.itemDetails(item, bidDAO.highest(item.id), form), menu = mainMenu.menu, user = user)
@@ -36,16 +47,19 @@ class Items @Inject() (mainMenu: MainMenu, itemDAO: ItemDAO, bidDAO: BidDAO, cat
   def newBid(itemId: Int): Action[AnyContent] = Action { implicit request =>
     itemDAO.findById(itemId) match {
       case Some(item) =>
-        val maxBid = bidDAO.highest(itemId).map(_.value.toInt + 1).getOrElse(1)
+        val maxBid   = bidDAO.highest(itemId).map(_.value.toInt + 1).getOrElse(1)
         val minValue = math.max(maxBid, item.minValue.toInt)
-        
-        bidForm(minValue).bindFromRequest().fold(
-          formWithErrors => BadRequest(itemDetailsPage(item, formWithErrors)),
-          { case (email, value, notify) =>
-              bidHelper.processBid(email, value, notify, itemId, routes.Items.details(itemId).absoluteURL())
-              Redirect(routes.Items.details(itemId))
-          }
-        )
+
+        bidForm(minValue)
+          .bindFromRequest()
+          .fold(
+            formWithErrors => BadRequest(itemDetailsPage(item, formWithErrors)),
+            {
+              case (email, value, notify) =>
+                bidHelper.processBid(email, value, notify, itemId, routes.Items.details(itemId).absoluteURL())
+                Redirect(routes.Items.details(itemId))
+            }
+          )
 
       case None => NotFound("")
     }
@@ -55,7 +69,7 @@ class Items @Inject() (mainMenu: MainMenu, itemDAO: ItemDAO, bidDAO: BidDAO, cat
     Action { implicit request =>
       itemDAO.findById(itemId) match {
         case Some(item) => Ok(itemDetailsPage(item))
-        case None => NotFound("that product doesn't exist!")  //TODO: create a nice 404 page
+        case None       => NotFound("that product doesn't exist!") //TODO: create a nice 404 page
       }
     }
   }
@@ -63,24 +77,30 @@ class Items @Inject() (mainMenu: MainMenu, itemDAO: ItemDAO, bidDAO: BidDAO, cat
   def highestBid(itemId: Int): Action[AnyContent] = Action {
     bidDAO.highest(itemId) match {
       case Some(bid) => Ok(bid.value.toString)
-      case None => NotFound
+      case None      => NotFound
     }
   }
 
-  def list: Action[AnyContent] = l(sold = false)
+  def list: Action[AnyContent]     = l(sold = false)
   def listSold: Action[AnyContent] = l(sold = true)
 
-  def listCat(cat: String): Action[AnyContent] = l(Some(cat), false)
+  def listCat(cat: String): Action[AnyContent]     = l(Some(cat), false)
   def listCatSold(cat: String): Action[AnyContent] = l(Some(cat), true)
 
   def l(category: Option[String] = None, sold: Boolean): Action[AnyContent] = Action { implicit request =>
-    category.map{ cat => categoryDAO.findByName(cat).map { c =>
-        Ok(indexTemplate(body = html.body(itemsHigherBids(itemDAO.all(c, sold))), menu = mainMenu.menu))
-      } getOrElse Redirect("/")
-    } getOrElse {
-      Ok(indexTemplate(body = html.body(itemsHigherBids(itemDAO.all(sold))), menu = mainMenu.menu))
-    }
+    category
+      .map { cat =>
+        categoryDAO
+          .findByName(cat)
+          .map { c =>
+            Ok(indexTemplate(body = html.body(itemsHigherBids(itemDAO.all(c, sold))), menu = mainMenu.menu))
+          }
+          .getOrElse(Redirect("/"))
+      }
+      .getOrElse {
+        Ok(indexTemplate(body = html.body(itemsHigherBids(itemDAO.all(sold))), menu = mainMenu.menu))
+      }
   }
-  
+
   def itemsHigherBids(items: Seq[Item]): Seq[(Item, Option[Bid])] = items.map(i => (i, bidDAO.highest(i.id)))
 }

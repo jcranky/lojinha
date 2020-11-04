@@ -1,22 +1,37 @@
 package models.dao
 
 import com.google.inject.ImplementedBy
-import models.dao.anorm.{AnormBidDAO, AnormCategoryDAO, AnormItemDAO}
+import models.dao.anorm.{ AnormBidDAO, AnormCategoryDAO, AnormItemDAO }
 import org.joda.time.DateTime
 
 final case class Category(id: Int, displayName: String, urlName: String)
 
 @SuppressWarnings(Array("org.wartremover.warts.FinalCaseClass"))
-case class Item(id: Int, name: String, description: String, minValue: BigDecimal, imageKeys: Option[String],
-                cat: Category, createdDate: DateTime = new DateTime(), sold: Boolean = false)
+case class Item(
+  id: Int,
+  name: String,
+  description: String,
+  minValue: BigDecimal,
+  imageKeys: Option[String],
+  cat: Category,
+  createdDate: DateTime = new DateTime(),
+  sold: Boolean = false
+)
 
-final case class Bid(id: Int, bidderEmail: String, value: BigDecimal, dateTime: DateTime,
-               notifyBetterBids: Boolean, item: Item) extends Ordered[Bid] {
+final case class Bid(
+  id: Int,
+  bidderEmail: String,
+  value: BigDecimal,
+  dateTime: DateTime,
+  notifyBetterBids: Boolean,
+  item: Item
+) extends Ordered[Bid] {
 
   def compare(otherBid: Bid): Int = (value - otherBid.value).toInt
 }
 
 object Bid {
+
   def apply(bidderEmail: String, value: BigDecimal, notifyBetterBids: Boolean, item: Item): Bid =
     Bid(0, bidderEmail, value, new DateTime, notifyBetterBids, item)
 }

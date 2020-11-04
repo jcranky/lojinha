@@ -7,23 +7,35 @@ import play.api.Configuration
 import play.api.cache.Cached
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.{I18nSupport, Lang}
+import play.api.i18n.{ I18nSupport, Lang }
 import play.api.mvc._
 import play.api.routing.JavaScriptReverseRouter
 import play.twirl.api.Html
 import views._
 
-class Application @Inject() (items: Items, mainMenu: MainMenu, userDAO: UserDAO, itemDAO: ItemDAO,
-                             cached: Cached, val controllerComponents: ControllerComponents, indexTemplate: views.html.index)
-                            (implicit configuration: Configuration, images: Images) extends BaseController with I18nSupport {
+class Application @Inject() (
+  items: Items,
+  mainMenu: MainMenu,
+  userDAO: UserDAO,
+  itemDAO: ItemDAO,
+  cached: Cached,
+  val controllerComponents: ControllerComponents,
+  indexTemplate: views.html.index
+)(implicit configuration: Configuration, images: Images)
+    extends BaseController
+    with I18nSupport {
 
   val loginForm: Form[(String, String)] = Form(
     tuple(
-      "email" -> text,
+      "email"    -> text,
       "password" -> text
-    ).verifying("Invalid email or password", result => result match {
-      case (email, password) => userDAO.authenticate(email, password).isDefined
-    })
+    ).verifying(
+      "Invalid email or password",
+      result =>
+        result match {
+          case (email, password) => userDAO.authenticate(email, password).isDefined
+        }
+    )
   )
 
   def login: Action[AnyContent] = Action { implicit request =>
@@ -31,10 +43,12 @@ class Application @Inject() (items: Items, mainMenu: MainMenu, userDAO: UserDAO,
   }
 
   def authenticate: Action[AnyContent] = Action { implicit request =>
-    loginForm.bindFromRequest().fold(
-      formWithErrors => BadRequest(indexTemplate(body = html.login(formWithErrors), menu = mainMenu.menu)),
-      user => Redirect(routes.Admin.index()).withSession("email" -> user._1)
-    )
+    loginForm
+      .bindFromRequest()
+      .fold(
+        formWithErrors => BadRequest(indexTemplate(body = html.login(formWithErrors), menu = mainMenu.menu)),
+        user => Redirect(routes.Admin.index()).withSession("email" -> user._1)
+      )
   }
 
   def logout: Action[AnyContent] = Action {
@@ -50,13 +64,14 @@ class Application @Inject() (items: Items, mainMenu: MainMenu, userDAO: UserDAO,
   }
 
   def about: Action[AnyContent] = Action { implicit request =>
-    def findPage(l: Lang) = l match {
+    def findPage(l: Lang)                 = l match {
       case Lang(locale) if locale.getLanguage == "pt" => Some(indexTemplate(body = html.about(), menu = mainMenu.menu))
-      case Lang(locale) if locale.getLanguage == "en" => Some(indexTemplate(body = html.about_en(), menu = mainMenu.menu))
-      case _ => None
+      case Lang(locale) if locale.getLanguage == "en" =>
+        Some(indexTemplate(body = html.about_en(), menu = mainMenu.menu))
+      case _                                          => None
     }
     def findLang(langs: List[Lang]): Html = langs match {
-      case Nil => indexTemplate(body = html.about(), menu = mainMenu.menu)
+      case Nil          => indexTemplate(body = html.about(), menu = mainMenu.menu)
       case head :: tail => findPage(head).getOrElse(findLang(tail))
     }
 

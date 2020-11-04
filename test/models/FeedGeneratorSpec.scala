@@ -24,10 +24,14 @@ class FeedGeneratorSpec extends Specification with Mockito {
     val cat = Category(1, "Games", "games")
 
     val itemDAO = mock[ItemDAO]
-    itemDAO.all(false) returns List(
-      Item(1, "Zelda 64", "The Legend of Zelda 64", 0, None, cat),
-      Item(2, "Mario 64", "Super Mario 64", 0, None, cat)
-    )
+    itemDAO
+      .all(false)
+      .returns(
+        List(
+          Item(1, "Zelda 64", "The Legend of Zelda 64", 0, None, cat),
+          Item(2, "Mario 64", "Super Mario 64", 0, None, cat)
+        )
+      )
 
     val images = mock[Images]
 

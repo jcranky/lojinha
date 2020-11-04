@@ -9,8 +9,8 @@ import models.dao._
 @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
 class ItemBidsSpec extends Specification with Mockito {
   implicit val item: Item = mock[Item]
-  val bid: Bid = Bid(1, "someone@jcranky.com", 10, new DateTime, false, item)
-  val itemBids: ItemBids = ItemBids(Some(bid), List(bid))
+  val bid: Bid            = Bid(1, "someone@jcranky.com", 10, new DateTime, false, item)
+  val itemBids: ItemBids  = ItemBids(Some(bid), List(bid))
 
   "a bid handler" should {
     "add the bid as higherBid if there is no previous bid" in {
@@ -40,7 +40,8 @@ class ItemBidsSpec extends Specification with Mockito {
 
     "throw IllegalArgumentException if a different item is specified" in {
       val newItem = mock[Item]
-      itemBids.withBid(Bid(0, "wrong@jcranky.com", 9, new DateTime, false, newItem)) must throwAn[IllegalArgumentException]
+      itemBids
+        .withBid(Bid(0, "wrong@jcranky.com", 9, new DateTime, false, newItem)) must throwAn[IllegalArgumentException]
     }
   }
 }

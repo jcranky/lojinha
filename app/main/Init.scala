@@ -1,34 +1,34 @@
 package main
 
-import javax.inject.{Inject, Singleton}
-import models.dao.{CategoryDAO, ItemDAO}
+import javax.inject.{ Inject, Singleton }
+import models.dao.{ CategoryDAO, ItemDAO }
 import play.api._
 
 @Singleton
 @SuppressWarnings(Array("org.wartremover.warts.NonUnitStatements"))
-class Init @Inject()(environment: Environment, itemDAO: ItemDAO, categoryDAO: CategoryDAO) {
+class Init @Inject() (environment: Environment, itemDAO: ItemDAO, categoryDAO: CategoryDAO) {
   if (environment.mode == Mode.Dev)
     new DevData(itemDAO, categoryDAO).ensureData()
 }
 
 class DevData(itemDAO: ItemDAO, categoryDAO: CategoryDAO) {
+
   def ensureData(): Int = {
     val mario64 = itemDAO.findByName("Mario 64")
     mario64 match {
       case Some(_) => 0
-      case None => createData()
+      case None    => createData()
     }
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
   private def createData(): Int = {
-    Seq(
-      "Games" -> "games", "Books" -> "books", "CDs" -> "cds").foreach {
-        case (displayName, urlName) => categoryDAO.create(displayName, urlName)
+    Seq("Games" -> "games", "Books" -> "books", "CDs" -> "cds").foreach {
+      case (displayName, urlName) => categoryDAO.create(displayName, urlName)
     }
     val gamesCat = categoryDAO.findByName("games").get
     val booksCat = categoryDAO.findByName("books").get
-    val cdsCat = categoryDAO.findByName("cds").get
+    val cdsCat   = categoryDAO.findByName("cds").get
 
     Seq(
       ("Mario 64", "Mario 64 para Nintendo 64", 80, None, gamesCat),
@@ -41,8 +41,9 @@ class DevData(itemDAO: ItemDAO, categoryDAO: CategoryDAO) {
       ("Live in Athens", "Live in Athens, An Iced Earth CD", 30, None, cdsCat),
       ("Horror Show", "Horror Show, An Iced Earth CD", 20, None, cdsCat),
       ("Fuel", "Fuel, A Metallica CD", 15, None, cdsCat),
-      ("Black Album", "Black Album, A Metallica CD", 19, None, cdsCat)).map {
-        case (name, description, minValue, imgs, cat) => itemDAO.create(name, description, minValue, imgs, cat)
+      ("Black Album", "Black Album, A Metallica CD", 19, None, cdsCat)
+    ).map {
+      case (name, description, minValue, imgs, cat) => itemDAO.create(name, description, minValue, imgs, cat)
     }.sum
   }
 }

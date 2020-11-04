@@ -15,8 +15,8 @@ class ItemsSpec extends PlaySpecification {
         val Some(result) = route(app, FakeRequest(GET, "/items/1"))
 
         status(result) must equalTo(OK)
-        contentAsString(result) must not contain ("soldButton")
-        contentAsString(result) must not contain ("deleteButton")
+        contentAsString(result) must not contain "soldButton"
+        contentAsString(result) must not contain "deleteButton"
       }
     }
 
