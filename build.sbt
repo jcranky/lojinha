@@ -21,12 +21,14 @@ scalacOptions ++= Seq(
   "-Xfatal-warnings"
 )
 
+scalafmtOnCompile := true
+
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 val webJars = Seq(
   "org.webjars" %% "webjars-play" % "2.8.0-1",
-  "org.webjars" %  "jquery"       % "3.5.1",
-  "org.webjars" %  "bootstrap"    % "4.5.3"
+  "org.webjars"  % "jquery"       % "3.5.1",
+  "org.webjars"  % "bootstrap"    % "4.5.3"
 )
 
 val databaseDeps = Seq(
@@ -44,9 +46,9 @@ val testLibs = Seq(
 libraryDependencies ++= Seq(
   guice,
   caffeine,
-  "com.amazonaws"     %  "aws-java-sdk" % "1.11.893",
+  "com.amazonaws"      % "aws-java-sdk" % "1.11.893",
   "com.typesafe.play" %% "play-mailer"  % "8.0.1",
-  "postgresql"        %  "postgresql"   % "9.1-901-1.jdbc4" % Runtime
+  "postgresql"         % "postgresql"   % "9.1-901-1.jdbc4" % Runtime
 ) ++ webJars ++ databaseDeps ++ testLibs
 
 TwirlKeys.templateImports ++= Seq(

@@ -1,9 +1,10 @@
 package models
 
-import models.dao.{Item, ItemDAO}
-import models.images.{Images, LargeThumb}
+import models.dao.{ Item, ItemDAO }
+import models.images.{ Images, LargeThumb }
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
+
 import scala.xml.NodeSeq
 
 class FeedGenerator(itemDAO: ItemDAO, images: Images) {
@@ -12,7 +13,14 @@ class FeedGenerator(itemDAO: ItemDAO, images: Images) {
   def allItemsFeed(baseURL: String): NodeSeq = {
     val items = itemDAO.all(false)
 
-    def itemMapper(item: Item) = {
+    def itemImages(item: Item): NodeSeq =
+      item.imageKeys
+        .map { imgKeys =>
+          <p><img src={images.generateUrl(imgKeys.split('|').head, LargeThumb)}/></p>
+        }
+        .getOrElse(NodeSeq.Empty)
+
+    def itemMapper(item: Item): NodeSeq =
       <entry>
         <title>{item.name}</title>
         <link rel="alternate" type="text/html" href={"%s/items/%d".format(baseURL, item.id)}/>
@@ -22,15 +30,12 @@ class FeedGenerator(itemDAO: ItemDAO, images: Images) {
         <content type="xhtml">
           <div xmlns="http://www.w3.org/1999/xhtml">
             <p>{item.description}</p>
-            {item.imageKeys.map { imgKeys =>
-                <p><img src={images.generateUrl(imgKeys.split('|').head, LargeThumb)}/></p>
-              }.getOrElse("") }
+            {itemImages(item)}
           </div>
         </content>
       </entry>
-    }
 
-    <feed xmlns="http://www.w3.org/2005/Atom">
+    val feed: NodeSeq = <feed xmlns="http://www.w3.org/2005/Atom">
       <title>Feed da Lojinha</title>
       <link href={baseURL}/>
       <link href={"%s/feed".format(baseURL)} rel="self"/>
@@ -39,8 +44,9 @@ class FeedGenerator(itemDAO: ItemDAO, images: Images) {
         <name>jcranky</name>
       </author>
       <id>{baseURL + "/feed"}</id>
-
       {items.map(itemMapper)}
     </feed>
+
+    feed
   }
 }

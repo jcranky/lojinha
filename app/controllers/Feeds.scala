@@ -10,8 +10,13 @@ import play.api.mvc._
 import scala.concurrent.duration.FiniteDuration
 import scala.xml.NodeSeq
 
-class Feeds @Inject() (images: Images, itemDAO: ItemDAO, feedStatsHelper: FeedStatsHelper,
-                       cache: SyncCacheApi, val controllerComponents: ControllerComponents) extends BaseController {
+class Feeds @Inject() (
+  images: Images,
+  itemDAO: ItemDAO,
+  feedStatsHelper: FeedStatsHelper,
+  cache: SyncCacheApi,
+  val controllerComponents: ControllerComponents
+) extends BaseController {
 
   // fixme: inject this instead of creating it here
   private val feedGen = new FeedGenerator(itemDAO, images)

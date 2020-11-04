@@ -14,7 +14,7 @@ class ApplicationSpec extends Specification {
         val Some(result) = route(app, FakeRequest(GET, "/about"))
 
         status(result) must equalTo(OK)
-        contentAsString(result) must not contain("mini-store")
+        contentAsString(result) must not contain "mini-store"
       }
     }
 
@@ -32,7 +32,7 @@ class ApplicationSpec extends Specification {
         val Some(result) = route(app, FakeRequest(GET, "/about").withHeaders("Accept-Language" -> "pt-BR,en"))
 
         status(result) must equalTo(OK)
-        contentAsString(result) must not contain("mini-store")
+        contentAsString(result) must not contain "mini-store"
       }
     }
   }

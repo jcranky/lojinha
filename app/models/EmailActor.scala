@@ -1,12 +1,13 @@
 package models
 
 import akka.actor._
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import play.api.libs.mailer._
 
 class EmailActor(mailerClient: MailerClient) extends Actor {
+
   def receive = {
-    case m: BidToppedMessage => sendEmail(m, views.html.email.bidTopped.render(m.itemName, m.itemUrl).body)
+    case m: BidToppedMessage   => sendEmail(m, views.html.email.bidTopped.render(m.itemName, m.itemUrl).body)
     case m: BidReceivedMessage => sendEmail(m, views.html.email.bidReceived.render(m.itemName, m.itemUrl).body)
   }
 
@@ -25,9 +26,12 @@ class EmailActor(mailerClient: MailerClient) extends Actor {
 
 @Singleton
 class EMailActorHelper @Inject() (system: ActorSystem) {
-  val actor: ActorRef = system.actorOf(Props(
-    new EmailActor(new SMTPMailer(new SMTPConfiguration("localhost", 25)))
-  ))
+
+  val actor: ActorRef = system.actorOf(
+    Props(
+      new EmailActor(new SMTPMailer(new SMTPConfiguration("localhost", 25)))
+    )
+  )
 }
 
 sealed trait EmailMessage {

@@ -1,17 +1,17 @@
 package models
 
 import akka.actor._
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import models.dao._
 
 @Singleton
 class BidHelper @Inject() (system: ActorSystem, itemDAO: ItemDAO, bidDAO: BidDAO, emailActorHelper: EMailActorHelper) {
+
   val masterBidActor: ActorRef =
     system.actorOf(Props(new MasterBidActor(itemDAO, bidDAO, emailActorHelper)), "master-bid-actor")
 
-  def processBid(email: String, value: BigDecimal, notifyBetterBids: Boolean, itemId: Int, itemUrl: String): Unit = {
+  def processBid(email: String, value: BigDecimal, notifyBetterBids: Boolean, itemId: Int, itemUrl: String): Unit =
     masterBidActor ! ProcessBid(email, value, notifyBetterBids, itemId, itemUrl)
-  }
 }
 
 @SuppressWarnings(Array("org.wartremover.warts.Var"))
@@ -40,18 +40,21 @@ class BidProcessActor(itemId: Int, itemDAO: ItemDAO, bidDAO: BidDAO, emailActorH
     case ProcessBid(email, value, notifyBetterBids, _, itemUrl) =>
       emailActorHelper.actor ! BidReceivedMessage(bidProcessor.item.name, itemUrl, email)
 
-      bidProcessor.itemBids.bidsList.lastOption.foreach { bid => if (bid.notifyBetterBids)
-        emailActorHelper.actor ! BidToppedMessage(bidProcessor.item.name, itemUrl, bid.bidderEmail)
+      bidProcessor.itemBids.bidsList.lastOption.foreach { bid =>
+        if (bid.notifyBetterBids)
+          emailActorHelper.actor ! BidToppedMessage(bidProcessor.item.name, itemUrl, bid.bidderEmail)
       }
-      
+
       bidProcessor.addBid(Bid(email, value, notifyBetterBids, bidProcessor.item))
   }
 }
 
 @SuppressWarnings(Array("org.wartremover.warts.Throw", "org.wartremover.warts.Var", "org.wartremover.warts.AnyVal"))
 class BidProcessor(itemId: Int, itemDAO: ItemDAO, bidDAO: BidDAO) {
-  val item: Item = itemDAO.findById(itemId).getOrElse(
-    throw new IllegalArgumentException("cannot have a BidProcessActor for an invalid Item"))
+
+  val item: Item = itemDAO
+    .findById(itemId)
+    .getOrElse(throw new IllegalArgumentException("cannot have a BidProcessActor for an invalid Item"))
 
   var itemBids: ItemBids = new ItemBids(bidDAO.all(itemId), item)
 
