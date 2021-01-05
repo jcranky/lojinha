@@ -39,7 +39,7 @@ val databaseDeps = Seq(
 )
 
 val testLibs = Seq(
-  "org.mockito" % "mockito-core" % "3.6.28",
+  "org.mockito" % "mockito-core" % "3.7.0",
   specs2
 ).map(_ % Test)
 
