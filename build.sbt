@@ -28,7 +28,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 val webJars = Seq(
   "org.webjars" %% "webjars-play" % "2.8.0-1",
   "org.webjars"  % "jquery"       % "3.5.1",
-  "org.webjars"  % "bootstrap"    % "4.5.3"
+  "org.webjars"  % "bootstrap"    % "4.6.0"
 )
 
 val databaseDeps = Seq(
