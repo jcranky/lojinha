@@ -34,7 +34,7 @@ val webJars = Seq(
 val databaseDeps = Seq(
   jdbc,
   evolutions,
-  "org.playframework.anorm" %% "anorm" % "2.6.8",
+  "org.playframework.anorm" %% "anorm" % "2.6.9",
   "com.h2database"           % "h2"    % "1.4.200"
 )
 
